@@ -1,6 +1,7 @@
 package com.sigma.oilstation.entity;
 
 import com.sigma.oilstation.entity.template.AbsEntity;
+import com.sigma.oilstation.enums.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -8,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 @Data
 @Entity
@@ -17,4 +20,7 @@ import javax.persistence.Entity;
 public class Role extends AbsEntity {
     @Column(nullable = false)
     private String name;
+
+    @Enumerated(EnumType.STRING)
+    private RoleType type;
 }
