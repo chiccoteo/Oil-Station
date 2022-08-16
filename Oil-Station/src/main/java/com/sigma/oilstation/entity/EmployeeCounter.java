@@ -6,20 +6,21 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 @Data
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 @EqualsAndHashCode(callSuper = true)
-public class Branch extends AbsEntity {
-    @Column(nullable = false)
-    private String name;
+public class EmployeeCounter extends AbsEntity {
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private Address address;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private MainCounter mainCounter;
+
+    private double givenNumber;
 }

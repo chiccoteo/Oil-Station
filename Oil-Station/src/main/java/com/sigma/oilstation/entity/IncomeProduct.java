@@ -28,17 +28,12 @@ public class IncomeProduct extends AbsEntity {
 
     private double outcomePrice;
 
-    @Column(nullable = false)
-    private double calculator;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private EmployeeCounter employeeCounter;
 
     private Timestamp incomeTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
 
     @Column(nullable = false)
     private boolean isDebt;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Branch branch;
 }
