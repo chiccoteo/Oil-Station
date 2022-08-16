@@ -22,4 +22,7 @@ public class Branch extends AbsEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     private Address address;
+
+
+
 }
