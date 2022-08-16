@@ -24,5 +24,4 @@ public class Branch extends AbsEntity {
     private Address address;
 
 
-
 }
