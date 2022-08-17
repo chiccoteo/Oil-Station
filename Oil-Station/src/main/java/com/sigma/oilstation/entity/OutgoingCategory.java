@@ -10,7 +10,6 @@ import javax.persistence.Entity;
 
 @Data
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class OutgoingCategory extends AbsEntity {
