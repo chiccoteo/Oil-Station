@@ -1,5 +1,6 @@
-package com.sigma.oilstation.controller;
+package com.sigma.oilstation.controllerImpl;
 
+import com.sigma.oilstation.controller.FuelReportController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
