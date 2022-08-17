@@ -17,4 +17,6 @@ public interface AuthController {
     @PostMapping(LOGIN)
     HttpEntity<?> login(@RequestBody LoginDTO loginDTO);
 
+
+
 }
