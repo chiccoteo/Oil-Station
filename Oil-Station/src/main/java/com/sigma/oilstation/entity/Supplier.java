@@ -19,4 +19,10 @@ public class Supplier extends AbsLong {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private boolean deleted;
+
+    public Supplier(String name) {
+        this.name = name;
+    }
 }
