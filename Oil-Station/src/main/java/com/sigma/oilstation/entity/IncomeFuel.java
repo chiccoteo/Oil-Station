@@ -1,6 +1,6 @@
 package com.sigma.oilstation.entity;
 
-import com.sigma.oilstation.entity.template.AbsEntity;
+import com.sigma.oilstation.entity.template.AbsUUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,25 +13,29 @@ import javax.persistence.ManyToOne;
 import java.sql.Timestamp;
 
 @Data
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @EqualsAndHashCode(callSuper = true)
-public class FinancialHistory extends AbsEntity {
-    @Column(nullable = false)
-    private String name;
+public class IncomeFuel extends AbsUUID {
 
-    private String description;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Fuel fuel;
 
     @Column(nullable = false)
     private double amount;
 
+    private double incomePrice;
+
+    private double salePrice;
+
+    private double counter;
+
+    private Timestamp incomeTime;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private User employee;
 
     @Column(nullable = false)
-    private Timestamp time;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private FinancialCategory category;
+    private boolean isDebt;
 }

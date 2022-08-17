@@ -1,6 +1,6 @@
 package com.sigma.oilstation.entity;
 
-import com.sigma.oilstation.entity.template.AbsEntity;
+import com.sigma.oilstation.entity.template.AbsUUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,7 +13,7 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 @Entity
 @EqualsAndHashCode(callSuper = true)
-public class Address extends AbsEntity {
+public class Address extends AbsUUID {
 
     private String region;
 
@@ -22,4 +22,5 @@ public class Address extends AbsEntity {
     private String street;
 
     private String homeNumber;
+
 }
