@@ -1,6 +1,7 @@
 package com.sigma.oilstation.entity;
 
 import com.sigma.oilstation.entity.template.AbsEntity;
+import com.sigma.oilstation.entity.template.AbsLong;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,7 +15,9 @@ import javax.persistence.Entity;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class Measurement extends AbsEntity {
+public class Measurement extends AbsLong {
+
     @Column(nullable = false)
     private String name;
+
 }

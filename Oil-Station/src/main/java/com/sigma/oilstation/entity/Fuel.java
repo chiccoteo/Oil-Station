@@ -16,9 +16,7 @@ import javax.persistence.ManyToOne;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class Product extends AbsEntity {
-    @Column(nullable = false)
-    private String name;
+public class Fuel extends AbsEntity {
 
     @Column(nullable = false)
     private String type;

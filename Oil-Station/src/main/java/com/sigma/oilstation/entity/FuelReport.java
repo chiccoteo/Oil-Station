@@ -1,6 +1,6 @@
 package com.sigma.oilstation.entity;
 
-import com.sigma.oilstation.entity.template.AbsEntity;
+import com.sigma.oilstation.entity.template.AbsUUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,17 +15,23 @@ import java.sql.Timestamp;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @Entity
-@EqualsAndHashCode(callSuper = true)
-public class MainCounter extends AbsEntity {
+public class FuelReport extends AbsUUID {
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User employee;
+
     @Column(nullable = false)
-    private double counter;
+    private double amountAtStartOfShift;
 
-    private Timestamp givenTime;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Branch branch;
+    private double amountAtEndOfShift;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Product product;
+    private Fuel fuel;
+
+    private Timestamp reportTime;
+
+    private boolean isActiveShift;
+
 }

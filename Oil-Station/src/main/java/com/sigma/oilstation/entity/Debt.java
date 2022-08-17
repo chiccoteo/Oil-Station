@@ -1,6 +1,6 @@
 package com.sigma.oilstation.entity;
 
-import com.sigma.oilstation.entity.template.AbsEntity;
+import com.sigma.oilstation.entity.template.AbsUUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,23 +17,24 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class IncomeProduct extends AbsEntity {
+public class Debt extends AbsUUID {
+
     @ManyToOne(fetch = FetchType.LAZY)
-    private Product product;
+    private User borrower;
 
     @Column(nullable = false)
     private double amount;
 
-    private double incomePrice;
-
-    private double outcomePrice;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User lenderOrBorrower;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private EmployeeCounter employeeCounter;
+    private Supplier lender;
 
-    private Timestamp incomeTime;
+    private Timestamp givenTime;
 
+    private Timestamp returnTime;
 
-    @Column(nullable = false)
-    private boolean isDebt;
+    private boolean isGiven;
+
 }
