@@ -14,8 +14,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class User extends AbsEntity {
-    @Column(nullable = false)
-    private String userName;
 
     @Column(nullable = false)
     private String fio;

@@ -1,6 +1,6 @@
 package com.sigma.oilstation.entity;
 
-import com.sigma.oilstation.entity.template.AbsEntity;
+import com.sigma.oilstation.entity.template.AbsUUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,16 +17,17 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class Sale extends AbsEntity{
+public class Sale extends AbsUUID {
+
     @ManyToOne(fetch = FetchType.LAZY)
-    private Product product;
+    private Fuel fuel;
 
     @Column(nullable = false)
-    private Timestamp buyTime;
+    private Timestamp saleTime;
 
     @Column(nullable = false)
     private boolean isCash;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private User seller;
 }
