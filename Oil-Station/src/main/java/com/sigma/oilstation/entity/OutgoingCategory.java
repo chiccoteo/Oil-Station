@@ -1,7 +1,6 @@
 package com.sigma.oilstation.entity;
 
 import com.sigma.oilstation.entity.template.AbsEntity;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
