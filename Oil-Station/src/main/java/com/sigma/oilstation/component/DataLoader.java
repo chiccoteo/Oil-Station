@@ -35,9 +35,12 @@ public class DataLoader implements CommandLineRunner {
             Role admin = new Role(RoleType.ROLE_ADMIN.name(), RoleType.ROLE_ADMIN);
             Role manager = new Role(RoleType.ROLE_MANAGER.name(), RoleType.ROLE_MANAGER);
             Role employee = new Role(RoleType.ROLE_EMPLOYEE.name(), RoleType.ROLE_EMPLOYEE);
-            roles.add(admin);
-            roles.add(manager);
-            roles.add(employee);
+            if (roleRepo.findByType(admin.getType()) == null)
+                roles.add(admin);
+            if (roleRepo.findByType(manager.getType()) == null)
+                roles.add(manager);
+            if (roleRepo.findByType(employee.getType()) == null)
+                roles.add(employee);
             roleRepo.saveAll(roles);
 
 
@@ -50,8 +53,8 @@ public class DataLoader implements CommandLineRunner {
                     roleRepo.findByType(RoleType.ROLE_ADMIN),
                     false
             );
-
-            userRepo.save(adminUser);
+            if (userRepo.findByUsername(adminUser.getUsername()).isEmpty())
+                userRepo.save(adminUser);
         }
     }
 }
