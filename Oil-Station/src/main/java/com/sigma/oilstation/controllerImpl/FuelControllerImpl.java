@@ -1,43 +1,52 @@
 package com.sigma.oilstation.controllerImpl;
 
 import com.sigma.oilstation.controller.FuelController;
+import com.sigma.oilstation.payload.ApiResponse;
+import com.sigma.oilstation.payload.FuelPostDto;
+import com.sigma.oilstation.payload.FuelUpdateDto;
+import com.sigma.oilstation.service.FuelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import static com.sigma.oilstation.utils.AppConstant.*;
 
 @RestController
 @RequiredArgsConstructor
 public class FuelControllerImpl implements FuelController {
-    @PostMapping(POST_PATH)
-    public HttpEntity<?> addProduct(){
-        return null;
+
+    private final FuelService fuelService;
+
+
+    @Override
+    public HttpEntity<?> addFuel(@RequestBody FuelPostDto fuelPostDto) {
+        ApiResponse<?> apiResponse = fuelService.addFuel(fuelPostDto);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 400).body(apiResponse);
     }
 
-    @GetMapping(GET_BY_ID_PATH)
-    public HttpEntity<?> getByIdProduct(@PathVariable UUID id){
-        return null;
+    @Override
+    public HttpEntity<?> getByIdFuel(UUID id) {
+        ApiResponse<?> apiResponse = fuelService.getByIdFuel(id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 400).body(apiResponse);
     }
 
-    @GetMapping(GET_ALL_PATH)
-    public HttpEntity<?> getAllProduct(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
-                                       @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size){
-
-        return null;
+    @Override
+    public HttpEntity<?> getAllFuel(Integer page, Integer size) {
+        ApiResponse<?> apiResponse = fuelService.getAllFuel(page, size);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 400).body(apiResponse);
     }
 
-    @PutMapping(PUT_PATH)
-    public HttpEntity<?> updateProduct(@PathVariable UUID id){
-
-        return null;
+    @Override
+    public HttpEntity<?> updateFuel(UUID id, @RequestBody FuelUpdateDto fuelUpdateDto) {
+        ApiResponse<?> apiResponse = fuelService.updateFuel(id,fuelUpdateDto);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 400).body(apiResponse);
     }
 
-    @DeleteMapping(DELETE_PATH)
-    public HttpEntity<?> deleteProduct(@PathVariable UUID id){
-
-        return null;
+    @Override
+    public HttpEntity<?> deleteFuel(UUID id) {
+        ApiResponse<?> apiResponse = fuelService.deleteFuel(id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 400).body(apiResponse);
     }
 }
