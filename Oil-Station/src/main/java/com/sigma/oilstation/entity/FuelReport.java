@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @Entity
 public class FuelReport extends AbsUUID {
 
@@ -32,6 +32,6 @@ public class FuelReport extends AbsUUID {
 
     private Timestamp reportTime;
 
-    private boolean isActiveShift;
+    private boolean activeShift;
 
 }
