@@ -17,31 +17,37 @@ public class AddressControllerImpl implements AddressController {
 
     @Override
     public HttpEntity<?> getAll(Integer page, Integer size) {
-        ApiResponse<?> apiResponse = service.getAll(page,size);
-        return ResponseEntity.status(apiResponse.isSuccess() ? 200: 409).body(apiResponse);
+        ApiResponse<?> apiResponse = service.getAll(page, size);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
+    @Override
+    public HttpEntity<?> getAllList() {
+        ApiResponse<?> apiResponse = service.getAllList();
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 
     @Override
     public HttpEntity<?> getById(Long id) {
         ApiResponse<?> apiResponse = service.getById(id);
-        return ResponseEntity.status(apiResponse.isSuccess() ? 200: 404).body(apiResponse);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 404).body(apiResponse);
     }
 
     @Override
     public HttpEntity<?> create(AddressDTO addressDTO) {
         ApiResponse<?> apiResponse = service.create(addressDTO);
-        return ResponseEntity.status(apiResponse.isSuccess() ? 201:409).body(apiResponse);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 409).body(apiResponse);
     }
 
     @Override
     public HttpEntity<?> update(AddressDTO addressDTO, Long id) {
         ApiResponse<?> apiResponse = service.update(addressDTO, id);
-        return ResponseEntity.status(apiResponse.isSuccess() ? 200: 404).body(apiResponse);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 404).body(apiResponse);
     }
 
     @Override
     public HttpEntity<?> delete(Long id) {
         ApiResponse<?> apiResponse = service.delete(id);
-        return ResponseEntity.status(apiResponse.isSuccess() ? 200: 404).body(apiResponse);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 404).body(apiResponse);
     }
 }
