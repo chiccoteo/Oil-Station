@@ -4,13 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BranchGetDTO {
-    private UUID id;
-    private String name;
-    private AddressDTO addressDTO;
+public class AddressGetDTO {
+    private Long id;
+
+    private String region;
+
+    private String district;
+
+    private String street;
+
+    private String homeNumber;
+
 }

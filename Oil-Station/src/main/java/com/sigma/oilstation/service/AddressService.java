@@ -13,4 +13,6 @@ public interface AddressService {
     ApiResponse<?> update(AddressDTO addressDTO, Long id);
 
     ApiResponse<?> delete(Long id);
+
+    ApiResponse<?> getAllList();
 }
