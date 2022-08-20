@@ -29,4 +29,7 @@ public class Fuel extends AbsEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Measurement outcomeMeasurement;
+
+    @Column(nullable = false)
+    private boolean deleted;
 }

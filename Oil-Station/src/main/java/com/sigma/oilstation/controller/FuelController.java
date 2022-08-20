@@ -21,9 +21,12 @@ public interface FuelController {
     @GetMapping(GET_BY_ID_PATH)
     public HttpEntity<?> getByIdFuel(@PathVariable UUID id);
 
-    @GetMapping(GET_ALL_PATH)
-    public HttpEntity<?> getAllFuel(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
+    @GetMapping(GET_ALL_PAGEABLE_PATH)
+    public HttpEntity<?> getAllFuelPageable(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
                                        @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
+
+    @GetMapping(GET_ALL_PATH)
+    public HttpEntity<?> getAllFuel();
 
     @PutMapping(PUT_PATH)
     public HttpEntity<?> updateFuel(@PathVariable UUID id, @RequestBody FuelUpdateDto fuelUpdateDto);
