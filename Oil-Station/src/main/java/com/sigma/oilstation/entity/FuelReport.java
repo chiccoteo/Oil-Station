@@ -6,10 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Data
@@ -30,8 +27,16 @@ public class FuelReport extends AbsUUID {
     @ManyToOne(fetch = FetchType.LAZY)
     private Fuel fuel;
 
+    private double salePrice;
+
     private Timestamp reportTime;
 
     private boolean isActiveShift;
+
+    @PrePersist
+    @PreUpdate
+    public void setSalePrice() {
+        this.salePrice = fuel.getPrice();
+    }
 
 }
