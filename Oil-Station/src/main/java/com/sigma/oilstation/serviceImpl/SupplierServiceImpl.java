@@ -77,4 +77,9 @@ public class SupplierServiceImpl implements SupplierService {
         supplierRepo.save(supplier);
         return ApiResponse.successResponse("Successfully deleted");
     }
+
+    @Override
+    public ApiResponse<?> getListOfSuppliers() {
+        return ApiResponse.successResponse("List of all suppliers", supplierMapper.toGetDTOList(supplierRepo.findAll()));
+    }
 }

@@ -13,4 +13,7 @@ public interface SupplierService {
     ApiResponse<?> editSupplierById(Long id, String name);
 
     ApiResponse<?> deleteSupplierById(Long id);
+
+    ApiResponse<?> getListOfSuppliers();
+
 }

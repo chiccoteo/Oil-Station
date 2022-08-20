@@ -14,6 +14,8 @@ public interface SupplierController {
 
     String GET_ALL_SUPPLIERS = "/all";
 
+    String GET_LIST_OF_SUPPLIERS = "/list";
+
     String GET_SUPPLIER_BY_ID = "/get";
 
     String UPDATE_SUPPLIER_BY_ID = "/update";
@@ -26,6 +28,9 @@ public interface SupplierController {
     @GetMapping(GET_ALL_SUPPLIERS)
     HttpEntity<?> getAllSuppliers(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
                                   @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
+
+    @GetMapping(GET_LIST_OF_SUPPLIERS)
+    HttpEntity<?> getListOfSuppliers();
 
     @GetMapping(GET_SUPPLIER_BY_ID)
     HttpEntity<?> getSupplierById(@RequestParam(name = "supplierId") Long id);

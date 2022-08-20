@@ -27,6 +27,12 @@ public class SupplierControllerImpl implements SupplierController {
     }
 
     @Override
+    public HttpEntity<?> getListOfSuppliers() {
+        ApiResponse<?> apiResponse = service.getListOfSuppliers();
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @Override
     public HttpEntity<?> getSupplierById(Long id) {
         ApiResponse<?> apiResponse = service.getSupplierById(id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 404).body(apiResponse);
