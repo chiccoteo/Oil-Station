@@ -29,8 +29,8 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public ApiResponse<?> getAll(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Address> all = repository.findAll(pageable, Sort.by("createdDate").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        Page<Address> all = repository.findAll(pageable);
 
         List<AddressGetDTO> addressDTOS = mapper.toDTOList(all.toList());
 
