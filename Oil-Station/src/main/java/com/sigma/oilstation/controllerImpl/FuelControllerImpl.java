@@ -8,7 +8,8 @@ import com.sigma.oilstation.service.FuelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
@@ -33,8 +34,14 @@ public class FuelControllerImpl implements FuelController {
     }
 
     @Override
-    public HttpEntity<?> getAllFuel(Integer page, Integer size) {
-        ApiResponse<?> apiResponse = fuelService.getAllFuel(page, size);
+    public HttpEntity<?> getAllFuelPageable(Integer page, Integer size) {
+        ApiResponse<?> apiResponse = fuelService.getAllFuelPageable(page, size);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 400).body(apiResponse);
+    }
+
+    @Override
+    public HttpEntity<?> getAllFuel() {
+        ApiResponse<?> apiResponse = fuelService.getAllFuel();
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 400).body(apiResponse);
     }
 

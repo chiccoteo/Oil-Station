@@ -6,6 +6,7 @@ public interface AppConstant {
 
     String POST_PATH = "/add";
     String GET_BY_ID_PATH = "/getById{id}";
+    String GET_ALL_PAGEABLE_PATH = "/getAllPageable";
     String GET_ALL_PATH = "/getAll";
     String PUT_PATH = "/update{id}";
     String DELETE_PATH = "/delete{id}";
