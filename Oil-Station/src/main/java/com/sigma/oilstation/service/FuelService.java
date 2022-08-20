@@ -11,9 +11,13 @@ public interface FuelService {
 
     ApiResponse<?> getByIdFuel(UUID id);
 
-    ApiResponse<?> getAllFuel(Integer page, Integer size);
+    ApiResponse<?> getAllFuelPageable(Integer page, Integer size);
+
+    ApiResponse<?> getAllFuel();
 
     ApiResponse<?> updateFuel(UUID id, FuelUpdateDto fuelUpdateDto);
 
     ApiResponse<?> deleteFuel(UUID id);
+
+
 }
