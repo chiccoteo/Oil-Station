@@ -1,7 +1,6 @@
 package com.sigma.oilstation.mapper;
 
 import com.sigma.oilstation.entity.Role;
-import com.sigma.oilstation.payload.RoleDTO;
 import com.sigma.oilstation.payload.RoleGetDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

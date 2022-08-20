@@ -7,5 +7,5 @@ import lombok.Data;
 public class RoleGetDTO {
     private Long id;
     private String name;
-    private RoleType roleType;
+    private String roleType;
 }
