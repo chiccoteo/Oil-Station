@@ -23,6 +23,12 @@ public class OutgoingCategoryControllerImpl implements OutgoingCategoryControlle
     }
 
     @Override
+    public HttpEntity<?> getListOfOutgoingCategories() {
+        ApiResponse<?> apiResponse = outgoingCategoryService.getListOfOutgoingCategories();
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @Override
     public HttpEntity<?> getOutgoingCategoryById(UUID id) {
         ApiResponse<?> apiResponse = outgoingCategoryService.getOutgoingCategoryById(id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 404).body(apiResponse);

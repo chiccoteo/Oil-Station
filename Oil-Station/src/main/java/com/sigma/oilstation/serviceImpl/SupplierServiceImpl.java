@@ -9,6 +9,7 @@ import com.sigma.oilstation.service.SupplierService;
 import com.sigma.oilstation.utils.CommandUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -76,5 +77,10 @@ public class SupplierServiceImpl implements SupplierService {
         supplier.setDeleted(true);
         supplierRepo.save(supplier);
         return ApiResponse.successResponse("Successfully deleted");
+    }
+
+    @Override
+    public ApiResponse<?> getListOfSuppliers() {
+        return ApiResponse.successResponse("List of all suppliers", supplierMapper.toGetDTOList(supplierRepo.findAll(Sort.by("createdDate"))));
     }
 }

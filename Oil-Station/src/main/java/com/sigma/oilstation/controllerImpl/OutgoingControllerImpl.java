@@ -30,6 +30,12 @@ public class OutgoingControllerImpl implements OutgoingController {
     }
 
     @Override
+    public HttpEntity<?> getListOfOutgoings() {
+        ApiResponse<?> apiResponse = outgoingService.getListOfOutgoings();
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @Override
     public HttpEntity<?> getOutgoingById(UUID id) {
         ApiResponse<?> apiResponse = outgoingService.getOutgoingById(id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 404).body(apiResponse);

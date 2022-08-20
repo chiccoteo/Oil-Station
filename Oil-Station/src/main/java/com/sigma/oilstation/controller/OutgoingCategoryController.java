@@ -18,11 +18,16 @@ public interface OutgoingCategoryController {
 
     String GET_ALL_OUTGOING_CATEGORIES = "/all";
 
+    String GET_LIST_OF_OUTGOING_CATEGORIES = "/list";
+
     String GET_OUTGOING_CATEGORY_BY_ID = "/get";
 
     @GetMapping(GET_ALL_OUTGOING_CATEGORIES)
     HttpEntity<?> getAllOutgoingCategories(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
                                            @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
+
+    @GetMapping(GET_LIST_OF_OUTGOING_CATEGORIES)
+    HttpEntity<?> getListOfOutgoingCategories();
 
     @GetMapping(GET_OUTGOING_CATEGORY_BY_ID)
     HttpEntity<?> getOutgoingCategoryById(@RequestParam(name = "outgoingCategoryId") UUID id);

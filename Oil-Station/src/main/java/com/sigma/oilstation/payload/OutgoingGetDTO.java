@@ -3,6 +3,7 @@ package com.sigma.oilstation.payload;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 @Data
 public class OutgoingGetDTO {
@@ -18,5 +19,9 @@ public class OutgoingGetDTO {
     private Timestamp outgoingTime;
 
     private String category;
+
+    private Date lastModifiedDate;
+
+    private String lastModifiedBy;
 
 }

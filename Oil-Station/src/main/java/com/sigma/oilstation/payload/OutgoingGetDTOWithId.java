@@ -3,6 +3,7 @@ package com.sigma.oilstation.payload;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -21,5 +22,9 @@ public class OutgoingGetDTOWithId {
     private Timestamp outgoingTime;
 
     private String category;
+
+    private Date lastModifiedDate;
+
+    private String lastModifiedBy;
 
 }

@@ -16,4 +16,7 @@ public interface OutgoingService {
     ApiResponse<?> updateOutgoingById(UUID id, OutgoingPostDTO outgoingPostDTO);
 
     ApiResponse<?> deleteOutgoingById(UUID id);
+
+    ApiResponse<?> getListOfOutgoings();
+
 }

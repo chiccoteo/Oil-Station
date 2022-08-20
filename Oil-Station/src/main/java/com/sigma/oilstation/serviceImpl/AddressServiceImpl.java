@@ -3,6 +3,7 @@ package com.sigma.oilstation.serviceImpl;
 import com.sigma.oilstation.entity.Address;
 import com.sigma.oilstation.mapper.AddressMapper;
 import com.sigma.oilstation.payload.AddressDTO;
+import com.sigma.oilstation.payload.AddressGetDTO;
 import com.sigma.oilstation.payload.ApiResponse;
 import com.sigma.oilstation.repository.AddressRepository;
 import com.sigma.oilstation.service.AddressService;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -27,10 +29,10 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public ApiResponse<?> getAll(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<Address> all = repository.findAll(pageable);
 
-        List<AddressDTO> addressDTOS = mapper.toDTOList(all.toList());
+        List<AddressGetDTO> addressDTOS = mapper.toDTOList(all.toList());
 
         Map<String, Object> response = new HashMap<>();
         response.put("addresses", addressDTOS);
@@ -57,8 +59,7 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public ApiResponse<?> create(AddressDTO addressDTO) {
         Address address = mapper.toEntity(addressDTO);
-        repository.save(address);
-        return ApiResponse.successResponse("SUCCESSFULLY_SAVED");
+        return ApiResponse.successResponse("SUCCESSFULLY_SAVED", mapper.toGetDTO(repository.save(address)));
     }
 
     @Override
@@ -79,7 +80,7 @@ public class AddressServiceImpl implements AddressService {
 
         repository.save(address);
 
-        return ApiResponse.successResponse("SUCCESSFULLY_UPDATE", mapper.toGetDTO(address));
+        return ApiResponse.successResponse("SUCCESSFULLY_UPDATE");
     }
 
     @Override
@@ -96,5 +97,10 @@ public class AddressServiceImpl implements AddressService {
         repository.delete(address);
 
         return ApiResponse.successResponse("SUCCESSFULLY_DELETE");
+    }
+
+    @Override
+    public ApiResponse<?> getAllList() {
+        return ApiResponse.successResponse(mapper.toDTOList(repository.findAll()));
     }
 }

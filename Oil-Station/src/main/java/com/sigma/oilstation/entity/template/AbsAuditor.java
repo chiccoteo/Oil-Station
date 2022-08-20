@@ -1,7 +1,6 @@
 package com.sigma.oilstation.entity.template;
 
-import java.util.UUID;
-
+import com.sigma.oilstation.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
@@ -24,10 +23,12 @@ public abstract class AbsAuditor implements Serializable {
 
     @JoinColumn(updatable = false)
     @CreatedBy
-    private UUID createdBy;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User createdBy;
 
     @LastModifiedBy
-    private UUID lastModifiedBy;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User lastModifiedBy;
 
 
     @JoinColumn(updatable = false)
