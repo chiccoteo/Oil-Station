@@ -18,10 +18,12 @@ public interface OutgoingMapper {
 
     @Mapping(target = "spenderFIO", source = "spender.fio")
     @Mapping(target = "category", source = "category.name")
+    @Mapping(target = "lastModifiedBy", source = "lastModifiedBy.fio")
     OutgoingGetDTO toGetDTO(Outgoing outgoing);
 
     @Mapping(target = "spenderFIO", source = "spender.fio")
     @Mapping(target = "category", source = "category.name")
+    @Mapping(target = "lastModifiedBy", source = "lastModifiedBy.fio")
     OutgoingGetDTOWithId toGetDTOWithId(Outgoing outgoing);
 
     List<OutgoingGetDTOWithId> toGetDTOList(List<Outgoing> outgoingList);

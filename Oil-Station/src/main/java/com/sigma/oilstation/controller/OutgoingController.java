@@ -17,6 +17,8 @@ public interface OutgoingController {
 
     String GET_ALL_OUTGOINGS = "/all";
 
+    String GET_LIST_OF_OUTGOINGS = "/list";
+
     String GET_OUTGOING_BY_ID = "/get";
 
     String UPDATE_OUTGOING_BY_ID = "/update";
@@ -30,6 +32,9 @@ public interface OutgoingController {
     @GetMapping(GET_ALL_OUTGOINGS)
     HttpEntity<?> getAllOutgoings(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
                                   @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
+
+    @GetMapping(GET_LIST_OF_OUTGOINGS)
+    HttpEntity<?> getListOfOutgoings();
 
     @GetMapping(GET_OUTGOING_BY_ID)
     HttpEntity<?> getOutgoingById(@RequestParam(name = "outgoingId") UUID id);

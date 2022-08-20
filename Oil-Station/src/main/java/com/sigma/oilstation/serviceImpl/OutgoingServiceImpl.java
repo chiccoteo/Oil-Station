@@ -103,4 +103,9 @@ public class OutgoingServiceImpl implements OutgoingService {
         outgoingRepo.deleteById(id);
         return ApiResponse.successResponse("Successfully deleted");
     }
+
+    @Override
+    public ApiResponse<?> getListOfOutgoings() {
+        return ApiResponse.successResponse("List of all Outgoings", outgoingMapper.toGetDTOList(outgoingRepo.findAll()));
+    }
 }
