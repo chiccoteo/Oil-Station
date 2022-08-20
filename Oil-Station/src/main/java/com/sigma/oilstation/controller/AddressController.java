@@ -17,6 +17,9 @@ public interface AddressController {
     HttpEntity<?> getAll(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
                          @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
 
+    @GetMapping("/getAllList")
+    HttpEntity<?> getAllList();
+
     @GetMapping("/get")
     HttpEntity<?> getById(@RequestParam(name = "byId") Long id);
 
