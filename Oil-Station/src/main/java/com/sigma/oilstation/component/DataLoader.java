@@ -51,6 +51,7 @@ public class DataLoader implements CommandLineRunner {
                     "+998979516170",
                     null,
                     roleRepo.findByType(RoleType.ROLE_ADMIN),
+                    false,
                     false
             );
             if (userRepo.findByUsername(adminUser.getUsername()).isEmpty())

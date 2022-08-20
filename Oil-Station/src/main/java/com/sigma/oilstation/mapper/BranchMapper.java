@@ -17,6 +17,7 @@ public interface BranchMapper {
     List<BranchGetDTO> toGetDTOList(List<Branch> branchList);
 
 
+
     @Mapping(target = "address.id", source = "addressId")
     Branch toEntity(BranchDTO branchDTO);
 
