@@ -39,6 +39,8 @@ public class User extends AbsUUID implements UserDetails {
 
     private boolean deleted;
 
+    private boolean isBlock;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(role);

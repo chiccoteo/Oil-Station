@@ -19,13 +19,13 @@ public interface BranchController {
 
     String GET_ALL_BRANCH = "/all";
 
-    String GET_BRANCH_BY_ID = "/get/{id}";
+    String GET_BRANCH_BY_ID = "/get{id}";
 
     String POST_BRANCH = "/post";
 
-    String UPDATE_BRANCH_BY_ID = "/update/{id}";
+    String UPDATE_BRANCH_BY_ID = "/update{id}";
 
-    String DELETE_BRANCH_BY_ID = "/delete/{id}";
+    String DELETE_BRANCH_BY_ID = "/delete{id}";
 
 
     @GetMapping(GET_ALL_BRANCH_PAGEABLE)

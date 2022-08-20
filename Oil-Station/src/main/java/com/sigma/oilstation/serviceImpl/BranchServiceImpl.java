@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -27,7 +28,7 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public ApiResponse<?> getAllPageable(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<Branch> all = repository.findAll(pageable);
 
         List<BranchGetDTO> branchDTOList = mapper.toGetDTOList(all.toList());
@@ -43,7 +44,7 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public ApiResponse<?> getAll() {
-        return ApiResponse.successResponse("ALL_BRANCHES", mapper.toGetDTOList(repository.findAll()));
+        return ApiResponse.successResponse("ALL_BRANCHES", mapper.toGetDTOList(repository.findAll(Sort.by("createdDate").descending())));
     }
 
     @Override
