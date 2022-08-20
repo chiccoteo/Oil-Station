@@ -41,6 +41,16 @@ public class User extends AbsUUID implements UserDetails {
 
     private boolean isBlock;
 
+    public User(String adminUsername, String admin_fio, String adminPassword, String s, Object o, Role byType, boolean b) {
+        this.username = adminUsername;
+        this.fio = admin_fio;
+        this.password = adminPassword;
+        this.phoneNumber = s;
+        this.branch = (Branch) o;
+        this.role = byType;
+        this.deleted =b;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(role);
