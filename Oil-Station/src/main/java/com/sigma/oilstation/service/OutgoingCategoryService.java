@@ -9,4 +9,6 @@ public interface OutgoingCategoryService {
 
     ApiResponse<?> getOutgoingCategoryById(UUID id);
 
+    ApiResponse<?> getListOfOutgoingCategories();
+
 }

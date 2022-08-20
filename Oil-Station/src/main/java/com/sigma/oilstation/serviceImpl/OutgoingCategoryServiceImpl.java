@@ -47,4 +47,9 @@ public class OutgoingCategoryServiceImpl implements OutgoingCategoryService {
             return ApiResponse.errorResponse("Such an outgoingCategory does not exist");
         return ApiResponse.successResponse("Success", outgoingCategoryMapper.toGetDTO(optionalOutgoingCategory.get()));
     }
+
+    @Override
+    public ApiResponse<?> getListOfOutgoingCategories() {
+        return ApiResponse.successResponse("List of all OutgoingCategories", outgoingCategoryMapper.toGetDTOList(outgoingCategoryRepo.findAll()));
+    }
 }
