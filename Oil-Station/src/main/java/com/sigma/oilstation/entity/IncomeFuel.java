@@ -37,5 +37,6 @@ public class IncomeFuel extends AbsUUID {
     private User employee;
 
     @Column(nullable = false)
-    private boolean isDebt;
+    private boolean debt;
+
 }

@@ -17,17 +17,17 @@ public class ApiResponse<T> implements Serializable {
 
     private T data;
 
-    private ApiResponse(boolean success, T data) {
+    public ApiResponse(boolean success, T data) {
         this.success = success;
         this.data = data;
     }
 
-    private ApiResponse(boolean success, String message) {
+    public ApiResponse(boolean success, String message) {
         this.success = success;
         this.message = message;
     }
 
-    private ApiResponse(boolean success, String message, T data) {
+    public ApiResponse(boolean success, String message, T data) {
         this.success = success;
         this.message = message;
         this.data = data;
