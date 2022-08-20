@@ -21,7 +21,7 @@ public class CommandUtils {
 
     public static Pageable simplePageable(int page, int size) throws PageSizeException {
         validatePageAndSize(page, size);
-        return PageRequest.of(page, size, Sort.by("createdDate").descending());
+        return PageRequest.of(page, size, Sort.by("createdDate"));
     }
 
 }
