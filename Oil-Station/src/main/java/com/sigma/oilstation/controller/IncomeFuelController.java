@@ -19,7 +19,7 @@ public interface IncomeFuelController {
     @PutMapping
     HttpEntity<?> edit(@RequestBody IncomeFuelDto incomeFuelDto);
 
-    @PatchMapping("/{id}")
+    @DeleteMapping("/{id}")
     HttpEntity<?> delete(@PathVariable UUID id);
 
     @GetMapping("/{id}")
@@ -29,7 +29,7 @@ public interface IncomeFuelController {
     HttpEntity<?> get();
 
     @GetMapping("/page")
-    HttpEntity<?> getPage(@RequestParam int page, int size);
+    HttpEntity<?> getPage(@RequestParam int page, @RequestParam int size);
 
 
 }

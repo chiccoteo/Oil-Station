@@ -15,4 +15,6 @@ public class FuelPostDto {
     private Double price;
     private Long incomeMeasurementId;
     private Long outcomeMeasurementId;
+
+
 }

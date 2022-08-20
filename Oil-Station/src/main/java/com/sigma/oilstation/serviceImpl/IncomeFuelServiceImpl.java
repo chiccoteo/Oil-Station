@@ -33,6 +33,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
     private final IncomeFuelMapper incomeMapper;
     private final FuelRepository fuelRepository;
 
+
     @Override
     public ApiResponse<?> create(IncomeFuelPostDto incomeFuelDto) {
         Optional<User> optionalUser = userRepository.findById(incomeFuelDto.getEmployeeId());
@@ -46,6 +47,9 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
         IncomeFuel incomeFuel = incomeMapper.toEntity(incomeFuelDto);
         incomeFuel.setEmployee(optionalUser.get());
         incomeFuelRepository.save(incomeFuel);
+        Fuel fuel = optionalFuel.get();
+        fuel.setPrice(incomeFuel.getSalePrice());
+        fuelRepository.save(fuel);
         if (incomeFuel.isDebt()) {
             Debt debt = new Debt();
             //TODO Umidjon shu yerga qarzni yozish kere
@@ -67,6 +71,9 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
             return new ApiResponse<>(false, "Kirim mavjud emas!");
 
         IncomeFuel incomeFuel = incomeMapper.toEntity(incomeFuelDto);
+        Fuel fuel = optionalFuel.get();
+        fuel.setPrice(incomeFuel.getSalePrice());
+        fuelRepository.save(fuel);
         incomeFuel.setFuel(optionalFuel.get());
         incomeFuel.setEmployee(optionalUser.get());
         incomeFuelRepository.save(incomeFuel);
