@@ -14,6 +14,7 @@ import com.sigma.oilstation.service.OutgoingService;
 import com.sigma.oilstation.utils.CommandUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -106,6 +107,6 @@ public class OutgoingServiceImpl implements OutgoingService {
 
     @Override
     public ApiResponse<?> getListOfOutgoings() {
-        return ApiResponse.successResponse("List of all Outgoings", outgoingMapper.toGetDTOList(outgoingRepo.findAll()));
+        return ApiResponse.successResponse("List of all Outgoings", outgoingMapper.toGetDTOList(outgoingRepo.findAll(Sort.by("createdDate"))));
     }
 }

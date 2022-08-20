@@ -9,6 +9,7 @@ import com.sigma.oilstation.service.SupplierService;
 import com.sigma.oilstation.utils.CommandUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -80,6 +81,6 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public ApiResponse<?> getListOfSuppliers() {
-        return ApiResponse.successResponse("List of all suppliers", supplierMapper.toGetDTOList(supplierRepo.findAll()));
+        return ApiResponse.successResponse("List of all suppliers", supplierMapper.toGetDTOList(supplierRepo.findAll(Sort.by("createdDate"))));
     }
 }

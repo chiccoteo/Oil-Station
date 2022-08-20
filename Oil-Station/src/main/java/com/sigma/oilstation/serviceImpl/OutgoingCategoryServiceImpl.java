@@ -9,6 +9,7 @@ import com.sigma.oilstation.service.OutgoingCategoryService;
 import com.sigma.oilstation.utils.CommandUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -50,6 +51,6 @@ public class OutgoingCategoryServiceImpl implements OutgoingCategoryService {
 
     @Override
     public ApiResponse<?> getListOfOutgoingCategories() {
-        return ApiResponse.successResponse("List of all OutgoingCategories", outgoingCategoryMapper.toGetDTOList(outgoingCategoryRepo.findAll()));
+        return ApiResponse.successResponse("List of all OutgoingCategories", outgoingCategoryMapper.toGetDTOList(outgoingCategoryRepo.findAll(Sort.by("createdDate"))));
     }
 }
