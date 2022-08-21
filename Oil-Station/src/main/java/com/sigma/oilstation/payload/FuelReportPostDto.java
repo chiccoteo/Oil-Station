@@ -12,7 +12,6 @@ import java.util.UUID;
 @NoArgsConstructor
 public class FuelReportPostDto {
     private UUID employeeId;
-    private UUID deviceId;
     private double amountAtStartOfShift;
     private UUID fuelId;
     private double salePrice;

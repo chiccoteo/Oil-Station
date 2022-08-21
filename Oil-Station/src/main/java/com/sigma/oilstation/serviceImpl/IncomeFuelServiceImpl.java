@@ -44,12 +44,17 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
         if (optionalFuel.isEmpty()) {
             return new ApiResponse<>(false, "Yoqilg'i mavjud emas!");
         }
+
         IncomeFuel incomeFuel = incomeMapper.toEntity(incomeFuelDto);
-        incomeFuel.setEmployee(optionalUser.get());
-        incomeFuelRepository.save(incomeFuel);
+
         Fuel fuel = optionalFuel.get();
         fuel.setPrice(incomeFuel.getSalePrice());
-        fuelRepository.save(fuel);
+        fuelRepository.saveAndFlush(fuel);
+
+        incomeFuel.setEmployee(optionalUser.get());
+        incomeFuel.setFuel(fuel);
+        incomeFuelRepository.save(incomeFuel);
+
         if (incomeFuel.isDebt()) {
             Debt debt = new Debt();
             //TODO Umidjon shu yerga qarzni yozish kere
@@ -71,12 +76,15 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
             return new ApiResponse<>(false, "Kirim mavjud emas!");
 
         IncomeFuel incomeFuel = incomeMapper.toEntity(incomeFuelDto);
+
         Fuel fuel = optionalFuel.get();
         fuel.setPrice(incomeFuel.getSalePrice());
         fuelRepository.save(fuel);
+
         incomeFuel.setFuel(optionalFuel.get());
         incomeFuel.setEmployee(optionalUser.get());
         incomeFuelRepository.save(incomeFuel);
+
         return new ApiResponse<>(true, "Kirim tahrirlandi!");
     }
 
@@ -94,21 +102,21 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
         List<IncomeFuelDto> incomeFuelDtoList = incomeFuelRepository.findAll()
                 .stream().map(incomeMapper::toDto)
                 .collect(Collectors.toList());
-        return new ApiResponse<>(true, "Hamma kirimlar!",incomeFuelDtoList);
+        return new ApiResponse<>(true, "Hamma kirimlar!", incomeFuelDtoList);
     }
 
     @Override
     public ApiResponse<?> get(int page, int size) {
         try {
             Page<IncomeFuel> incomeFuels = incomeFuelRepository.findAll(CommandUtils.simplePageable(page, size));
-            HashMap<String,Object> response = new HashMap<>();
-            response.put("incomeFuels",  incomeFuels.getContent().stream().map(incomeMapper::toDto).collect(Collectors.toList()));
+            HashMap<String, Object> response = new HashMap<>();
+            response.put("incomeFuels", incomeFuels.getContent().stream().map(incomeMapper::toDto).collect(Collectors.toList()));
             response.put("currentPage", incomeFuels.getNumber());
             response.put("totalItems", incomeFuels.getTotalElements());
             response.put("totalPages", incomeFuels.getTotalPages());
-            return new ApiResponse<>(true,"Kirimlar page!",response);
+            return new ApiResponse<>(true, "Kirimlar page!", response);
         } catch (PageSizeException e) {
-            return new ApiResponse<>(false,e.getMessage());
+            return new ApiResponse<>(false, e.getMessage());
         }
     }
 
@@ -116,10 +124,9 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
     public ApiResponse<?> delete(UUID id) {
         try {
             incomeFuelRepository.deleteById(id);
-            return new ApiResponse<>(true,"Kirim o'chirildi!");
-        }
-        catch (Exception e){
-            return new ApiResponse<>(false,"Kirim mavjud emas!");
+            return new ApiResponse<>(true, "Kirim o'chirildi!");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, "Kirim mavjud emas!");
         }
     }
 }

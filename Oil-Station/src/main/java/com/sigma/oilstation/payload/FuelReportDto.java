@@ -17,7 +17,6 @@ public class FuelReportDto {
     private double amountAtStartOfShift;
     private double amountAtEndOfShift;
     private UUID fuelId;
-    private UUID deviceId;
     private double salePrice;
     private Timestamp reportTime;
     private boolean activeShift;

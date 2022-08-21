@@ -19,8 +19,6 @@ public class FuelReport extends AbsUUID {
     @ManyToOne(fetch = FetchType.LAZY)
     private User employee;
 
-    @ManyToOne
-    private Device device;
 
     @Column(nullable = false)
     private double amountAtStartOfShift;

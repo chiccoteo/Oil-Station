@@ -1,6 +1,5 @@
 package com.sigma.oilstation.serviceImpl;
 
-import com.sigma.oilstation.entity.Device;
 import com.sigma.oilstation.entity.Fuel;
 import com.sigma.oilstation.entity.FuelReport;
 import com.sigma.oilstation.entity.User;
@@ -9,7 +8,6 @@ import com.sigma.oilstation.mapper.FuelReportMapper;
 import com.sigma.oilstation.payload.ApiResponse;
 import com.sigma.oilstation.payload.FuelReportDto;
 import com.sigma.oilstation.payload.FuelReportPostDto;
-import com.sigma.oilstation.repository.DeviceRepository;
 import com.sigma.oilstation.repository.FuelReportRepository;
 import com.sigma.oilstation.repository.FuelRepository;
 import com.sigma.oilstation.repository.UserRepository;
@@ -31,7 +29,6 @@ public class FuelReportServiceImpl implements FuelReportService {
     private final FuelReportRepository fuelReportRepository;
     private final FuelRepository fuelRepository;
     private final UserRepository userRepository;
-    private final DeviceRepository deviceRepository;
     private final FuelReportMapper mapper;
 
 
@@ -39,24 +36,19 @@ public class FuelReportServiceImpl implements FuelReportService {
     public ApiResponse<?> create(FuelReportPostDto fuelPostDto) {
         Optional<User> optionalUser = userRepository.findById(fuelPostDto.getEmployeeId());
         Optional<Fuel> optionalFuel = fuelRepository.findById(fuelPostDto.getFuelId());
-        Optional<Device> optionalDevice = deviceRepository.findById(fuelPostDto.getDeviceId());
+
         if (optionalUser.isEmpty()) {
             return new ApiResponse<>(false, "Ishchi mavjud emas!");
         }
         if (optionalFuel.isEmpty()) {
             return new ApiResponse<>(false, "Yoqilg'i mavjud emas!");
         }
-        if (optionalDevice.isEmpty()) {
-            return new ApiResponse<>(false, "Device mavjud emas!");
-        }
-
         FuelReport fuelReport = mapper.toEntity(fuelPostDto);
         fuelReport.setFuel(optionalFuel.get());
         fuelReport.setEmployee(optionalUser.get());
-        fuelReport.setDevice(optionalDevice.get());
         fuelReportRepository.save(fuelReport);
 
-        FuelReport oldFuelReport = fuelReportRepository.findByActiveShiftTrueAndDeviceId(optionalDevice.get().getId());
+        FuelReport oldFuelReport = fuelReportRepository.findByActiveShiftTrueAndEmployeeBranchId(optionalUser.get().getBranch().getId());
         oldFuelReport.setActiveShift(false);
         oldFuelReport.setAmountAtEndOfShift(fuelReport.getAmountAtEndOfShift());
         return new ApiResponse<>(true, "Hisobot saqlandi!");
@@ -67,7 +59,7 @@ public class FuelReportServiceImpl implements FuelReportService {
         Optional<FuelReport> optionalFuelReport = fuelReportRepository.findById(fuelReportDto.getId());
         Optional<User> optionalEmployee = userRepository.findById(fuelReportDto.getEmployeeId());
         Optional<Fuel> optionalFuel = fuelRepository.findById(fuelReportDto.getFuelId());
-        Optional<Device> optionalDevice = deviceRepository.findById(fuelReportDto.getDeviceId());
+
 
         if (optionalFuelReport.isEmpty())
             return new ApiResponse<>(false, "Hisobot mavjud emas!");
@@ -75,13 +67,11 @@ public class FuelReportServiceImpl implements FuelReportService {
             return new ApiResponse<>(false, "Ishchi mavjud emas!");
         if (optionalFuel.isEmpty())
             return new ApiResponse<>(false, "Yoqilg'i mavjud emas!");
-        if (optionalDevice.isEmpty())
-            return new ApiResponse<>(false, "Device mavjud emas!");
+
 
         FuelReport fuelReport = mapper.toEntity(fuelReportDto);
         fuelReport.setFuel(optionalFuel.get());
         fuelReport.setEmployee(optionalEmployee.get());
-        fuelReport.setDevice(optionalDevice.get());
         fuelReportRepository.save(fuelReport);
         return new ApiResponse<>(true, "Hisobot saqlandi!");
     }

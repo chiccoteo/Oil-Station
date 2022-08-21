@@ -30,6 +30,15 @@ public class Fuel extends AbsEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Measurement outcomeMeasurement;
 
+    public Fuel(String name, String type, double price, Measurement incomeMeasurement, Measurement outcomeMeasurement, boolean deleted) {
+        super(name);
+        this.type = type;
+        this.price = price;
+        this.incomeMeasurement = incomeMeasurement;
+        this.outcomeMeasurement = outcomeMeasurement;
+        this.deleted = deleted;
+    }
+
     @Column(nullable = false)
     private boolean deleted;
 }
