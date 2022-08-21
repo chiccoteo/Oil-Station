@@ -2,6 +2,7 @@ package com.sigma.oilstation.mapper;
 
 import com.sigma.oilstation.entity.Outgoing;
 import com.sigma.oilstation.payload.OutgoingGetDTO;
+import com.sigma.oilstation.payload.OutgoingGetDTOForReport;
 import com.sigma.oilstation.payload.OutgoingGetDTOWithId;
 import com.sigma.oilstation.payload.OutgoingPostDTO;
 import org.mapstruct.Mapper;
@@ -20,6 +21,12 @@ public interface OutgoingMapper {
     @Mapping(target = "category", source = "category.name")
     @Mapping(target = "lastModifiedBy", source = "lastModifiedBy.fio")
     OutgoingGetDTO toGetDTO(Outgoing outgoing);
+
+    @Mapping(target = "spenderFIO", source = "spender.fio")
+    @Mapping(target = "category", source = "category.name")
+    OutgoingGetDTOForReport toGetDTOForReport(Outgoing outgoing);
+
+    List<OutgoingGetDTOForReport> toGetDTOListForReport(List<Outgoing> outgoingList);
 
     @Mapping(target = "spenderFIO", source = "spender.fio")
     @Mapping(target = "category", source = "category.name")
