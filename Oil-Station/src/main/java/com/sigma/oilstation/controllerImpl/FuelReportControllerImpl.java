@@ -51,4 +51,5 @@ public class FuelReportControllerImpl implements FuelReportController {
     public HttpEntity<?> getByBranch(UUID branchId) {
         return null;
     }
+
 }
