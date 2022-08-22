@@ -6,6 +6,8 @@ import com.sigma.oilstation.entity.User;
 import com.sigma.oilstation.exceptions.PageSizeException;
 import com.sigma.oilstation.mapper.OutgoingMapper;
 import com.sigma.oilstation.payload.ApiResponse;
+import com.sigma.oilstation.payload.OutgoingDTOForReportWithTotalSumma;
+import com.sigma.oilstation.payload.OutgoingGetDTOForReport;
 import com.sigma.oilstation.payload.OutgoingPostDTO;
 import com.sigma.oilstation.repository.OutgoingCategoryRepository;
 import com.sigma.oilstation.repository.OutgoingRepository;
@@ -17,10 +19,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -109,4 +110,103 @@ public class OutgoingServiceImpl implements OutgoingService {
     public ApiResponse<?> getListOfOutgoings() {
         return ApiResponse.successResponse("List of all Outgoings", outgoingMapper.toGetDTOList(outgoingRepo.findAll(Sort.by("createdDate"))));
     }
+
+    @Override
+    public ApiResponse<?> getInterimOutgoings(Timestamp startTimestamp, Timestamp endTimestamp, Integer page, Integer size) {
+        Page<Outgoing> outgoingPage;
+        try {
+            outgoingPage = outgoingRepo.findAllByOutgoingTimeIsBetween(startTimestamp, endTimestamp, CommandUtils.simplePageable(page, size));
+        } catch (PageSizeException e) {
+            return ApiResponse.errorResponse(e.getMessage());
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("outgoings", getTotalSumma(outgoingPage));
+        response.put("currentPage", outgoingPage.getNumber());
+        response.put("totalItems", outgoingPage.getTotalElements());
+        response.put("totalPages", outgoingPage.getTotalPages());
+        return ApiResponse.successResponse("All InterimOutgoings with page", response);
+
+    }
+
+    @Override
+    public ApiResponse<?> getDailyOutgoings(Integer page, Integer size) {
+        Page<Outgoing> outgoingPage;
+        Timestamp today = Timestamp.valueOf(LocalDateTime.now());
+        Timestamp yesterday = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
+        try {
+            outgoingPage = outgoingRepo.findAllByOutgoingTimeIsBetween(yesterday, today, CommandUtils.simplePageable(page, size));
+        } catch (PageSizeException e) {
+            return ApiResponse.errorResponse(e.getMessage());
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("outgoings", getTotalSumma(outgoingPage));
+        response.put("currentPage", outgoingPage.getNumber());
+        response.put("totalItems", outgoingPage.getTotalElements());
+        response.put("totalPages", outgoingPage.getTotalPages());
+        return ApiResponse.successResponse("All daily outgoings with page", response);
+    }
+
+    @Override
+    public ApiResponse<?> getWeeklyOutgoings(Integer page, Integer size) {
+        Page<Outgoing> outgoingPage;
+        Timestamp today = Timestamp.valueOf(LocalDateTime.now());
+        Timestamp aWeekAgo = Timestamp.valueOf(LocalDateTime.now().minusWeeks(1));
+        try {
+            outgoingPage = outgoingRepo.findAllByOutgoingTimeIsBetween(aWeekAgo, today, CommandUtils.simplePageable(page, size));
+        } catch (PageSizeException e) {
+            return ApiResponse.errorResponse(e.getMessage());
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("outgoings", getTotalSumma(outgoingPage));
+        response.put("currentPage", outgoingPage.getNumber());
+        response.put("totalItems", outgoingPage.getTotalElements());
+        response.put("totalPages", outgoingPage.getTotalPages());
+        return ApiResponse.successResponse("All weekly outgoings with page", response);
+    }
+
+    @Override
+    public ApiResponse<?> getAnnualOutgoings(Integer page, Integer size) {
+        Page<Outgoing> outgoingPage;
+        Timestamp today = Timestamp.valueOf(LocalDateTime.now());
+        Timestamp aYearAgo = Timestamp.valueOf(LocalDateTime.now().minusYears(1));
+        try {
+            outgoingPage = outgoingRepo.findAllByOutgoingTimeIsBetween(aYearAgo, today, CommandUtils.simplePageable(page, size));
+        } catch (PageSizeException e) {
+            return ApiResponse.errorResponse(e.getMessage());
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("outgoings", getTotalSumma(outgoingPage));
+        response.put("currentPage", outgoingPage.getNumber());
+        response.put("totalItems", outgoingPage.getTotalElements());
+        response.put("totalPages", outgoingPage.getTotalPages());
+        return ApiResponse.successResponse("All annual outgoings with page", response);
+    }
+
+    @Override
+    public ApiResponse<?> getMonthlyOutgoings(Integer page, Integer size) {
+        Page<Outgoing> outgoingPage;
+        Timestamp today = Timestamp.valueOf(LocalDateTime.now());
+        Timestamp aMonthAgo = Timestamp.valueOf(LocalDateTime.now().minusMonths(1));
+        try {
+            outgoingPage = outgoingRepo.findAllByOutgoingTimeIsBetween(aMonthAgo, today, CommandUtils.simplePageable(page, size));
+        } catch (PageSizeException e) {
+            return ApiResponse.errorResponse(e.getMessage());
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("outgoings", getTotalSumma(outgoingPage));
+        response.put("currentPage", outgoingPage.getNumber());
+        response.put("totalItems", outgoingPage.getTotalElements());
+        response.put("totalPages", outgoingPage.getTotalPages());
+        return ApiResponse.successResponse("All monthly outgoings with page", response);
+    }
+
+    private OutgoingDTOForReportWithTotalSumma getTotalSumma(Page<Outgoing> outgoingPage) {
+        List<OutgoingGetDTOForReport> outgoingGetDTOForReports = outgoingMapper.toGetDTOListForReport(outgoingPage.getContent());
+        double totalSumma = 0;
+        for (OutgoingGetDTOForReport outgoingGetDTOForReport : outgoingGetDTOForReports) {
+            totalSumma += outgoingGetDTOForReport.getAmount();
+        }
+        return new OutgoingDTOForReportWithTotalSumma(totalSumma, outgoingGetDTOForReports);
+    }
+
 }

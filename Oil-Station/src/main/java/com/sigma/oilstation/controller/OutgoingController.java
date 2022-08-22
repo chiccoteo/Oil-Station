@@ -2,9 +2,11 @@ package com.sigma.oilstation.controller;
 
 import com.sigma.oilstation.payload.OutgoingPostDTO;
 import com.sigma.oilstation.utils.AppConstant;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.UUID;
 
 import static com.sigma.oilstation.utils.AppConstant.DEFAULT_PAGE;
@@ -24,6 +26,16 @@ public interface OutgoingController {
     String UPDATE_OUTGOING_BY_ID = "/update";
 
     String DELETE_OUTGOING_BY_ID = "/delete";
+
+    String GET_DAILY_OUTGOINGS = "/daily";
+
+    String GET_WEEKLY_OUTGOINGS = "/weekly";
+
+    String GET_MONTHLY_OUTGOINGS = "/monthly";
+
+    String GET_ANNUAL_OUTGOINGS = "/annual";
+
+    String GET_BETWEEN_OUTGOINGS = "/between";
 
 
     @PostMapping
@@ -45,5 +57,28 @@ public interface OutgoingController {
 
     @DeleteMapping(DELETE_OUTGOING_BY_ID)
     HttpEntity<?> deleteOutgoingById(@RequestParam(name = "outgoingId") UUID id);
+
+    @GetMapping(GET_DAILY_OUTGOINGS)
+    HttpEntity<?> getDailyOutgoings(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
+                                    @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
+
+    @GetMapping(GET_WEEKLY_OUTGOINGS)
+    HttpEntity<?> getWeeklyOutgoings(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
+                                     @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
+
+    @GetMapping(GET_MONTHLY_OUTGOINGS)
+    HttpEntity<?> getMonthlyOutgoings(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
+                                      @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
+
+    @GetMapping(GET_ANNUAL_OUTGOINGS)
+    HttpEntity<?> getAnnualOutgoings(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
+                                     @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
+
+    @GetMapping(GET_BETWEEN_OUTGOINGS)
+    HttpEntity<?> getInterimOutgoings(
+            @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
+            @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size,
+            @RequestParam(name = "startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @RequestParam(name = "endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate);
 
 }

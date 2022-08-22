@@ -9,6 +9,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.UUID;
 
 @RestController
@@ -51,5 +53,37 @@ public class OutgoingControllerImpl implements OutgoingController {
     public HttpEntity<?> deleteOutgoingById(UUID id) {
         ApiResponse<?> apiResponse = outgoingService.deleteOutgoingById(id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 404).body(apiResponse);
+    }
+
+    @Override
+    public HttpEntity<?> getDailyOutgoings(Integer page, Integer size) {
+        ApiResponse<?> apiResponse = outgoingService.getDailyOutgoings(page, size);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
+    @Override
+    public HttpEntity<?> getWeeklyOutgoings(Integer page, Integer size) {
+        ApiResponse<?> apiResponse = outgoingService.getWeeklyOutgoings(page, size);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
+    @Override
+    public HttpEntity<?> getMonthlyOutgoings(Integer page, Integer size) {
+        ApiResponse<?> apiResponse = outgoingService.getMonthlyOutgoings(page, size);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
+    @Override
+    public HttpEntity<?> getAnnualOutgoings(Integer page, Integer size) {
+        ApiResponse<?> apiResponse = outgoingService.getAnnualOutgoings(page, size);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
+    }
+
+    @Override
+    public HttpEntity<?> getInterimOutgoings(Integer page, Integer size, Date startDate, Date endDate) {
+        Timestamp startTimestamp = new Timestamp(startDate.getTime());
+        Timestamp endTimestamp = new Timestamp(endDate.getTime());
+        ApiResponse<?> apiResponse = outgoingService.getInterimOutgoings(startTimestamp, endTimestamp, page, size);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 409).body(apiResponse);
     }
 }
