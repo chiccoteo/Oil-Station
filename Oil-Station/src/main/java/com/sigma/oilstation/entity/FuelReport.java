@@ -19,6 +19,7 @@ public class FuelReport extends AbsUUID {
     @ManyToOne(fetch = FetchType.LAZY)
     private User employee;
 
+
     @Column(nullable = false)
     private double amountAtStartOfShift;
 
@@ -32,6 +33,7 @@ public class FuelReport extends AbsUUID {
     private Timestamp reportTime;
 
     private boolean activeShift;
+
 
     @PrePersist
     @PreUpdate

@@ -1,10 +1,8 @@
 package com.sigma.oilstation.component;
 
-import com.sigma.oilstation.entity.Role;
-import com.sigma.oilstation.entity.User;
+import com.sigma.oilstation.entity.*;
 import com.sigma.oilstation.enums.RoleType;
-import com.sigma.oilstation.repository.RoleRepository;
-import com.sigma.oilstation.repository.UserRepository;
+import com.sigma.oilstation.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -23,6 +21,10 @@ public class DataLoader implements CommandLineRunner {
     private final UserRepository userRepo;
 
     private final PasswordEncoder passwordEncoder;
+    private final AddressRepository addressRepository;
+    private final BranchRepository branchRepository;
+    private final FuelRepository fuelRepository;
+    private final MeasurementRepository measurementRepository;
 
     @Value("${spring.sql.init.mode}")
     private String initialMode;
@@ -42,20 +44,30 @@ public class DataLoader implements CommandLineRunner {
             if (roleRepo.findByType(employee.getType()) == null)
                 roles.add(employee);
             roleRepo.saveAll(roles);
+            Address address = new Address("Andijon","Oltinko'l","Ustozlar","40");
+            address = addressRepository.save(address);
 
-
+            Branch branch = new Branch(address);
+            branch =branchRepository.save(branch);
             User adminUser = new User(
                     "AdminUsername",
                     "Admin FIO",
                     passwordEncoder.encode("AdminPassword"),
                     "+998979516170",
-                    null,
+                    branch,
                     roleRepo.findByType(RoleType.ROLE_ADMIN),
                     false,
                     false
             );
             if (userRepo.findByUsername(adminUser.getUsername()).isEmpty())
                 userRepo.save(adminUser);
+            Measurement measurement1 = new Measurement("50");
+            Measurement measurement2 = new Measurement("60");
+            measurement1 = measurementRepository.save(measurement1);
+            measurement2 = measurementRepository.save(measurement2);
+            Fuel fuel = new Fuel("A-80",1400,measurement1,measurement2,false);
+            fuel =fuelRepository.save(fuel);
+
         }
     }
 }

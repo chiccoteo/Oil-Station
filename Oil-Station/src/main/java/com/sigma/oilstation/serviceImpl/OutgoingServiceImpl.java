@@ -111,6 +111,7 @@ public class OutgoingServiceImpl implements OutgoingService {
         return ApiResponse.successResponse("List of all Outgoings", outgoingMapper.toGetDTOList(outgoingRepo.findAll(Sort.by("createdDate"))));
     }
 
+
     @Override
     public ApiResponse<?> getInterimOutgoings(Timestamp startTimestamp, Timestamp endTimestamp, Integer page, Integer size) {
         Page<Outgoing> outgoingPage;
@@ -125,7 +126,6 @@ public class OutgoingServiceImpl implements OutgoingService {
         response.put("totalItems", outgoingPage.getTotalElements());
         response.put("totalPages", outgoingPage.getTotalPages());
         return ApiResponse.successResponse("All InterimOutgoings with page", response);
-
     }
 
     @Override
