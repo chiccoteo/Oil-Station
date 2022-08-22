@@ -149,7 +149,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
             response.put("currentPage", fuelReportPage.getNumber());
             response.put("totalItems", fuelReportPage.getTotalElements());
             response.put("totalPages", fuelReportPage.getTotalPages());
-            return new ApiResponse<>(true, "Haftalik hisobotlar!", response);
+            return new ApiResponse<>(true, "Haftalik kirimlar!", response);
         } catch (PageSizeException e) {
             return new ApiResponse<>(false, e.getMessage());
         }
@@ -166,7 +166,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
             response.put("currentPage", fuelReportPage.getNumber());
             response.put("totalItems", fuelReportPage.getTotalElements());
             response.put("totalPages", fuelReportPage.getTotalPages());
-            return new ApiResponse<>(true, "Oylik hisobotlar!", response);
+            return new ApiResponse<>(true, "Oylik kirimlar!", response);
         } catch (PageSizeException e) {
             return new ApiResponse<>(false, e.getMessage());
         }
@@ -183,7 +183,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
             response.put("currentPage", fuelReportPage.getNumber());
             response.put("totalItems", fuelReportPage.getTotalElements());
             response.put("totalPages", fuelReportPage.getTotalPages());
-            return new ApiResponse<>(true, "Yillik hisobotlar!", response);
+            return new ApiResponse<>(true, "Yillik kirimlar!", response);
         } catch (PageSizeException e) {
             return new ApiResponse<>(false, e.getMessage());
         }
@@ -199,7 +199,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
             response.put("currentPage", fuelReportPage.getNumber());
             response.put("totalItems", fuelReportPage.getTotalElements());
             response.put("totalPages", fuelReportPage.getTotalPages());
-            return new ApiResponse<>(true, "Vaqt oraligidagi hisobotlar!", response);
+            return new ApiResponse<>(true, "Vaqt oraligidagi kirimlar!", response);
         } catch (PageSizeException e) {
             return new ApiResponse<>(false, e.getMessage());
         }
