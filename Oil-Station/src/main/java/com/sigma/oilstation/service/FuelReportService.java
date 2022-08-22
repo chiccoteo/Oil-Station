@@ -4,6 +4,7 @@ import com.sigma.oilstation.payload.ApiResponse;
 import com.sigma.oilstation.payload.FuelReportDto;
 import com.sigma.oilstation.payload.FuelReportPostDto;
 
+import java.util.Date;
 import java.util.UUID;
 
 public interface FuelReportService {
@@ -16,4 +17,16 @@ public interface FuelReportService {
     ApiResponse<?> get();
 
     ApiResponse<?> get(int page, int size);
+
+    ApiResponse<?> getByBranchId(UUID branchId);
+
+    ApiResponse<?> getDailyFuelReport(Integer page, Integer size);
+
+    ApiResponse<?> getWeeklyFuelReport(Integer page, Integer size);
+
+    ApiResponse<?> getMonthlyFuelReport(Integer page, Integer size);
+
+    ApiResponse<?> getAnnuallyFuelReport(Integer page, Integer size);
+
+    ApiResponse<?> getInterimFuelReport(Integer page, Integer size, Date startDate,Date endDate);
 }

@@ -10,6 +10,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.UUID;
 
 @RestController
@@ -49,7 +50,38 @@ public class FuelReportControllerImpl implements FuelReportController {
 
     @Override
     public HttpEntity<?> getByBranch(UUID branchId) {
-        return null;
+        ApiResponse<?> response = fuelReportService.getByBranchId(branchId);
+        return ResponseEntity.status(response.isSuccess()?200:409).body(response);
+    }
+
+    @Override
+    public HttpEntity<?> getDailyFuelReport(int page, int size) {
+        ApiResponse<?> response = fuelReportService.getDailyFuelReport(page, size);
+        return ResponseEntity.status(response.isSuccess()?200:409).body(response);
+    }
+
+    @Override
+    public HttpEntity<?> getWeeklyFuelReport(int page, int size) {
+        ApiResponse<?> response = fuelReportService.getWeeklyFuelReport(page, size);
+        return ResponseEntity.status(response.isSuccess()?200:409).body(response);
+    }
+
+    @Override
+    public HttpEntity<?> getMonthlyFuelReport(int page, int size) {
+        ApiResponse<?> response = fuelReportService.getMonthlyFuelReport(page, size);
+        return ResponseEntity.status(response.isSuccess()?200:409).body(response);
+    }
+
+    @Override
+    public HttpEntity<?> getAnnualFuelReport(int page, int size) {
+        ApiResponse<?> response = fuelReportService.getAnnuallyFuelReport(page, size);
+        return ResponseEntity.status(response.isSuccess()?200:409).body(response);
+    }
+
+    @Override
+    public HttpEntity<?> getInterimFuelReport(int page, int size, Date startDate, Date endDate) {
+        ApiResponse<?> response = fuelReportService.getInterimFuelReport(page, size,startDate,endDate);
+        return ResponseEntity.status(response.isSuccess()?200:409).body(response);
     }
 
 }
