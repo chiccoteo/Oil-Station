@@ -1,1 +1,1 @@
-web: java -jar build/server/webapp-runner-.jar build/libs/.war
+worker: sh target/bin/Oil-Station
