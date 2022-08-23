@@ -39,5 +39,4 @@ public abstract class AbsAuditor implements Serializable {
     @LastModifiedDate
     @Temporal(TIMESTAMP)
     protected Date lastModifiedDate;
-
 }
