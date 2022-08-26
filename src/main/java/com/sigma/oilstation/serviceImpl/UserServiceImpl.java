@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -27,6 +28,8 @@ public class UserServiceImpl implements UserService {
     private final UserMapper mapper;
     private final RoleRepository roleRepository;
     private final BranchRepository branchRepository;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public ApiResponse<?> getAllUserPageable(Integer page, Integer size) {
@@ -66,8 +69,8 @@ public class UserServiceImpl implements UserService {
     public ApiResponse<?> createUser(UserDTO userDTO) {
         if (!(repository.existsByUsername(userDTO.getUsername()))) {
             User user = new User();
-            Branch branch = new Branch();
-            Role role = new Role();
+            Branch branch;
+            Role role;
 
             Optional<Role> optionalRole = roleRepository.findById(userDTO.getRoleId());
             Optional<Branch> optionalBranch = branchRepository.findById(userDTO.getBranchId());
@@ -82,7 +85,7 @@ public class UserServiceImpl implements UserService {
             user.setFio(userDTO.getFio());
             user.setUsername(userDTO.getUsername());
             user.setPhoneNumber(userDTO.getPhoneNumber());
-            user.setPassword(userDTO.getPassword());
+            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
             user.setBranch(branch);
             user.setRole(role);
             user.setBlock(false);
@@ -107,8 +110,8 @@ public class UserServiceImpl implements UserService {
         Optional<Role> optionalRole = roleRepository.findById(userDTO.getRoleId());
         Optional<Branch> optionalBranch = branchRepository.findById(userDTO.getBranchId());
 
-        Branch branch = new Branch();
-        Role role = new Role();
+        Branch branch;
+        Role role;
 
         if (optionalBranch.isPresent() && optionalRole.isPresent()) {
             branch = optionalBranch.get();
