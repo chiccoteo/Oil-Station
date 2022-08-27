@@ -52,4 +52,10 @@ public class UserControllerImpl implements UserController {
         ApiResponse<?> apiResponse = service.deleteUser(id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 404).body(apiResponse);
     }
+
+    @Override
+    public HttpEntity<?> getUser() {
+        ApiResponse<?> apiResponse = service.getUser();
+        return ResponseEntity.ok(apiResponse);
+    }
 }

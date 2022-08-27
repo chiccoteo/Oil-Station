@@ -45,4 +45,8 @@ public interface UserController {
 
     @DeleteMapping(DELETE_USER_BY_ID)
     HttpEntity<?> delete(@PathVariable UUID id);
+
+    @GetMapping
+    HttpEntity<?> getUser();
+
 }

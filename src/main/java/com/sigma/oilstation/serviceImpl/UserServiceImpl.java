@@ -16,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -149,5 +151,12 @@ public class UserServiceImpl implements UserService {
         User user = optionalUser.get();
         user.setDeleted(true);
         return ApiResponse.successResponse("SUCCESSFULLY_DELETED");
+    }
+
+    @Override
+    public ApiResponse<?> getUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User principal = (User) authentication.getPrincipal();
+        return ApiResponse.successResponse(mapper.toGetDTOs(principal));
     }
 }

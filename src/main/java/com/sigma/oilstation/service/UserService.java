@@ -17,4 +17,7 @@ public interface UserService {
     ApiResponse<?> updateUser(UUID id, UserDTO userDTO);
 
     ApiResponse<?> deleteUser(UUID id);
+
+    ApiResponse<?> getUser();
+
 }
