@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService {
         user.setUsername(userDTO.getUsername());
         user.setFio(userDTO.getFio());
         user.setPassword(userDTO.getPassword());
-        user.setPhoneNumber(userDTO.getPhoneNumber());
+        user.setPhoneNumber(passwordEncoder.encode(userDTO.getPhoneNumber()));
         user.setBranch(branch);
         user.setRole(role);
         user.setBlock(false);
