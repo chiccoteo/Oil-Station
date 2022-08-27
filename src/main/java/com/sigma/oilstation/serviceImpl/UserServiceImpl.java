@@ -156,6 +156,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public ApiResponse<?> getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal().equals("anonymousUser"))
+            return ApiResponse.errorResponse("This is an anonymousUser!!!");
         User principal = (User) authentication.getPrincipal();
         return ApiResponse.successResponse(mapper.toGetDTOs(principal));
     }
