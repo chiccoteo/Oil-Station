@@ -12,8 +12,6 @@ public class UserGetDTO {
 
     private String fio;
 
-    private String password;
-
     private String phoneNumber;
 
     private BranchGetDTO branchGetDTO;
