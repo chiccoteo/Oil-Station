@@ -29,11 +29,13 @@ public interface IncomeFuelController {
     String GET_ANNUAL_INCOME_FUEL= "/annually";
 
     String GET_BETWEEN_INCOME_FUEL = "/between";
+    
+     String PUT_INCOME_FUEL = "/{id}";
 
     @PostMapping
     HttpEntity<?> create(@RequestBody IncomeFuelPostDto incomeFuelDto);
 
-    @PutMapping
+    @PutMapping(PUT_INCOME_FUEL)
     HttpEntity<?> edit(@PathVariable UUID id, @RequestBody IncomeFuelDto incomeFuelDto);
 
     @DeleteMapping("/{id}")
