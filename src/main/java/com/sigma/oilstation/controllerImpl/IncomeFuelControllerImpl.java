@@ -8,6 +8,7 @@ import com.sigma.oilstation.service.IncomeFuelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
@@ -25,8 +26,8 @@ public class IncomeFuelControllerImpl implements IncomeFuelController {
     }
 
     @Override
-    public HttpEntity<?> edit(IncomeFuelDto incomeFuelDto) {
-        ApiResponse<?> response = incomeFuelService.edit(incomeFuelDto);
+    public HttpEntity<?> edit( UUID id, IncomeFuelDto incomeFuelDto) {
+        ApiResponse<?> response = incomeFuelService.edit(id,incomeFuelDto);
         return ResponseEntity.status(response.isSuccess()?201:409).body(response);
     }
 

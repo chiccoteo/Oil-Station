@@ -58,9 +58,11 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
     }
 
     @Override
-    public ApiResponse<?> edit(IncomeFuelDto incomeFuelDto) {
+    public ApiResponse<?> edit(UUID id, IncomeFuelDto incomeFuelDto) {
+
+
         Optional<User> optionalUser = userRepository.findById(incomeFuelDto.getEmployeeId());
-        Optional<IncomeFuel> optionalIncomeFuel = incomeFuelRepository.findById(incomeFuelDto.getId());
+        Optional<IncomeFuel> optionalIncomeFuel = incomeFuelRepository.findById(id);
         Optional<Fuel> optionalFuel = fuelRepository.findById(incomeFuelDto.getFuelId());
         if (optionalUser.isEmpty())
             return new ApiResponse<>(false, "ishchi mavjud emas!");
@@ -69,7 +71,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
         if (optionalIncomeFuel.isEmpty())
             return new ApiResponse<>(false, "Kirim mavjud emas!");
 
-        IncomeFuel incomeFuel = incomeMapper.toEntity(incomeFuelDto);
+        IncomeFuel incomeFuel = optionalIncomeFuel.get();
 
         Fuel fuel = optionalFuel.get();
         fuel.setPrice(incomeFuel.getSalePrice());
