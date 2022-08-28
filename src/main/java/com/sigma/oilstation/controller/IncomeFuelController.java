@@ -34,7 +34,7 @@ public interface IncomeFuelController {
     HttpEntity<?> create(@RequestBody IncomeFuelPostDto incomeFuelDto);
 
     @PutMapping
-    HttpEntity<?> edit(@RequestBody IncomeFuelDto incomeFuelDto);
+    HttpEntity<?> edit(@PathVariable UUID id, @RequestBody IncomeFuelDto incomeFuelDto);
 
     @DeleteMapping("/{id}")
     HttpEntity<?> delete(@PathVariable UUID id);

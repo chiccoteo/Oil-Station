@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface IncomeFuelService {
     ApiResponse<?> create(IncomeFuelPostDto incomeFuelDto);
 
-    ApiResponse<?> edit(IncomeFuelDto incomeFuelDto);
+    ApiResponse<?> edit(UUID id, IncomeFuelDto incomeFuelDto);
 
     ApiResponse<?> getById(UUID id);
 
