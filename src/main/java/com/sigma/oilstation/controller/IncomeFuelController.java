@@ -29,6 +29,8 @@ public interface IncomeFuelController {
     String GET_ANNUAL_INCOME_FUEL= "/annually";
 
     String GET_BETWEEN_INCOME_FUEL = "/between";
+    
+     String PUT_INCOME_FUEL = "/{id}";
 
     String PUT_INCOME_FUEL = "/{id}";
 
