@@ -80,6 +80,10 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
 
         incomeFuel.setFuel(optionalFuel.get());
         incomeFuel.setEmployee(optionalUser.get());
+        incomeFuel.setAmount(incomeFuelDto.getAmount());
+        incomeFuel.setIncomePrice(incomeFuelDto.getIncomePrice());
+        incomeFuel.setCounter(incomeFuelDto.getCounter());
+        incomeFuel.setSalePrice(incomeFuelDto.getSalePrice());
         incomeFuelRepository.save(incomeFuel);
 
         return new ApiResponse<>(true, "Kirim tahrirlandi!");
