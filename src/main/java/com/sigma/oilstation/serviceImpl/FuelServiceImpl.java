@@ -28,7 +28,7 @@ public class FuelServiceImpl implements FuelService {
     @Override
     public ApiResponse<?> addFuel(FuelPostDto fuelPostDto) {
         Optional<Fuel> optionalFuel = fuelRepository.findByType(fuelPostDto.getType());
-        if (optionalFuel.isEmpty()){
+        if (optionalFuel.isPresent() && !optionalFuel.get().isDeleted()){
             return ApiResponse.errorResponse("Such a type already exist");
         }
         Optional<Measurement> optionalIncomeMeasurement = measurementRepository.findById(fuelPostDto.getIncomeMeasurementId());
@@ -155,6 +155,7 @@ public class FuelServiceImpl implements FuelService {
             return ApiResponse.errorResponse("Such a fuel already deleted");
         }
         fuel.setDeleted(true);
+        fuelRepository.save(fuel);
         return ApiResponse.successResponse("Successfully deleted");
     }
 }

@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class DebtGetDto {
     private UUID id;
-    private UUID borrowerId;
+    private String borrower;
     private double amount;
     private UUID lenderOrBorrowerId;
     private Long lenderId;
