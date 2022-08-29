@@ -74,6 +74,7 @@ public interface FuelReportController {
             @RequestParam(name = "startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
             @RequestParam(name = "endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,@PathVariable UUID branchId);
 
+
     @GetMapping(GET_DAILY_FUEL_REPORT)
     HttpEntity<?> getDailyFuelReport(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
                                     @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size);
