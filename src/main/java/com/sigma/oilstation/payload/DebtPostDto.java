@@ -17,5 +17,4 @@ public class DebtPostDto {
     private Long lenderId;
     private Timestamp givenTime;
     private Timestamp returnTime;
-    private boolean isGiven;
 }
