@@ -28,7 +28,9 @@ public class MeasurementServiceImpl implements MeasurementService {
     private final MeasurementMapper measurementMapper;
     @Override
     public ApiResponse<?> addSupplier(String name) {
-        Measurement measurement = measurementMapper.toEntity(name);
+        Measurement measurement = new Measurement();
+        measurement.setName(name);
+        measurementRepository.save(measurement);
         return ApiResponse.successResponse("SUCCESSFULLY_ADDED", measurementMapper.toGetDto(measurementRepository.save(measurement)));
     }
 
@@ -71,6 +73,9 @@ public class MeasurementServiceImpl implements MeasurementService {
         if (optional.isEmpty())
             return ApiResponse.errorResponse("THIS_MEASUREMENT_DOES_NOT_EXIST");
 
+        Measurement measurement = optional.get();
+        measurement.setName(name);
+        measurementRepository.save(measurement);
         return ApiResponse.successResponse("SUCCESSFULLY_EDITED");
 
     }
