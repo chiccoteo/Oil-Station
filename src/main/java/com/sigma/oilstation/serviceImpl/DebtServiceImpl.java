@@ -32,16 +32,13 @@ public class DebtServiceImpl implements DebtService {
     @Override
     public ApiResponse<?> addDebt(DebtPostDto debtPostDto) {
         if (debtPostDto.getAmount() > 0) {
-            if (debtPostDto.getBorrowerId() != null && debtPostDto.getLenderOrBorrowerId() != null) {
-                Optional<User> optionalBorrower = userRepository.findById(debtPostDto.getBorrowerId());
+            if (debtPostDto.getBorrower() != null && debtPostDto.getLenderOrBorrowerId() != null) {
                 Optional<User> optionalLender = userRepository.findById(debtPostDto.getLenderOrBorrowerId());
-                if (optionalBorrower.isEmpty()) {
-                    return ApiResponse.errorResponse("Such a borrower does not exist");
-                } else if (optionalLender.isEmpty()) {
+                 if (optionalLender.isEmpty()) {
                     return ApiResponse.errorResponse("Such a lender does not exist");
                 } else {
                     Debt debt = new Debt();
-                    debt.setBorrower(optionalBorrower.get());
+                    debt.setBorrower(debtPostDto.getBorrower());
                     debt.setAmount(debtPostDto.getAmount());
                     debt.setLenderOrBorrower(optionalLender.get());
                     debt.setLender(null);
@@ -51,7 +48,7 @@ public class DebtServiceImpl implements DebtService {
                     debtRepository.save(debt);
                     return ApiResponse.successResponse("Successfully added");
                 }
-            } else if (debtPostDto.getBorrowerId() != null && debtPostDto.getLenderId() != null) {
+            } else if (debtPostDto.getBorrower() != null && debtPostDto.getLenderId() != null) {
                 Optional<Supplier> optionalLender = supplierRepository.findById(debtPostDto.getLenderId());
                 Optional<User> optionalBorrower = userRepository.findById(debtPostDto.getLenderOrBorrowerId());
                 if (optionalBorrower.isEmpty()) {
@@ -86,7 +83,7 @@ public class DebtServiceImpl implements DebtService {
         Debt debt = optionalDebt.get();
         DebtGetDto debtGetDto = new DebtGetDto();
         debtGetDto.setId(debt.getId());
-        debtGetDto.setBorrowerId(debt.getBorrower().getId());
+        debtGetDto.setBorrower(debt.getBorrower());
         debtGetDto.setAmount(debt.getAmount());
         debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
         debtGetDto.setLenderId(debt.getLender().getId());
@@ -110,7 +107,7 @@ public class DebtServiceImpl implements DebtService {
         for (Debt debt : debtList) {
             DebtGetDto debtGetDto = new DebtGetDto();
             debtGetDto.setId(debt.getId());
-            debtGetDto.setBorrowerId(debt.getBorrower().getId());
+            debtGetDto.setBorrower(debt.getBorrower());
             debtGetDto.setAmount(debt.getAmount());
             debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
             debtGetDto.setLenderId(debt.getLender().getId());
@@ -135,7 +132,7 @@ public class DebtServiceImpl implements DebtService {
         for (Debt debt : debtList) {
             DebtGetDto debtGetDto = new DebtGetDto();
             debtGetDto.setId(debt.getId());
-            debtGetDto.setBorrowerId(debt.getBorrower().getId());
+            debtGetDto.setBorrower(debt.getBorrower());
             debtGetDto.setAmount(debt.getAmount());
             debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
             debtGetDto.setLenderId(debt.getLender().getId());
@@ -155,16 +152,13 @@ public class DebtServiceImpl implements DebtService {
         }
         Debt debt = optionalDebt.get();
         if (debtUpdateDto.getAmount() > 0) {
-            if (debtUpdateDto.getBorrowerId() != null && debtUpdateDto.getLenderOrBorrowerId() != null) {
-                Optional<User> optionalBorrower = userRepository.findById(debtUpdateDto.getBorrowerId());
+            if (debtUpdateDto.getBorrower() != null && debtUpdateDto.getLenderOrBorrowerId() != null) {
                 Optional<User> optionalLender = userRepository.findById(debtUpdateDto.getLenderOrBorrowerId());
-                if (optionalBorrower.isEmpty()) {
-                    return ApiResponse.errorResponse("Such a borrower does not exist");
-                } else if (optionalLender.isEmpty()) {
+                if (optionalLender.isEmpty()) {
                     return ApiResponse.errorResponse("Such a lender does not exist");
                 } else {
 
-                    debt.setBorrower(optionalBorrower.get());
+                    debt.setBorrower(debtUpdateDto.getBorrower());
                     debt.setAmount(debtUpdateDto.getAmount());
                     debt.setLenderOrBorrower(optionalLender.get());
                     debt.setLender(null);
@@ -174,7 +168,7 @@ public class DebtServiceImpl implements DebtService {
                     debtRepository.save(debt);
                     return ApiResponse.successResponse("Successfully updated");
                 }
-            } else if (debtUpdateDto.getBorrowerId() != null && debtUpdateDto.getLenderId() != null) {
+            } else if (debtUpdateDto.getBorrower() != null && debtUpdateDto.getLenderId() != null) {
                 Optional<Supplier> optionalLender = supplierRepository.findById(debtUpdateDto.getLenderId());
                 Optional<User> optionalBorrower = userRepository.findById(debtUpdateDto.getLenderOrBorrowerId());
                 if (optionalBorrower.isEmpty()) {

@@ -11,7 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DebtUpdateDto {
-    private UUID borrowerId;
+    private String borrower;
     private double amount;
     private UUID lenderOrBorrowerId;
     private Long lenderId;
