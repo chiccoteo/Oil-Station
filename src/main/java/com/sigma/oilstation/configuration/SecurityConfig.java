@@ -56,11 +56,10 @@ public class SecurityConfig {
                 .and()
                 .csrf()
                 .disable()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
                 .formLogin()
                 .disable()
+                .httpBasic()
+                .and()
                 .authorizeHttpRequests()
                 .antMatchers("/api/**",
                         "/swagger-resources/**",
