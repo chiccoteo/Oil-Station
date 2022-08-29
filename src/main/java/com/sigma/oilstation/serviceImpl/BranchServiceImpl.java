@@ -92,7 +92,8 @@ public class BranchServiceImpl implements BranchService {
 
         Branch branch = optionalBranch.get();
         branch.setAddress(optionalAddress.get());
-
+        branch.setName(branchDTO.getName());
+        repository.save(branch);
         return ApiResponse.successResponse("SUCCESSFULLY_UPDATE");
     }
 

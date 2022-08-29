@@ -19,8 +19,8 @@ import java.sql.Timestamp;
 @EqualsAndHashCode(callSuper = true)
 public class Debt extends AbsUUID {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User borrower;
+    @Column(nullable = false)
+    private String borrower;
 
     @Column(nullable = false)
     private double amount;
