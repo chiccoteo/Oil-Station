@@ -84,4 +84,33 @@ public class FuelReportControllerImpl implements FuelReportController {
         return ResponseEntity.status(response.isSuccess()?200:409).body(response);
     }
 
+    @Override
+    public HttpEntity<?> getDailyBranchFuelReport(int page, int size, UUID branchId) {
+        ApiResponse<?> response = fuelReportService.getDailyBranchFuelReport(page, size,branchId);
+        return ResponseEntity.status(response.isSuccess()?200:409).body(response);
+    }
+
+    @Override
+    public HttpEntity<?> getWeeklyBranchFuelReport(int page, int size, UUID branchId) {
+        ApiResponse<?> response = fuelReportService.getWeeklyBranchFuelReport(page, size,branchId);
+        return ResponseEntity.status(response.isSuccess()?200:409).body(response);
+    }
+
+    @Override
+    public HttpEntity<?> getMonthlyBranchFuelReport(int page, int size, UUID branchId) {
+        ApiResponse<?> response = fuelReportService.getMonthlyBranchFuelReport(page, size,branchId);
+        return ResponseEntity.status(response.isSuccess()?200:409).body(response);
+    }
+
+    @Override
+    public HttpEntity<?> getAnnualBranchFuelReport(int page, int size, UUID branchId) {
+        ApiResponse<?> response = fuelReportService.getAnnuallyBranchFuelReport(page, size,branchId);
+        return ResponseEntity.status(response.isSuccess()?200:409).body(response);
+    }
+
+    @Override
+    public HttpEntity<?> getInterimBranchFuelReport(int page, int size, Date startDate, Date endDate, UUID branchId) {
+        ApiResponse<?> response = fuelReportService.getInterimBranchFuelReport(page, size,branchId,startDate,endDate);
+        return ResponseEntity.status(response.isSuccess()?200:409).body(response);
+    }
 }

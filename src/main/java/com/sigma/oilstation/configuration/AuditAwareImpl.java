@@ -7,7 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
-public class AuditAwareImpl implements AuditorAware<User> {
+public class    AuditAwareImpl implements AuditorAware<User> {
 
     @Override
     public Optional<User> getCurrentAuditor() {

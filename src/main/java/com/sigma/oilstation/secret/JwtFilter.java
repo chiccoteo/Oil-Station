@@ -43,13 +43,13 @@ public class JwtFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    public User generateUser(String token) {
-        if (jwtProvider.validateToken(token)) {
-            Optional<User> optionalUser = jwtProvider.getUserFromToken(token);
-            return optionalUser.orElse(null);
+        public User generateUser(String token) {
+            if (jwtProvider.validateToken(token)) {
+                Optional<User> optionalUser = jwtProvider.getUserFromToken(token);
+                return optionalUser.orElse(null);
+            }
+            return null;
         }
-        return null;
-    }
 
     public String getTokenFromRequest(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
