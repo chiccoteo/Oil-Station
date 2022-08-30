@@ -49,7 +49,7 @@ public class FuelServiceImpl implements FuelService {
         fuel.setOutcomeMeasurement(outcomeMeasurement);
         fuel.setDeleted(false);
         fuelRepository.save(fuel);
-        return ApiResponse.errorResponse("Successfully saved");
+        return ApiResponse.successResponse("Successfully saved");
     }
 
     @Override

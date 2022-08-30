@@ -17,6 +17,7 @@ import java.util.UUID;
 public class DebtControllerImpl implements DebtController {
 
     final private DebtService debtService;
+
     @Override
     public HttpEntity<?> addDebt(DebtPostDto debtPostDto) {
         ApiResponse<?> apiResponse = debtService.addDebt(debtPostDto);
