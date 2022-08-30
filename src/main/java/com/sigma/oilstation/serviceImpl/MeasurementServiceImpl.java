@@ -30,6 +30,7 @@ public class MeasurementServiceImpl implements MeasurementService {
     public ApiResponse<?> addSupplier(String name) {
         Measurement measurement = new Measurement();
         measurement.setName(name);
+        measurement.setDeleted(false);
         measurementRepository.save(measurement);
         return ApiResponse.successResponse("SUCCESSFULLY_ADDED", measurementMapper.toGetDto(measurementRepository.save(measurement)));
     }
@@ -89,6 +90,10 @@ public class MeasurementServiceImpl implements MeasurementService {
 
         if (optional.isEmpty())
             return ApiResponse.errorResponse("THIS_MEASUREMENT_DOES_NOT_EXIST");
+
+        Measurement measurement = optional.get();
+        measurement.setDeleted(true);
+        measurementRepository.save(measurement);
 
         return ApiResponse.successResponse("SUCCESSFULLY_DELETED");
     }
