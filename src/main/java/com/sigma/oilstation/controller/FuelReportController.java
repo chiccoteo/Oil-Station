@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.UUID;
 
@@ -31,7 +32,7 @@ public interface FuelReportController {
     String GET_BETWEEN_FUEL_REPORT= "/between";
 
     @PostMapping
-    HttpEntity<?> create(@RequestBody FuelReportPostDto fuelPostDto);
+    HttpEntity<?> create(@RequestBody @Valid FuelReportPostDto fuelPostDto);
 
     @PutMapping
     HttpEntity<?> edit(@RequestBody FuelReportDto fuelReportDto);
