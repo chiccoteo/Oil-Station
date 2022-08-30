@@ -215,7 +215,7 @@ public class DebtServiceImpl implements DebtService {
             return ApiResponse.errorResponse("Such a debt does not exist");
         }
         Debt debt = optionalDebt.get();
-        debt.setGiven(false);
+        debt.setGiven(true);
         debtRepository.save(debt);
         return ApiResponse.successResponse("Successfully deleted");
     }
