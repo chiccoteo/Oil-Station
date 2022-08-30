@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class MeasurementGetDto {
     private Long id;
     private String name;
+    private boolean deleted;
 }
