@@ -36,7 +36,7 @@ public class FuelServiceImpl implements FuelService {
             return ApiResponse.errorResponse("Such a income measurement does not exist");
         }
         Measurement incomeMeasurement = optionalIncomeMeasurement.get();
-        Optional<Measurement> optionalOutComeMeasurement = measurementRepository.findById(fuelPostDto.getIncomeMeasurementId());
+        Optional<Measurement> optionalOutComeMeasurement = measurementRepository.findById(fuelPostDto.getOutcomeMeasurementId());
         if (optionalOutComeMeasurement.isEmpty()){
             return ApiResponse.errorResponse("Such a outcome measurement does not exist");
         }
@@ -129,7 +129,7 @@ public class FuelServiceImpl implements FuelService {
             return ApiResponse.errorResponse("Such a income measurement does not exist");
         }
         Measurement incomeMeasurement = optionalIncomeMeasurement.get();
-        Optional<Measurement> optionalOutComeMeasurement = measurementRepository.findById(fuelUpdateDto.getIncomeMeasurementId());
+        Optional<Measurement> optionalOutComeMeasurement = measurementRepository.findById(fuelUpdateDto.getOutcomeMeasurementId());
         if (optionalOutComeMeasurement.isEmpty()){
             return ApiResponse.errorResponse("Such a outcome measurement does not exist");
         }

@@ -22,4 +22,5 @@ public interface FuelReportMapper {
     @Mapping(target = "fuelId", source = "fuel.id")
     @Mapping(target = "employeeId", source = "employee.id")
     FuelReportDto toDto(FuelReport fuelReport);
+
 }
