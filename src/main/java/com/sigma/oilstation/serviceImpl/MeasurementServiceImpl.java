@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +44,7 @@ public class MeasurementServiceImpl implements MeasurementService {
         List<MeasurementGetDto> measurementDtos = measurementMapper.toDoList(all.toList());
 
         Map<String, Object> response = new HashMap<>();
-        response.put("measurements", measurementDtos);
+        response.put("measurements", measurementDtos.stream().filter(measurementGetDto -> !measurementGetDto.isDeleted()).collect(Collectors.toList()));
         response.put("currentPage", all.getNumber());
         response.put("totalItems", all.getTotalElements());
         response.put("totalPages", all.getTotalPages());
