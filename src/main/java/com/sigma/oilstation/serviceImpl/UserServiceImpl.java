@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
             user.setRole(role);
             user.setBlock(false);
             user.setDeleted(false);
-            return ApiResponse.successResponse("SUCCESSFULLY_CREATE", mapper.toGetDTOs(repository.save(user)));
+            return ApiResponse.successResponse("SUCCESSFULLY_CREATE");
         }
         return ApiResponse.errorResponse("SUCH_A_USER_EXIST");
     }
@@ -135,7 +135,7 @@ public class UserServiceImpl implements UserService {
         user.setRole(role);
         user.setBlock(userDTO.isBlock());
         user.setDeleted(userDTO.isDeleted());
-        return ApiResponse.successResponse("SUCCESSFULLY_CREATE", mapper.toGetDTOs(repository.save(user)));
+        return ApiResponse.successResponse("SUCCESSFULLY_CREATE");
     }
 
     @Override
