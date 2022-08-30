@@ -47,7 +47,7 @@ public interface FuelReportController {
     HttpEntity<?> getPage(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
                           @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size);
 
-    @GetMapping("/{branchId}")
+    @GetMapping("/byBranch/{branchId}")
     HttpEntity<?> getByBranch(@PathVariable UUID branchId);
 
     @GetMapping(GET_DAILY_FUEL_REPORT+"/{branchId}")
