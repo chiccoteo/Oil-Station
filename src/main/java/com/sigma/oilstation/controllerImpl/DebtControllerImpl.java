@@ -31,8 +31,14 @@ public class DebtControllerImpl implements DebtController {
     }
 
     @Override
-    public HttpEntity<?> getAllDebtPageable(Integer page, Integer size) {
-        ApiResponse<?> apiResponse = debtService.getAllDebtPageable(page,size);
+    public HttpEntity<?> getAllDebtPageableWorker(Integer page, Integer size) {
+        ApiResponse<?> apiResponse = debtService.getAllDebtPageableWorker(page,size);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 400).body(apiResponse);
+    }
+
+    @Override
+    public HttpEntity<?> getAllDebtPageableSupplier(Integer page, Integer size) {
+        ApiResponse<?> apiResponse = debtService.getAllDebtPageableSupplier(page,size);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 400).body(apiResponse);
     }
 
