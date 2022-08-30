@@ -48,8 +48,8 @@ public class FuelReportServiceImpl implements FuelReportService {
         FuelReport fuelReport = mapper.toEntity(fuelPostDto);
         fuelReport.setFuel(optionalFuel.get());
         fuelReport.setEmployee(optionalUser.get());
+        fuelReport.setActiveShift(true);
         fuelReportRepository.save(fuelReport);
-
         FuelReport oldFuelReport = fuelReportRepository.findByActiveShiftTrueAndEmployeeBranchId(optionalUser.get().getBranch().getId());
         oldFuelReport.setActiveShift(false);
         oldFuelReport.setAmountAtEndOfShift(fuelReport.getAmountAtEndOfShift());

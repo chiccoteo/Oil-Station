@@ -16,5 +16,4 @@ public class FuelReportPostDto {
     private UUID fuelId;
     private double salePrice;
     private Timestamp reportTime;
-    private boolean activeShift;
 }
