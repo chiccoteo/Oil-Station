@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ApiResponse<?> getAllUserPageable(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-        Page<User> all = repository.findAll(pageable);
+        Page<User> all = repository.findUsersByDeletedFalse(pageable);
         List<UserGetDTO> userGetDTOList = mapper.toGetDTOList(repository.findAll(pageable).toList());
 
         Map<String, Object> response = new HashMap<>();
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ApiResponse<?> getAllUser() {
-        return ApiResponse.successResponse("ALL_USERS", mapper.toGetDTOList(repository.findAll(Sort.by("createdDate").descending())));
+        return ApiResponse.successResponse("ALL_USERS", mapper.toGetDTOList(repository.findUserByDeletedFalseOrderByCreatedDateDesc()));
     }
 
     @Override
@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
             user.setRole(role);
             user.setBlock(false);
             user.setDeleted(false);
-            return ApiResponse.successResponse("SUCCESSFULLY_CREATE", mapper.toGetDTOs(repository.save(user)));
+            return ApiResponse.successResponse("SUCCESSFULLY_CREATE");
         }
         return ApiResponse.errorResponse("SUCH_A_USER_EXIST");
     }
@@ -129,13 +129,13 @@ public class UserServiceImpl implements UserService {
         }
         user.setUsername(userDTO.getUsername());
         user.setFio(userDTO.getFio());
-        user.setPassword(userDTO.getPassword());
-        user.setPhoneNumber(passwordEncoder.encode(userDTO.getPhoneNumber()));
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setPhoneNumber(userDTO.getPhoneNumber());
         user.setBranch(branch);
         user.setRole(role);
-        user.setBlock(false);
-        user.setDeleted(false);
-        return ApiResponse.successResponse("SUCCESSFULLY_CREATE", mapper.toGetDTOs(repository.save(user)));
+        user.setBlock(userDTO.isBlock());
+        user.setDeleted(userDTO.isDeleted());
+        return ApiResponse.successResponse("SUCCESSFULLY_CREATE");
     }
 
     @Override
