@@ -179,7 +179,7 @@ public class DebtServiceImpl implements DebtService {
                     debt.setLender(null);
                     debt.setGivenTime(debtUpdateDto.getGivenTime());
                     debt.setReturnTime(debtUpdateDto.getReturnTime());
-                    debt.setGiven(false);
+                    debt.setGiven(debtUpdateDto.isGiven());
                     debtRepository.save(debt);
                     return ApiResponse.successResponse("Successfully updated");
                 }
@@ -197,7 +197,7 @@ public class DebtServiceImpl implements DebtService {
                     debt.setLender(optionalLender.get());
                     debt.setGivenTime(debtUpdateDto.getGivenTime());
                     debt.setReturnTime(debtUpdateDto.getReturnTime());
-                    debt.setGiven(false);
+                    debt.setGiven(debtUpdateDto.isGiven());
                     debtRepository.save(debt);
                     return ApiResponse.successResponse("Successfully updated");
                 }
@@ -216,6 +216,7 @@ public class DebtServiceImpl implements DebtService {
         }
         Debt debt = optionalDebt.get();
         debt.setGiven(false);
+        debtRepository.save(debt);
         return ApiResponse.successResponse("Successfully deleted");
     }
 }
