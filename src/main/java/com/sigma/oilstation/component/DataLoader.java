@@ -61,8 +61,9 @@ public class DataLoader implements CommandLineRunner {
             );
             if (userRepo.findByUsername(adminUser.getUsername()).isEmpty())
                 userRepo.save(adminUser);
-            Measurement measurement1 = new Measurement("50");
-            Measurement measurement2 = new Measurement("60");
+
+            Measurement measurement1 = new Measurement("50",false);
+            Measurement measurement2 = new Measurement("60",false);
             measurement1 = measurementRepository.save(measurement1);
             measurement2 = measurementRepository.save(measurement2);
             Fuel fuel = new Fuel("A-80",1400,measurement1,measurement2,false);
