@@ -92,6 +92,7 @@ public class UserServiceImpl implements UserService {
             user.setRole(role);
             user.setBlock(false);
             user.setDeleted(false);
+            repository.save(user);
             return ApiResponse.successResponse("SUCCESSFULLY_CREATE");
         }
         return ApiResponse.errorResponse("SUCH_A_USER_EXIST");
@@ -135,6 +136,7 @@ public class UserServiceImpl implements UserService {
         user.setRole(role);
         user.setBlock(userDTO.isBlock());
         user.setDeleted(userDTO.isDeleted());
+        repository.save(user);
         return ApiResponse.successResponse("SUCCESSFULLY_CREATE");
     }
 
@@ -150,6 +152,7 @@ public class UserServiceImpl implements UserService {
 
         User user = optionalUser.get();
         user.setDeleted(true);
+        repository.save(user);
         return ApiResponse.successResponse("SUCCESSFULLY_DELETED");
     }
 
