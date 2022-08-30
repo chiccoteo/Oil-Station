@@ -32,7 +32,7 @@ public class DebtServiceImpl implements DebtService {
     @Override
     public ApiResponse<?> addDebt(DebtPostDto debtPostDto) {
         if (debtPostDto.getAmount() > 0) {
-            if (debtPostDto.getBorrower().length() > 0 && debtPostDto.getLenderOrBorrowerId() != null) {
+            if (debtPostDto.getBorrower() != null && debtPostDto.getLenderOrBorrowerId() != null) {
                 Optional<User> optionalLender = userRepository.findById(debtPostDto.getLenderOrBorrowerId());
                 if (optionalLender.isEmpty()) {
                     return ApiResponse.errorResponse("Such a lender does not exist");
@@ -99,38 +99,69 @@ public class DebtServiceImpl implements DebtService {
     }
 
     @Override
-    public ApiResponse<?> getAllDebtPageable(Integer page, Integer size) {
+    public ApiResponse<?> getAllDebtPageableWorker(Integer page, Integer size) {
         Page<Debt> debtPage;
         try {
-            debtPage = debtRepository.findAll(CommandUtils.simplePageable(page,size));
-        }catch (PageSizeException e){
+            debtPage = debtRepository.findAll(CommandUtils.simplePageable(page, size));
+        } catch (PageSizeException e) {
             return ApiResponse.errorResponse(e.getMessage());
         }
         List<Debt> debtList = debtPage.getContent();
         List<DebtGetDto> debtGetDtoList = new LinkedList<>();
 
         for (Debt debt : debtList) {
-            DebtGetDto debtGetDto = new DebtGetDto();
-            debtGetDto.setId(debt.getId());
-            debtGetDto.setBorrower(debt.getBorrower());
-            debtGetDto.setAmount(debt.getAmount());
-            debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
-            if (debt.getLender() != null) {
-                debtGetDto.setLenderId(debt.getLender().getId());
-            }else {
+            if (debt.getLender() == null) {
+                DebtGetDto debtGetDto = new DebtGetDto();
+                debtGetDto.setId(debt.getId());
+                debtGetDto.setBorrower(debt.getBorrower());
+                debtGetDto.setAmount(debt.getAmount());
+                debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
                 debtGetDto.setLenderId(null);
+                debtGetDto.setGivenTime(debt.getGivenTime());
+                debtGetDto.setReturnTime(debt.getReturnTime());
+                debtGetDto.setGiven(debt.isGiven());
+                debtGetDtoList.add(debtGetDto);
             }
-            debtGetDto.setGivenTime(debt.getGivenTime());
-            debtGetDto.setReturnTime(debt.getReturnTime());
-            debtGetDto.setGiven(debt.isGiven());
-            debtGetDtoList.add(debtGetDto);
         }
         Map<String, Object> response = new HashMap<>();
         response.put("debt", debtGetDtoList);
         response.put("currentPage", debtPage.getNumber());
         response.put("totalItems", debtPage.getTotalElements());
         response.put("totalPages", debtPage.getTotalPages());
-        return ApiResponse.successResponse("All fuel with page", response);
+        return ApiResponse.successResponse("All debt with page, worker", response);
+    }
+
+    @Override
+    public ApiResponse<?> getAllDebtPageableSupplier(Integer page, Integer size) {
+        Page<Debt> debtPage;
+        try {
+            debtPage = debtRepository.findAll(CommandUtils.simplePageable(page, size));
+        } catch (PageSizeException e) {
+            return ApiResponse.errorResponse(e.getMessage());
+        }
+        List<Debt> debtList = debtPage.getContent();
+        List<DebtGetDto> debtGetDtoList = new LinkedList<>();
+
+        for (Debt debt : debtList) {
+            if (debt.getBorrower() == null) {
+                DebtGetDto debtGetDto = new DebtGetDto();
+                debtGetDto.setId(debt.getId());
+                debtGetDto.setBorrower(debt.getBorrower());
+                debtGetDto.setAmount(debt.getAmount());
+                debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
+                debtGetDto.setLenderId(debtGetDto.getLenderId());
+                debtGetDto.setGivenTime(debt.getGivenTime());
+                debtGetDto.setReturnTime(debt.getReturnTime());
+                debtGetDto.setGiven(debt.isGiven());
+                debtGetDtoList.add(debtGetDto);
+            }
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("debt", debtGetDtoList);
+        response.put("currentPage", debtPage.getNumber());
+        response.put("totalItems", debtPage.getTotalElements());
+        response.put("totalPages", debtPage.getTotalPages());
+        return ApiResponse.successResponse("All debt with page, supplier", response);
     }
 
     @Override

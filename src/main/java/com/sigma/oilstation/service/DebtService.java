@@ -11,7 +11,9 @@ public interface DebtService {
 
     ApiResponse<?> getByIdDebt(UUID id);
 
-    ApiResponse<?> getAllDebtPageable(Integer page, Integer size);
+    ApiResponse<?> getAllDebtPageableWorker(Integer page, Integer size);
+
+    ApiResponse<?> getAllDebtPageableSupplier(Integer page, Integer size);
 
     ApiResponse<?> getAllDebt();
 

@@ -19,7 +19,6 @@ import java.sql.Timestamp;
 @EqualsAndHashCode(callSuper = true)
 public class Debt extends AbsUUID {
 
-    @Column(nullable = false)
     private String borrower;
 
     @Column(nullable = false)
