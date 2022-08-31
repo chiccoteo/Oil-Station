@@ -21,8 +21,12 @@ public interface DebtController {
     @GetMapping(GET_BY_ID_PATH)
     public HttpEntity<?> getByIdDebt(@PathVariable UUID id);
 
-    @GetMapping(GET_ALL_PAGEABLE_PATH)
-    public HttpEntity<?> getAllDebtPageable(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
+    @GetMapping(GET_ALL_PAGEABLE_PATH+"/worker")
+    public HttpEntity<?> getAllDebtPageableWorker(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
+                                            @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
+
+    @GetMapping(GET_ALL_PAGEABLE_PATH+"supplier")
+    public HttpEntity<?> getAllDebtPageableSupplier(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
                                             @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
 
     @GetMapping(GET_ALL_PATH)

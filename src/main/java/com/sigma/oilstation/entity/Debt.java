@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+
 import javax.persistence.ManyToOne;
 import java.sql.Timestamp;
 
@@ -19,16 +19,15 @@ import java.sql.Timestamp;
 @EqualsAndHashCode(callSuper = true)
 public class Debt extends AbsUUID {
 
-    @Column(nullable = false)
     private String borrower;
 
     @Column(nullable = false)
     private double amount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private User lenderOrBorrower;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Supplier lender;
 
     private Timestamp givenTime;

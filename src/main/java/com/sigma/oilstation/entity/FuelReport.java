@@ -19,26 +19,19 @@ public class FuelReport extends AbsUUID {
     @ManyToOne(fetch = FetchType.LAZY)
     private User employee;
 
-
     @Column(nullable = false)
     private double amountAtStartOfShift;
 
     private double amountAtEndOfShift;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Fuel fuel;
 
-    private double salePrice;
+    @Column(nullable = false)
+    private Double salePrice;
 
     private Timestamp reportTime;
 
     private boolean activeShift;
-
-
-    @PrePersist
-    @PreUpdate
-    public void setSalePrice() {
-        this.salePrice = fuel.getPrice();
-    }
 
 }

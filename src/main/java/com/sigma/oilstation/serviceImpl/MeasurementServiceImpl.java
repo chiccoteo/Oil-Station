@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +31,7 @@ public class MeasurementServiceImpl implements MeasurementService {
     public ApiResponse<?> addSupplier(String name) {
         Measurement measurement = new Measurement();
         measurement.setName(name);
+        measurement.setDeleted(false);
         measurementRepository.save(measurement);
         return ApiResponse.successResponse("SUCCESSFULLY_ADDED", measurementMapper.toGetDto(measurementRepository.save(measurement)));
     }
@@ -42,7 +44,7 @@ public class MeasurementServiceImpl implements MeasurementService {
         List<MeasurementGetDto> measurementDtos = measurementMapper.toDoList(all.toList());
 
         Map<String, Object> response = new HashMap<>();
-        response.put("measurements", measurementDtos);
+        response.put("measurements", measurementDtos.stream().filter(measurementGetDto -> !measurementGetDto.isDeleted()).collect(Collectors.toList()));
         response.put("currentPage", all.getNumber());
         response.put("totalItems", all.getTotalElements());
         response.put("totalPages", all.getTotalPages());
@@ -89,6 +91,10 @@ public class MeasurementServiceImpl implements MeasurementService {
 
         if (optional.isEmpty())
             return ApiResponse.errorResponse("THIS_MEASUREMENT_DOES_NOT_EXIST");
+
+        Measurement measurement = optional.get();
+        measurement.setDeleted(true);
+        measurementRepository.save(measurement);
 
         return ApiResponse.successResponse("SUCCESSFULLY_DELETED");
     }
