@@ -75,12 +75,16 @@ public class FuelReportServiceImpl implements FuelReportService {
             return new ApiResponse<>(false, "Ishchi mavjud emas!");
         if (optionalFuel.isEmpty())
             return new ApiResponse<>(false, "Yoqilg'i mavjud emas!");
+        FuelReport activeFuelReport = fuelReportRepository.findByActiveShiftTrueAndEmployeeBranchId(optionalEmployee.get().getBranch().getId());
+        if(fuelReportDto.isActiveShift()&&!activeFuelReport.getId().equals(fuelReportDto.getId()))
+            return new ApiResponse<>(false,"Hozirda faol hisobot allaqachon mavjud!");
 
         FuelReport fuelReport = mapper.toEntity(fuelReportDto);
         fuelReport.setFuel(optionalFuel.get());
         fuelReport.setEmployee(optionalEmployee.get());
+        fuelReport.setSalePrice(fuelReportDto.getSalePrice());
         fuelReportRepository.save(fuelReport);
-        return new ApiResponse<>(true, "Hisobot saqlandi!");
+        return new ApiResponse<>(true, "Hisobot tahrirlandi!");
     }
 
     @Override
