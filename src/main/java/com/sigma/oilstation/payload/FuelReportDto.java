@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -21,7 +22,8 @@ public class FuelReportDto {
     private double amountAtEndOfShift;
     private UUID fuelId;
     @Min(value = 0,message = "not negative")
-    private double salePrice;
+    @NotNull
+    private Double salePrice;
     private Timestamp reportTime;
     private boolean activeShift;
 }

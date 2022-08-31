@@ -13,10 +13,12 @@ public interface FuelReportMapper {
     @Mapping(target = "fuel",ignore = true)
     @Mapping(target = "employee",ignore = true)
     @Mapping(target = "amountAtEndOfShift",ignore = true)
+    @Mapping(target = "salePrice",ignore = true)
     FuelReport toEntity(FuelReportPostDto fuelReportPostDto);
 
     @Mapping(target = "fuel",ignore = true)
     @Mapping(target = "employee",ignore = true)
+    @Mapping(target = "salePrice",ignore = true)
     FuelReport toEntity(FuelReportDto fuelReportDto);
 
     @Mapping(target = "fuelId", source = "fuel.id")
