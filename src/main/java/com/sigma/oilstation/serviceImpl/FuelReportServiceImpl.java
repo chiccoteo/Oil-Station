@@ -58,8 +58,8 @@ public class FuelReportServiceImpl implements FuelReportService {
         fuelReport.setFuel(optionalFuel.get());
         fuelReport.setEmployee(optionalUser.get());
         fuelReport.setActiveShift(true);
+        fuelReport.setSalePrice(optionalFuel.get().getPrice());
         fuelReportRepository.save(fuelReport);
-
         return new ApiResponse<>(true, "Hisobot saqlandi!");
     }
 
@@ -82,7 +82,7 @@ public class FuelReportServiceImpl implements FuelReportService {
         FuelReport fuelReport = mapper.toEntity(fuelReportDto);
         fuelReport.setFuel(optionalFuel.get());
         fuelReport.setEmployee(optionalEmployee.get());
-        fuelReport.setSalePrice(fuelReportDto.getSalePrice());
+        fuelReport.setSalePrice(optionalFuel.get().getPrice());
         fuelReportRepository.save(fuelReport);
         return new ApiResponse<>(true, "Hisobot tahrirlandi!");
     }
@@ -200,7 +200,7 @@ public class FuelReportServiceImpl implements FuelReportService {
     @Override
     public ApiResponse<?> getInterimFuelReport(Integer page, Integer size, Date startDate, Date endDate) {
         try {
-            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByReportTimeIsBetween(new Timestamp(endDate.getTime()),new Timestamp(startDate.getTime()),  CommandUtils.simplePageable(page, size));
+            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByReportTimeIsBetween(new Timestamp(startDate.getTime()),new Timestamp(endDate.getTime()),  CommandUtils.simplePageable(page, size));
             Map<String, Object> response = new HashMap<>();
             response.put("fuelReports", getTotalFuelReport(fuelReportPage));
             response.put("currentPage", fuelReportPage.getNumber());
@@ -294,7 +294,7 @@ public class FuelReportServiceImpl implements FuelReportService {
         if (!branchRepository.existsById(branchId))
             return new ApiResponse<>(false, "Filial mavjud emas!");
         try {
-            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByEmployeeBranchIdAndReportTimeIsBetween(branchId, new Timestamp(endDate.getTime()),new Timestamp(startDate.getTime()),  CommandUtils.simplePageable(page, size));
+            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByEmployeeBranchIdAndReportTimeIsBetween(branchId, new Timestamp(startDate.getTime()),new Timestamp(endDate.getTime()),  CommandUtils.simplePageable(page, size));
             Map<String, Object> response = new HashMap<>();
             response.put("fuelReports", getTotalFuelReport(fuelReportPage));
             response.put("currentPage", fuelReportPage.getNumber());
