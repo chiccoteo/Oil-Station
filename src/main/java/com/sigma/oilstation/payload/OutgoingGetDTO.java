@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.UUID;
 
 @Data
 public class OutgoingGetDTO {
@@ -15,6 +16,8 @@ public class OutgoingGetDTO {
     private double amount;
 
     private String spenderFIO;
+
+    private UUID spenderId;
 
     private Timestamp outgoingTime;
 
