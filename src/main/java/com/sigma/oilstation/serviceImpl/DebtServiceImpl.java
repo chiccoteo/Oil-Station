@@ -49,7 +49,7 @@ public class DebtServiceImpl implements DebtService {
                     debtRepository.save(debt);
                     return ApiResponse.successResponse("Successfully added");
                 }
-            } else if (debtPostDto.getBorrower() != null && debtPostDto.getLenderId() != null) {
+            } else if (debtPostDto.getLenderOrBorrowerId() != null && debtPostDto.getLenderId() != null) {
                 Optional<Supplier> optionalLender = supplierRepository.findById(debtPostDto.getLenderId());
                 Optional<User> optionalBorrower = userRepository.findById(debtPostDto.getLenderOrBorrowerId());
                 if (optionalBorrower.isEmpty()) {
