@@ -24,6 +24,7 @@ public interface OutgoingMapper {
     OutgoingGetDTO toGetDTO(Outgoing outgoing);
 
     @Mapping(target = "spenderFIO", source = "spender.fio")
+    @Mapping(target = "spenderId", source = "spender.id")
     @Mapping(target = "category", source = "category.name")
     OutgoingGetDTOForReport toGetDTOForReport(Outgoing outgoing);
 

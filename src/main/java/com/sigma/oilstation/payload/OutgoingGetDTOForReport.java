@@ -3,6 +3,7 @@ package com.sigma.oilstation.payload;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.UUID;
 
 @Data
 public class OutgoingGetDTOForReport {
@@ -14,6 +15,8 @@ public class OutgoingGetDTOForReport {
     private double amount;
 
     private String spenderFIO;
+
+    private UUID spenderId;
 
     private Timestamp outgoingTime;
 
