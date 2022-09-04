@@ -29,7 +29,7 @@ public class BranchServiceImpl implements BranchService {
     @Override
     public ApiResponse<?> getAllPageable(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-        Page<Branch> all = repository.findAll(pageable);
+        Page<Branch> all = repository.findAllByDeleteIsFalse(pageable);
 
         List<BranchGetDTO> branchDTOList = mapper.toGetDTOList(all.toList());
 
@@ -44,7 +44,7 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public ApiResponse<?> getAll() {
-        return ApiResponse.successResponse("ALL_BRANCHES", mapper.toGetDTOList(repository.findAll(Sort.by("createdDate").descending())));
+        return ApiResponse.successResponse("ALL_BRANCHES", mapper.toGetDTOList(repository.findAllByDeleteIsFalse(Sort.by("createdDate").descending())));
     }
 
     @Override
@@ -114,7 +114,7 @@ public class BranchServiceImpl implements BranchService {
             return ApiResponse.errorResponse("SUCH_A_BRANCH_DOES_NOT_EXIST");
 
         Branch branch = optionalBranch.get();
-        repository.delete(branch);
+        branch.setDelete(true);
 
         return ApiResponse.successResponse("SUCCESSFULLY_DELETED");
     }
