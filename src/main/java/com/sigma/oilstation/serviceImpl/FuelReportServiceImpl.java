@@ -45,14 +45,21 @@ public class FuelReportServiceImpl implements FuelReportService {
         if (optionalFuel.isEmpty()) {
             return new ApiResponse<>(false, "Yoqilg'i mavjud emas!");
         }
+
         FuelReport fuelReport = mapper.toEntity(fuelPostDto);
-        fuelReport.setFuel(optionalFuel.get());
-        fuelReport.setEmployee(optionalUser.get());
-        fuelReportRepository.save(fuelReport);
 
         FuelReport oldFuelReport = fuelReportRepository.findByActiveShiftTrueAndEmployeeBranchId(optionalUser.get().getBranch().getId());
-        oldFuelReport.setActiveShift(false);
-        oldFuelReport.setAmountAtEndOfShift(fuelReport.getAmountAtEndOfShift());
+        if(oldFuelReport!=null){
+            oldFuelReport.setActiveShift(false);
+            oldFuelReport.setAmountAtEndOfShift(fuelReport.getAmountAtStartOfShift());
+            fuelReportRepository.save(oldFuelReport);
+        }
+
+        fuelReport.setFuel(optionalFuel.get());
+        fuelReport.setEmployee(optionalUser.get());
+        fuelReport.setActiveShift(true);
+        fuelReport.setSalePrice(optionalFuel.get().getPrice());
+        fuelReportRepository.save(fuelReport);
         return new ApiResponse<>(true, "Hisobot saqlandi!");
     }
 
@@ -62,20 +69,22 @@ public class FuelReportServiceImpl implements FuelReportService {
         Optional<User> optionalEmployee = userRepository.findById(fuelReportDto.getEmployeeId());
         Optional<Fuel> optionalFuel = fuelRepository.findById(fuelReportDto.getFuelId());
 
-
         if (optionalFuelReport.isEmpty())
             return new ApiResponse<>(false, "Hisobot mavjud emas!");
         if (optionalEmployee.isEmpty())
             return new ApiResponse<>(false, "Ishchi mavjud emas!");
         if (optionalFuel.isEmpty())
             return new ApiResponse<>(false, "Yoqilg'i mavjud emas!");
-
+        FuelReport activeFuelReport = fuelReportRepository.findByActiveShiftTrueAndEmployeeBranchId(optionalEmployee.get().getBranch().getId());
+        if(fuelReportDto.isActiveShift()&&!activeFuelReport.getId().equals(fuelReportDto.getId()))
+            return new ApiResponse<>(false,"Hozirda faol hisobot allaqachon mavjud!");
 
         FuelReport fuelReport = mapper.toEntity(fuelReportDto);
         fuelReport.setFuel(optionalFuel.get());
         fuelReport.setEmployee(optionalEmployee.get());
+        fuelReport.setSalePrice(optionalFuel.get().getPrice());
         fuelReportRepository.save(fuelReport);
-        return new ApiResponse<>(true, "Hisobot saqlandi!");
+        return new ApiResponse<>(true, "Hisobot tahrirlandi!");
     }
 
     @Override
@@ -111,10 +120,11 @@ public class FuelReportServiceImpl implements FuelReportService {
 
     @Override
     public ApiResponse<?> getByBranchId(UUID branchId) {
-        if(!branchRepository.existsById(branchId))
-            return new ApiResponse<>(false,"Filial mavjud emas!");
+        if (!branchRepository.existsById(branchId))
+            return new ApiResponse<>(false, "Filial mavjud emas!");
+
         List<FuelReport> fuelReportList = fuelReportRepository.findAllByEmployeeBranchId(branchId);
-        return new ApiResponse<>(true,"Filial hisobotlari!",getTotalFuelReport(fuelReportList));
+        return new ApiResponse<>(true, "Filial hisobotlari!", getTotalFuelReport(fuelReportList));
     }
 
     @Override
@@ -122,7 +132,7 @@ public class FuelReportServiceImpl implements FuelReportService {
         Timestamp today = Timestamp.valueOf(LocalDateTime.now());
         Timestamp yesterday = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
         try {
-            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByReportTimeIsBetween(today, yesterday, CommandUtils.simplePageable(page, size));
+            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByReportTimeIsBetween(yesterday, today, CommandUtils.simplePageable(page, size));
             Map<String, Object> response = new HashMap<>();
             response.put("fuelReports", getTotalFuelReport(fuelReportPage));
             response.put("currentPage", fuelReportPage.getNumber());
@@ -138,8 +148,10 @@ public class FuelReportServiceImpl implements FuelReportService {
     public ApiResponse<?> getWeeklyFuelReport(Integer page, Integer size) {
         Timestamp today = Timestamp.valueOf(LocalDateTime.now());
         Timestamp aWeekAgo = Timestamp.valueOf(LocalDateTime.now().minusWeeks(1));
+        System.out.println(today+":: "+aWeekAgo);
         try {
-            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByReportTimeIsBetween(today, aWeekAgo, CommandUtils.simplePageable(page, size));
+            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByReportTimeIsBetween(aWeekAgo, today, CommandUtils.simplePageable(page, size));
+            System.out.println("Fuel report:: "+ fuelReportPage.getContent());
             Map<String, Object> response = new HashMap<>();
             response.put("fuelReports", getTotalFuelReport(fuelReportPage));
             response.put("currentPage", fuelReportPage.getNumber());
@@ -156,7 +168,7 @@ public class FuelReportServiceImpl implements FuelReportService {
         Timestamp today = Timestamp.valueOf(LocalDateTime.now());
         Timestamp aMonthAgo = Timestamp.valueOf(LocalDateTime.now().minusMonths(1));
         try {
-            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByReportTimeIsBetween(today, aMonthAgo, CommandUtils.simplePageable(page, size));
+            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByReportTimeIsBetween(aMonthAgo, today, CommandUtils.simplePageable(page, size));
             Map<String, Object> response = new HashMap<>();
             response.put("fuelReports", getTotalFuelReport(fuelReportPage));
             response.put("currentPage", fuelReportPage.getNumber());
@@ -173,7 +185,7 @@ public class FuelReportServiceImpl implements FuelReportService {
         Timestamp today = Timestamp.valueOf(LocalDateTime.now());
         Timestamp aYearAgo = Timestamp.valueOf(LocalDateTime.now().minusYears(1));
         try {
-            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByReportTimeIsBetween(today, aYearAgo, CommandUtils.simplePageable(page, size));
+            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByReportTimeIsBetween(aYearAgo, today, CommandUtils.simplePageable(page, size));
             Map<String, Object> response = new HashMap<>();
             response.put("fuelReports", getTotalFuelReport(fuelReportPage));
             response.put("currentPage", fuelReportPage.getNumber());
@@ -186,9 +198,9 @@ public class FuelReportServiceImpl implements FuelReportService {
     }
 
     @Override
-    public ApiResponse<?> getInterimFuelReport(Integer page, Integer size,Date startDate,Date endDate) {
+    public ApiResponse<?> getInterimFuelReport(Integer page, Integer size, Date startDate, Date endDate) {
         try {
-            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByReportTimeIsBetween(new Timestamp(startDate.getTime()),new Timestamp(endDate.getTime()), CommandUtils.simplePageable(page, size));
+            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByReportTimeIsBetween(new Timestamp(startDate.getTime()),new Timestamp(endDate.getTime()),  CommandUtils.simplePageable(page, size));
             Map<String, Object> response = new HashMap<>();
             response.put("fuelReports", getTotalFuelReport(fuelReportPage));
             response.put("currentPage", fuelReportPage.getNumber());
@@ -199,6 +211,101 @@ public class FuelReportServiceImpl implements FuelReportService {
             return new ApiResponse<>(false, e.getMessage());
         }
     }
+
+
+    @Override
+    public ApiResponse<?> getDailyBranchFuelReport(int page, int size, UUID branchId) {
+        if (!branchRepository.existsById(branchId))
+            return new ApiResponse<>(false, "Filial mavjud emas!");
+        Timestamp today = Timestamp.valueOf(LocalDateTime.now());
+        Timestamp yesterday = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
+        try {
+            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByEmployeeBranchIdAndReportTimeIsBetween(branchId, yesterday, today, CommandUtils.simplePageable(page, size));
+            Map<String, Object> response = new HashMap<>();
+            response.put("fuelReports", getTotalFuelReport(fuelReportPage));
+            response.put("currentPage", fuelReportPage.getNumber());
+            response.put("totalItems", fuelReportPage.getTotalElements());
+            response.put("totalPages", fuelReportPage.getTotalPages());
+            return new ApiResponse<>(true, "Kunlik filial hisobotlari!", response);
+        } catch (PageSizeException e) {
+            return new ApiResponse<>(false, e.getMessage());
+        }
+    }
+
+    @Override
+    public ApiResponse<?> getWeeklyBranchFuelReport(int page, int size, UUID branchId) {
+        if (!branchRepository.existsById(branchId))
+            return new ApiResponse<>(false, "Filial mavjud emas!");
+        Timestamp today = Timestamp.valueOf(LocalDateTime.now());
+        Timestamp aWeekAgo = Timestamp.valueOf(LocalDateTime.now().minusWeeks(1));
+        try {
+            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByEmployeeBranchIdAndReportTimeIsBetween(branchId, aWeekAgo, today, CommandUtils.simplePageable(page, size));
+            Map<String, Object> response = new HashMap<>();
+            response.put("fuelReports", getTotalFuelReport(fuelReportPage));
+            response.put("currentPage", fuelReportPage.getNumber());
+            response.put("totalItems", fuelReportPage.getTotalElements());
+            response.put("totalPages", fuelReportPage.getTotalPages());
+            return new ApiResponse<>(true, "Haftalik filial hisobotlari!", response);
+        } catch (PageSizeException e) {
+            return new ApiResponse<>(false, e.getMessage());
+        }
+    }
+
+    @Override
+    public ApiResponse<?> getMonthlyBranchFuelReport(int page, int size, UUID branchId) {
+        if (!branchRepository.existsById(branchId))
+            return new ApiResponse<>(false, "Filial mavjud emas!");
+        Timestamp today = Timestamp.valueOf(LocalDateTime.now());
+        Timestamp aMonthAgo = Timestamp.valueOf(LocalDateTime.now().minusMonths(1));
+        try {
+            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByEmployeeBranchIdAndReportTimeIsBetween(branchId, aMonthAgo, today, CommandUtils.simplePageable(page, size));
+            Map<String, Object> response = new HashMap<>();
+            response.put("fuelReports", getTotalFuelReport(fuelReportPage));
+            response.put("currentPage", fuelReportPage.getNumber());
+            response.put("totalItems", fuelReportPage.getTotalElements());
+            response.put("totalPages", fuelReportPage.getTotalPages());
+            return new ApiResponse<>(true, "Oylik filial hisobotlar!", response);
+        } catch (PageSizeException e) {
+            return new ApiResponse<>(false, e.getMessage());
+        }
+    }
+
+    @Override
+    public ApiResponse<?> getAnnuallyBranchFuelReport(int page, int size, UUID branchId) {
+        if (!branchRepository.existsById(branchId))
+            return new ApiResponse<>(false, "Filial mavjud emas!");
+        Timestamp today = Timestamp.valueOf(LocalDateTime.now());
+        Timestamp aYearAgo = Timestamp.valueOf(LocalDateTime.now().minusYears(1));
+        try {
+            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByEmployeeBranchIdAndReportTimeIsBetween(branchId, aYearAgo, today, CommandUtils.simplePageable(page, size));
+            Map<String, Object> response = new HashMap<>();
+            response.put("fuelReports", getTotalFuelReport(fuelReportPage));
+            response.put("currentPage", fuelReportPage.getNumber());
+            response.put("totalItems", fuelReportPage.getTotalElements());
+            response.put("totalPages", fuelReportPage.getTotalPages());
+            return new ApiResponse<>(true, "Yillik filial hisobotlar!", response);
+        } catch (PageSizeException e) {
+            return new ApiResponse<>(false, e.getMessage());
+        }
+    }
+
+    @Override
+    public ApiResponse<?> getInterimBranchFuelReport(int page, int size, UUID branchId, Date startDate, Date endDate) {
+        if (!branchRepository.existsById(branchId))
+            return new ApiResponse<>(false, "Filial mavjud emas!");
+        try {
+            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByEmployeeBranchIdAndReportTimeIsBetween(branchId, new Timestamp(startDate.getTime()),new Timestamp(endDate.getTime()),  CommandUtils.simplePageable(page, size));
+            Map<String, Object> response = new HashMap<>();
+            response.put("fuelReports", getTotalFuelReport(fuelReportPage));
+            response.put("currentPage", fuelReportPage.getNumber());
+            response.put("totalItems", fuelReportPage.getTotalElements());
+            response.put("totalPages", fuelReportPage.getTotalPages());
+            return new ApiResponse<>(true, "Vaqt oraligidagi hisobotlar!", response);
+        } catch (PageSizeException e) {
+            return new ApiResponse<>(false, e.getMessage());
+        }
+    }
+
 
     private FuelReportTotalDto getTotalFuelReport(Page<FuelReport> fuelReportPage) {
         List<FuelReportDto> fuelReportDtoList = fuelReportPage.getContent().stream().map(mapper::toDto).collect(Collectors.toList());
@@ -223,5 +330,4 @@ public class FuelReportServiceImpl implements FuelReportService {
         }
         return new FuelReportTotalDto(totalSum, totalAmount, fuelReportDtoList);
     }
-
 }

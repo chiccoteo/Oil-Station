@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ApiResponse<?> getAllUserPageable(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-        Page<User> all = repository.findAll(pageable);
+        Page<User> all = repository.findUsersByDeletedFalse(pageable);
         List<UserGetDTO> userGetDTOList = mapper.toGetDTOList(repository.findAll(pageable).toList());
 
         Map<String, Object> response = new HashMap<>();
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ApiResponse<?> getAllUser() {
-        return ApiResponse.successResponse("ALL_USERS", mapper.toGetDTOList(repository.findAll(Sort.by("createdDate").descending())));
+        return ApiResponse.successResponse("ALL_USERS", mapper.toGetDTOList(repository.findUserByDeletedFalseOrderByCreatedDateDesc()));
     }
 
     @Override
@@ -92,7 +92,8 @@ public class UserServiceImpl implements UserService {
             user.setRole(role);
             user.setBlock(false);
             user.setDeleted(false);
-            return ApiResponse.successResponse("SUCCESSFULLY_CREATE", mapper.toGetDTOs(repository.save(user)));
+            repository.save(user);
+            return ApiResponse.successResponse("SUCCESSFULLY_CREATE");
         }
         return ApiResponse.errorResponse("SUCH_A_USER_EXIST");
     }
@@ -109,17 +110,22 @@ public class UserServiceImpl implements UserService {
 
         User user = optionalUser.get();
 
-        Optional<Role> optionalRole = roleRepository.findById(userDTO.getRoleId());
-        Optional<Branch> optionalBranch = branchRepository.findById(userDTO.getBranchId());
+        if (userDTO.getRoleId()!=null){
+            Optional<Role> optionalRole = roleRepository.findById(userDTO.getRoleId());
+            if (optionalRole.isEmpty()){
+                return ApiResponse.errorResponse("SUCH_A_ROLE_DOES_NOT_EXIST");
+            }
+            Role role = optionalRole.get();
+            user.setRole(role);
+        }
 
-        Branch branch;
-        Role role;
-
-        if (optionalBranch.isPresent() && optionalRole.isPresent()) {
-            branch = optionalBranch.get();
-            role = optionalRole.get();
-        } else {
-            return ApiResponse.errorResponse("SUCH_A_ROLE_OR_BRANCH_DOES_NOT_EXIST");
+        if (userDTO.getBranchId()!=null){
+            Optional<Branch> optionalBranch = branchRepository.findById(userDTO.getBranchId());
+            if (optionalBranch.isEmpty()){
+                return ApiResponse.errorResponse("SUCH_A_BRANCH_DOES_NOT_EXIST");
+            }
+            Branch branch = optionalBranch.get();
+            user.setBranch(branch);
         }
 
         if (repository.existsByUsername(userDTO.getUsername())) {
@@ -127,15 +133,16 @@ public class UserServiceImpl implements UserService {
                 return ApiResponse.errorResponse("ERROR_USERNAME");
             }
         }
+
         user.setUsername(userDTO.getUsername());
         user.setFio(userDTO.getFio());
-        user.setPassword(userDTO.getPassword());
-        user.setPhoneNumber(passwordEncoder.encode(userDTO.getPhoneNumber()));
-        user.setBranch(branch);
-        user.setRole(role);
-        user.setBlock(false);
-        user.setDeleted(false);
-        return ApiResponse.successResponse("SUCCESSFULLY_CREATE", mapper.toGetDTOs(repository.save(user)));
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setPhoneNumber(userDTO.getPhoneNumber());
+        user.setBlock(userDTO.isBlock());
+        user.setDeleted(userDTO.isDeleted());
+        repository.save(user);
+
+        return ApiResponse.successResponse("SUCCESSFULLY_CREATE");
     }
 
     @Override
@@ -150,6 +157,7 @@ public class UserServiceImpl implements UserService {
 
         User user = optionalUser.get();
         user.setDeleted(true);
+        repository.save(user);
         return ApiResponse.successResponse("SUCCESSFULLY_DELETED");
     }
 

@@ -32,18 +32,16 @@ public class DebtServiceImpl implements DebtService {
     @Override
     public ApiResponse<?> addDebt(DebtPostDto debtPostDto) {
         if (debtPostDto.getAmount() > 0) {
-            if (debtPostDto.getBorrowerId() != null && debtPostDto.getLenderOrBorrowerId() != null) {
-                Optional<User> optionalBorrower = userRepository.findById(debtPostDto.getBorrowerId());
+            if (debtPostDto.getBorrower() != null && debtPostDto.getLenderOrBorrowerId() != null) {
                 Optional<User> optionalLender = userRepository.findById(debtPostDto.getLenderOrBorrowerId());
-                if (optionalBorrower.isEmpty()) {
-                    return ApiResponse.errorResponse("Such a borrower does not exist");
-                } else if (optionalLender.isEmpty()) {
+                if (optionalLender.isEmpty()) {
                     return ApiResponse.errorResponse("Such a lender does not exist");
                 } else {
                     Debt debt = new Debt();
-                    debt.setBorrower(optionalBorrower.get());
+                    debt.setBorrower(debtPostDto.getBorrower());
                     debt.setAmount(debtPostDto.getAmount());
-                    debt.setLenderOrBorrower(optionalLender.get());
+                    User user = optionalLender.get();
+                    debt.setLenderOrBorrower(user);
                     debt.setLender(null);
                     debt.setGivenTime(debtPostDto.getGivenTime());
                     debt.setReturnTime(debtPostDto.getReturnTime());
@@ -51,7 +49,7 @@ public class DebtServiceImpl implements DebtService {
                     debtRepository.save(debt);
                     return ApiResponse.successResponse("Successfully added");
                 }
-            } else if (debtPostDto.getBorrowerId() != null && debtPostDto.getLenderId() != null) {
+            } else if (debtPostDto.getLenderOrBorrowerId() != null && debtPostDto.getLenderId() != null) {
                 Optional<Supplier> optionalLender = supplierRepository.findById(debtPostDto.getLenderId());
                 Optional<User> optionalBorrower = userRepository.findById(debtPostDto.getLenderOrBorrowerId());
                 if (optionalBorrower.isEmpty()) {
@@ -60,17 +58,21 @@ public class DebtServiceImpl implements DebtService {
                     return ApiResponse.errorResponse("Such a lender does not exist");
                 } else {
                     Debt debt = new Debt();
-                    debt.setBorrower(null);
+                    debt.setBorrower(debtPostDto.getBorrower());
                     debt.setAmount(debtPostDto.getAmount());
-                    debt.setLenderOrBorrower(optionalBorrower.get());
-                    debt.setLender(optionalLender.get());
+                    User user = optionalBorrower.get();
+                    debt.setLenderOrBorrower(user);
+                    System.out.println(user);
+                    Supplier supplier = optionalLender.get();
+                    System.out.println(supplier);
+                    debt.setLender(supplier);
                     debt.setGivenTime(debtPostDto.getGivenTime());
                     debt.setReturnTime(debtPostDto.getReturnTime());
                     debt.setGiven(false);
                     debtRepository.save(debt);
-                    return ApiResponse.successResponse("Successfully added");
+                    return ApiResponse.successResponse("Successfully added supplier is lender");
                 }
-                }  else {
+            } else {
                 return ApiResponse.errorResponse("Lender or Borrower not included");
             }
         }
@@ -86,7 +88,7 @@ public class DebtServiceImpl implements DebtService {
         Debt debt = optionalDebt.get();
         DebtGetDto debtGetDto = new DebtGetDto();
         debtGetDto.setId(debt.getId());
-        debtGetDto.setBorrowerId(debt.getBorrower().getId());
+        debtGetDto.setBorrower(debt.getBorrower());
         debtGetDto.setAmount(debt.getAmount());
         debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
         debtGetDto.setLenderId(debt.getLender().getId());
@@ -97,34 +99,69 @@ public class DebtServiceImpl implements DebtService {
     }
 
     @Override
-    public ApiResponse<?> getAllDebtPageable(Integer page, Integer size) {
+    public ApiResponse<?> getAllDebtPageableWorker(Integer page, Integer size) {
         Page<Debt> debtPage;
         try {
-            debtPage = debtRepository.findAll(CommandUtils.simplePageable(page,size));
-        }catch (PageSizeException e){
+            debtPage = debtRepository.findAll(CommandUtils.simplePageable(page, size));
+        } catch (PageSizeException e) {
             return ApiResponse.errorResponse(e.getMessage());
         }
         List<Debt> debtList = debtPage.getContent();
         List<DebtGetDto> debtGetDtoList = new LinkedList<>();
 
         for (Debt debt : debtList) {
-            DebtGetDto debtGetDto = new DebtGetDto();
-            debtGetDto.setId(debt.getId());
-            debtGetDto.setBorrowerId(debt.getBorrower().getId());
-            debtGetDto.setAmount(debt.getAmount());
-            debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
-            debtGetDto.setLenderId(debt.getLender().getId());
-            debtGetDto.setGivenTime(debt.getGivenTime());
-            debtGetDto.setReturnTime(debt.getReturnTime());
-            debtGetDto.setGiven(debt.isGiven());
-            debtGetDtoList.add(debtGetDto);
+            if (debt.getLender() == null) {
+                DebtGetDto debtGetDto = new DebtGetDto();
+                debtGetDto.setId(debt.getId());
+                debtGetDto.setBorrower(debt.getBorrower());
+                debtGetDto.setAmount(debt.getAmount());
+                debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
+                debtGetDto.setLenderId(null);
+                debtGetDto.setGivenTime(debt.getGivenTime());
+                debtGetDto.setReturnTime(debt.getReturnTime());
+                debtGetDto.setGiven(debt.isGiven());
+                debtGetDtoList.add(debtGetDto);
+            }
         }
         Map<String, Object> response = new HashMap<>();
         response.put("debt", debtGetDtoList);
         response.put("currentPage", debtPage.getNumber());
         response.put("totalItems", debtPage.getTotalElements());
         response.put("totalPages", debtPage.getTotalPages());
-        return ApiResponse.successResponse("All fuel with page", response);
+        return ApiResponse.successResponse("All debt with page, worker", response);
+    }
+
+    @Override
+    public ApiResponse<?> getAllDebtPageableSupplier(Integer page, Integer size) {
+        Page<Debt> debtPage;
+        try {
+            debtPage = debtRepository.findAll(CommandUtils.simplePageable(page, size));
+        } catch (PageSizeException e) {
+            return ApiResponse.errorResponse(e.getMessage());
+        }
+        List<Debt> debtList = debtPage.getContent();
+        List<DebtGetDto> debtGetDtoList = new LinkedList<>();
+
+        for (Debt debt : debtList) {
+            if (debt.getBorrower() == null) {
+                DebtGetDto debtGetDto = new DebtGetDto();
+                debtGetDto.setId(debt.getId());
+                debtGetDto.setBorrower(debt.getBorrower());
+                debtGetDto.setAmount(debt.getAmount());
+                debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
+                debtGetDto.setLenderId(debt.getLender().getId());
+                debtGetDto.setGivenTime(debt.getGivenTime());
+                debtGetDto.setReturnTime(debt.getReturnTime());
+                debtGetDto.setGiven(debt.isGiven());
+                debtGetDtoList.add(debtGetDto);
+            }
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("debt", debtGetDtoList);
+        response.put("currentPage", debtPage.getNumber());
+        response.put("totalItems", debtPage.getTotalElements());
+        response.put("totalPages", debtPage.getTotalPages());
+        return ApiResponse.successResponse("All debt with page, supplier", response);
     }
 
     @Override
@@ -135,13 +172,19 @@ public class DebtServiceImpl implements DebtService {
         for (Debt debt : debtList) {
             DebtGetDto debtGetDto = new DebtGetDto();
             debtGetDto.setId(debt.getId());
-            debtGetDto.setBorrowerId(debt.getBorrower().getId());
+            debtGetDto.setBorrower(debt.getBorrower());
             debtGetDto.setAmount(debt.getAmount());
             debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
-            debtGetDto.setLenderId(debt.getLender().getId());
+            if (debt.getLender() != null) {
+                debtGetDto.setLenderId(debt.getLender().getId());
+            }else {
+                debtGetDto.setLenderId(null);
+            }
             debtGetDto.setGivenTime(debt.getGivenTime());
             debtGetDto.setReturnTime(debt.getReturnTime());
             debtGetDto.setGiven(debt.isGiven());
+            System.out.println(debt);
+            System.out.println(debtGetDto);
             debtGetDtoList.add(debtGetDto);
         }
         return ApiResponse.successResponse("All debt", debtGetDtoList);
@@ -155,26 +198,23 @@ public class DebtServiceImpl implements DebtService {
         }
         Debt debt = optionalDebt.get();
         if (debtUpdateDto.getAmount() > 0) {
-            if (debtUpdateDto.getBorrowerId() != null && debtUpdateDto.getLenderOrBorrowerId() != null) {
-                Optional<User> optionalBorrower = userRepository.findById(debtUpdateDto.getBorrowerId());
+            if (debtUpdateDto.getBorrower() != null && debtUpdateDto.getLenderOrBorrowerId() != null) {
                 Optional<User> optionalLender = userRepository.findById(debtUpdateDto.getLenderOrBorrowerId());
-                if (optionalBorrower.isEmpty()) {
-                    return ApiResponse.errorResponse("Such a borrower does not exist");
-                } else if (optionalLender.isEmpty()) {
+                if (optionalLender.isEmpty()) {
                     return ApiResponse.errorResponse("Such a lender does not exist");
                 } else {
 
-                    debt.setBorrower(optionalBorrower.get());
+                    debt.setBorrower(debtUpdateDto.getBorrower());
                     debt.setAmount(debtUpdateDto.getAmount());
                     debt.setLenderOrBorrower(optionalLender.get());
                     debt.setLender(null);
                     debt.setGivenTime(debtUpdateDto.getGivenTime());
                     debt.setReturnTime(debtUpdateDto.getReturnTime());
-                    debt.setGiven(false);
+                    debt.setGiven(debtUpdateDto.isGiven());
                     debtRepository.save(debt);
                     return ApiResponse.successResponse("Successfully updated");
                 }
-            } else if (debtUpdateDto.getBorrowerId() != null && debtUpdateDto.getLenderId() != null) {
+            } else if (debtUpdateDto.getBorrower() != null && debtUpdateDto.getLenderId() != null) {
                 Optional<Supplier> optionalLender = supplierRepository.findById(debtUpdateDto.getLenderId());
                 Optional<User> optionalBorrower = userRepository.findById(debtUpdateDto.getLenderOrBorrowerId());
                 if (optionalBorrower.isEmpty()) {
@@ -188,7 +228,7 @@ public class DebtServiceImpl implements DebtService {
                     debt.setLender(optionalLender.get());
                     debt.setGivenTime(debtUpdateDto.getGivenTime());
                     debt.setReturnTime(debtUpdateDto.getReturnTime());
-                    debt.setGiven(false);
+                    debt.setGiven(debtUpdateDto.isGiven());
                     debtRepository.save(debt);
                     return ApiResponse.successResponse("Successfully updated");
                 }
@@ -206,7 +246,8 @@ public class DebtServiceImpl implements DebtService {
             return ApiResponse.errorResponse("Such a debt does not exist");
         }
         Debt debt = optionalDebt.get();
-        debt.setGiven(false);
+        debt.setGiven(true);
+        debtRepository.save(debt);
         return ApiResponse.successResponse("Successfully deleted");
     }
 }

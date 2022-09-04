@@ -28,7 +28,7 @@ public class FuelServiceImpl implements FuelService {
     @Override
     public ApiResponse<?> addFuel(FuelPostDto fuelPostDto) {
         Optional<Fuel> optionalFuel = fuelRepository.findByType(fuelPostDto.getType());
-        if (optionalFuel.isEmpty()){
+        if (optionalFuel.isPresent() && !optionalFuel.get().isDeleted()){
             return ApiResponse.errorResponse("Such a type already exist");
         }
         Optional<Measurement> optionalIncomeMeasurement = measurementRepository.findById(fuelPostDto.getIncomeMeasurementId());
@@ -36,7 +36,7 @@ public class FuelServiceImpl implements FuelService {
             return ApiResponse.errorResponse("Such a income measurement does not exist");
         }
         Measurement incomeMeasurement = optionalIncomeMeasurement.get();
-        Optional<Measurement> optionalOutComeMeasurement = measurementRepository.findById(fuelPostDto.getIncomeMeasurementId());
+        Optional<Measurement> optionalOutComeMeasurement = measurementRepository.findById(fuelPostDto.getOutcomeMeasurementId());
         if (optionalOutComeMeasurement.isEmpty()){
             return ApiResponse.errorResponse("Such a outcome measurement does not exist");
         }
@@ -49,7 +49,7 @@ public class FuelServiceImpl implements FuelService {
         fuel.setOutcomeMeasurement(outcomeMeasurement);
         fuel.setDeleted(false);
         fuelRepository.save(fuel);
-        return ApiResponse.errorResponse("Successfully saved");
+        return ApiResponse.successResponse("Successfully saved");
     }
 
     @Override
@@ -129,7 +129,7 @@ public class FuelServiceImpl implements FuelService {
             return ApiResponse.errorResponse("Such a income measurement does not exist");
         }
         Measurement incomeMeasurement = optionalIncomeMeasurement.get();
-        Optional<Measurement> optionalOutComeMeasurement = measurementRepository.findById(fuelUpdateDto.getIncomeMeasurementId());
+        Optional<Measurement> optionalOutComeMeasurement = measurementRepository.findById(fuelUpdateDto.getOutcomeMeasurementId());
         if (optionalOutComeMeasurement.isEmpty()){
             return ApiResponse.errorResponse("Such a outcome measurement does not exist");
         }
@@ -155,6 +155,7 @@ public class FuelServiceImpl implements FuelService {
             return ApiResponse.errorResponse("Such a fuel already deleted");
         }
         fuel.setDeleted(true);
+        fuelRepository.save(fuel);
         return ApiResponse.successResponse("Successfully deleted");
     }
 }

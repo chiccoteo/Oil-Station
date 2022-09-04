@@ -18,17 +18,20 @@ public interface OutgoingMapper {
     Outgoing toEntity(OutgoingPostDTO outgoingPostDTO);
 
     @Mapping(target = "spenderFIO", source = "spender.fio")
+    @Mapping(target = "spenderId", source = "spender.id")
     @Mapping(target = "category", source = "category.name")
     @Mapping(target = "lastModifiedBy", source = "lastModifiedBy.fio")
     OutgoingGetDTO toGetDTO(Outgoing outgoing);
 
     @Mapping(target = "spenderFIO", source = "spender.fio")
+    @Mapping(target = "spenderId", source = "spender.id")
     @Mapping(target = "category", source = "category.name")
     OutgoingGetDTOForReport toGetDTOForReport(Outgoing outgoing);
 
     List<OutgoingGetDTOForReport> toGetDTOListForReport(List<Outgoing> outgoingList);
 
     @Mapping(target = "spenderFIO", source = "spender.fio")
+    @Mapping(target = "spenderId", source = "spender.id")
     @Mapping(target = "category", source = "category.name")
     @Mapping(target = "lastModifiedBy", source = "lastModifiedBy.fio")
     OutgoingGetDTOWithId toGetDTOWithId(Outgoing outgoing);

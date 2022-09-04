@@ -11,11 +11,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DebtPostDto {
-    private UUID borrowerId;
+    private String borrower;
     private double amount;
     private UUID lenderOrBorrowerId;
     private Long lenderId;
     private Timestamp givenTime;
     private Timestamp returnTime;
-    private boolean isGiven;
 }

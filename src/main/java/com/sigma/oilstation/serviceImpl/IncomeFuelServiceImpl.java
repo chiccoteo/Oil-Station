@@ -60,11 +60,10 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
     @Override
     public ApiResponse<?> edit(UUID id, IncomeFuelDto incomeFuelDto) {
 
-        Optional<IncomeFuel> optionalIncomeFuel = incomeFuelRepository.findById(id);
+
         Optional<User> optionalUser = userRepository.findById(incomeFuelDto.getEmployeeId());
+        Optional<IncomeFuel> optionalIncomeFuel = incomeFuelRepository.findById(id);
         Optional<Fuel> optionalFuel = fuelRepository.findById(incomeFuelDto.getFuelId());
-
-
         if (optionalUser.isEmpty())
             return new ApiResponse<>(false, "ishchi mavjud emas!");
         if (optionalFuel.isEmpty())
@@ -80,10 +79,6 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
 
         incomeFuel.setFuel(optionalFuel.get());
         incomeFuel.setEmployee(optionalUser.get());
-        incomeFuel.setAmount(incomeFuelDto.getAmount());
-        incomeFuel.setIncomePrice(incomeFuelDto.getIncomePrice());
-        incomeFuel.setCounter(incomeFuelDto.getCounter());
-        incomeFuel.setSalePrice(incomeFuelDto.getSalePrice());
         incomeFuelRepository.save(incomeFuel);
 
         return new ApiResponse<>(true, "Kirim tahrirlandi!");
@@ -200,7 +195,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
     @Override
     public ApiResponse<?> getInterimIncomeFuel(int page, int size, Date startDate, Date endDate) {
         try {
-            Page<IncomeFuel> fuelReportPage = incomeFuelRepository.findAllByIncomeTimeIsBetween(new Timestamp(startDate.getTime()), new Timestamp(endDate.getTime()), CommandUtils.simplePageable(page, size));
+            Page<IncomeFuel> fuelReportPage = incomeFuelRepository.findAllByIncomeTimeIsBetween(new Timestamp(startDate.getTime()),new Timestamp(endDate.getTime()), CommandUtils.simplePageable(page, size));
             Map<String, Object> response = new HashMap<>();
             response.put("fuelReports", getTotalIncomeFuel(fuelReportPage));
             response.put("currentPage", fuelReportPage.getNumber());
@@ -213,29 +208,31 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
     }
 
 
-    IncomeFuelTotalDto getTotalIncomeFuel(Page<IncomeFuel> fuelReportPage) {
-        List<IncomeFuelDto> incomeFuelDtoList = fuelReportPage.getContent().stream().map(incomeMapper::toDto).collect(Collectors.toList());
-        double totalSumSale = 0;
-        double totalSumIncome = 0;
-        double totalAmount = 0;
-        for (IncomeFuelDto incomeFuelDto : incomeFuelDtoList) {
-            totalSumSale += (incomeFuelDto.getAmount() * incomeFuelDto.getSalePrice());
-            totalSumIncome += (incomeFuelDto.getAmount() * incomeFuelDto.getIncomePrice());
-            totalAmount += incomeFuelDto.getAmount();
-        }
-        return new IncomeFuelTotalDto(totalSumIncome, totalSumSale, totalAmount, incomeFuelDtoList);
-    }
 
-    IncomeFuelTotalDto getTotalIncomeFuel(List<IncomeFuel> fuelReportList) {
-        List<IncomeFuelDto> incomeFuelDtoList = fuelReportList.stream().map(incomeMapper::toDto).collect(Collectors.toList());
-        double totalSumIncome = 0;
-        double totalSumSale = 0;
-        double totalAmount = 0;
+
+
+    IncomeFuelTotalDto getTotalIncomeFuel(Page<IncomeFuel> fuelReportPage){
+        List<IncomeFuelDto> incomeFuelDtoList = fuelReportPage.getContent().stream().map(incomeMapper::toDto).collect(Collectors.toList());
+        double totalSumSale=0;
+        double totalSumIncome=0;
+        double totalAmount=0;
         for (IncomeFuelDto incomeFuelDto : incomeFuelDtoList) {
-            totalSumSale += (incomeFuelDto.getAmount() * incomeFuelDto.getSalePrice());
-            totalSumIncome += (incomeFuelDto.getAmount() * incomeFuelDto.getIncomePrice());
-            totalAmount += incomeFuelDto.getAmount();
+            totalSumSale+=(incomeFuelDto.getAmount()*incomeFuelDto.getSalePrice());
+            totalSumIncome+=(incomeFuelDto.getAmount()*incomeFuelDto.getIncomePrice());
+            totalAmount+=incomeFuelDto.getAmount();
         }
-        return new IncomeFuelTotalDto(totalSumIncome, totalSumSale, totalAmount, incomeFuelDtoList);
+        return new IncomeFuelTotalDto(totalSumIncome,totalSumSale,totalAmount,incomeFuelDtoList);
+    }
+    IncomeFuelTotalDto getTotalIncomeFuel(List<IncomeFuel> fuelReportList){
+        List<IncomeFuelDto> incomeFuelDtoList = fuelReportList.stream().map(incomeMapper::toDto).collect(Collectors.toList());
+        double totalSumIncome=0;
+        double totalSumSale=0;
+        double totalAmount=0;
+        for (IncomeFuelDto incomeFuelDto : incomeFuelDtoList) {
+            totalSumSale+=(incomeFuelDto.getAmount()*incomeFuelDto.getSalePrice());
+            totalSumIncome+=(incomeFuelDto.getAmount()*incomeFuelDto.getIncomePrice());
+            totalAmount+=incomeFuelDto.getAmount();
+        }
+        return new IncomeFuelTotalDto(totalSumIncome,totalSumSale,totalAmount,incomeFuelDtoList);
     }
 }

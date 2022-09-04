@@ -19,6 +19,8 @@ public class OutgoingGetDTOWithId {
 
     private String spenderFIO;
 
+    private UUID spenderId;
+
     private Timestamp outgoingTime;
 
     private String category;
