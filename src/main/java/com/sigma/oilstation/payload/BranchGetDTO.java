@@ -13,4 +13,5 @@ public class BranchGetDTO {
     private UUID id;
     private String name;
     private AddressDTO addressDTO;
+    private boolean delete;
 }

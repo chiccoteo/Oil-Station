@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class BranchDTO {
     private String name;
     private Long addressId;
+    private boolean delete;
 }
