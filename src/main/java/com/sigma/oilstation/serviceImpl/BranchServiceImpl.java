@@ -84,14 +84,20 @@ public class BranchServiceImpl implements BranchService {
             return ApiResponse.errorResponse("ID_MUST_NOT_BE_NULL");
 
         Optional<Branch> optionalBranch = repository.findById(id);
-        Optional<Address> optionalAddress = addressRepository.findById(branchDTO.getAddressId());
 
-        if (optionalBranch.isEmpty() || optionalAddress.isEmpty()) {
+        if (optionalBranch.isEmpty()) {
             return ApiResponse.errorResponse("SUCH_A_BRANCH_OR_ADDRESS_DOES_NOT_EXIST");
         }
-
         Branch branch = optionalBranch.get();
-        branch.setAddress(optionalAddress.get());
+
+        if (branchDTO.getAddressId()!=null){
+            Optional<Address> optionalAddress = addressRepository.findById(branchDTO.getAddressId());
+            if (optionalAddress.isEmpty()) {
+                return ApiResponse.errorResponse("SUCH_A_BRANCH_OR_ADDRESS_DOES_NOT_EXIST");
+            }
+            branch.setAddress(optionalAddress.get());
+        }
+
         branch.setName(branchDTO.getName());
         repository.save(branch);
         return ApiResponse.successResponse("SUCCESSFULLY_UPDATE");
