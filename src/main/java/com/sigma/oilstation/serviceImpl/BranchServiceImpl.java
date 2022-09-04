@@ -80,7 +80,7 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public ApiResponse<?> edit(UUID id, BranchDTO branchDTO) {
-        if (id == null || branchDTO.getAddressId() == null)
+        if (id == null)
             return ApiResponse.errorResponse("ID_MUST_NOT_BE_NULL");
 
         Optional<Branch> optionalBranch = repository.findById(id);
@@ -113,7 +113,8 @@ public class BranchServiceImpl implements BranchService {
         if (optionalBranch.isEmpty())
             return ApiResponse.errorResponse("SUCH_A_BRANCH_DOES_NOT_EXIST");
 
-        repository.delete(optionalBranch.get());
+        Branch branch = optionalBranch.get();
+        repository.delete(branch);
 
         return ApiResponse.successResponse("SUCCESSFULLY_DELETED");
     }

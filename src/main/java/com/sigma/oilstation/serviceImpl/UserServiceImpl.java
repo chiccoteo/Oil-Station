@@ -142,8 +142,8 @@ public class UserServiceImpl implements UserService {
         user.setDeleted(userDTO.isDeleted());
         repository.save(user);
 
-        return ApiResponse.successResponse("SUCCESSFULLY_CREATE");
-    }
+        return ApiResponse.successResponse("SUCCESSFULLY_UPDATE");
+        }
 
     @Override
     public ApiResponse<?> deleteUser(UUID id) {
