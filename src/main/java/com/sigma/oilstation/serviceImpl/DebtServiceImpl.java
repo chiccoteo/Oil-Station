@@ -149,7 +149,7 @@ public class DebtServiceImpl implements DebtService {
                 debtGetDto.setBorrower(debt.getBorrower());
                 debtGetDto.setAmount(debt.getAmount());
                 debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
-                debtGetDto.setLenderId(debtGetDto.getLenderId());
+                debtGetDto.setLenderId(debt.getLender().getId());
                 debtGetDto.setGivenTime(debt.getGivenTime());
                 debtGetDto.setReturnTime(debt.getReturnTime());
                 debtGetDto.setGiven(debt.isGiven());
