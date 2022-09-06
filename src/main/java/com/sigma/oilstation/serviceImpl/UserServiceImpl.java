@@ -100,9 +100,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ApiResponse<?> updateUser(UUID id, UserDTO userDTO) {
-        if (id == null)
-            return ApiResponse.errorResponse("ID_MUST_NOT_BE_NULL");
-
         Optional<User> optionalUser = repository.findById(id);
 
         if (optionalUser.isEmpty())
