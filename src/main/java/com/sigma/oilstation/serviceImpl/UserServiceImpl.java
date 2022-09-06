@@ -128,11 +128,6 @@ public class UserServiceImpl implements UserService {
             user.setBranch(branch);
         }
 
-        if (repository.existsByUsername(userDTO.getUsername())) {
-            if (!user.getUsername().equals(userDTO.getUsername())) {
-                return ApiResponse.errorResponse("ERROR_USERNAME");
-            }
-        }
 
         user.setUsername(userDTO.getUsername());
         user.setFio(userDTO.getFio());
@@ -140,6 +135,7 @@ public class UserServiceImpl implements UserService {
         user.setPhoneNumber(userDTO.getPhoneNumber());
         user.setBlock(userDTO.isBlock());
         user.setDeleted(userDTO.isDeleted());
+
         repository.save(user);
 
         return ApiResponse.successResponse("SUCCESSFULLY_UPDATE");
