@@ -100,6 +100,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ApiResponse<?> updateUser(UUID id, UserDTO userDTO) {
+        if (id == null)
+            return ApiResponse.errorResponse("ID_MUST_NOT_BE_NULL");
+
         Optional<User> optionalUser = repository.findById(id);
 
         if (optionalUser.isEmpty())
@@ -131,7 +134,6 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setPhoneNumber(userDTO.getPhoneNumber());
         user.setBlock(userDTO.isBlock());
-        user.setDeleted(userDTO.isDeleted());
 
         repository.save(user);
 
