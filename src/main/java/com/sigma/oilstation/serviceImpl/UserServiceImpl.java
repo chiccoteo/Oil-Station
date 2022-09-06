@@ -134,7 +134,6 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setPhoneNumber(userDTO.getPhoneNumber());
         user.setBlock(userDTO.isBlock());
-        user.setDeleted(userDTO.isDeleted());
 
         repository.save(user);
 
