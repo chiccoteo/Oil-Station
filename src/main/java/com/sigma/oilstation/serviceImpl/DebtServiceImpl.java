@@ -102,7 +102,7 @@ public class DebtServiceImpl implements DebtService {
     public ApiResponse<?> getAllDebtPageableWorker(Integer page, Integer size) {
         Page<Debt> debtPage;
         try {
-            debtPage = debtRepository.findAll(CommandUtils.simplePageable(page, size));
+            debtPage = debtRepository.findAllByBorrowerNotNull(CommandUtils.simplePageable(page, size));
         } catch (PageSizeException e) {
             return ApiResponse.errorResponse(e.getMessage());
         }
@@ -110,18 +110,16 @@ public class DebtServiceImpl implements DebtService {
         List<DebtGetDto> debtGetDtoList = new LinkedList<>();
 
         for (Debt debt : debtList) {
-            if (debt.getLender() == null) {
-                DebtGetDto debtGetDto = new DebtGetDto();
-                debtGetDto.setId(debt.getId());
-                debtGetDto.setBorrower(debt.getBorrower());
-                debtGetDto.setAmount(debt.getAmount());
-                debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
-                debtGetDto.setLenderId(null);
-                debtGetDto.setGivenTime(debt.getGivenTime());
-                debtGetDto.setReturnTime(debt.getReturnTime());
-                debtGetDto.setGiven(debt.isGiven());
-                debtGetDtoList.add(debtGetDto);
-            }
+            DebtGetDto debtGetDto = new DebtGetDto();
+            debtGetDto.setId(debt.getId());
+            debtGetDto.setBorrower(debt.getBorrower());
+            debtGetDto.setAmount(debt.getAmount());
+            debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
+            debtGetDto.setLenderId(null);
+            debtGetDto.setGivenTime(debt.getGivenTime());
+            debtGetDto.setReturnTime(debt.getReturnTime());
+            debtGetDto.setGiven(debt.isGiven());
+            debtGetDtoList.add(debtGetDto);
         }
         Map<String, Object> response = new HashMap<>();
         response.put("debt", debtGetDtoList);
@@ -135,7 +133,7 @@ public class DebtServiceImpl implements DebtService {
     public ApiResponse<?> getAllDebtPageableSupplier(Integer page, Integer size) {
         Page<Debt> debtPage;
         try {
-            debtPage = debtRepository.findAll(CommandUtils.simplePageable(page, size));
+            debtPage = debtRepository.findAllByLenderIsNotNull(CommandUtils.simplePageable(page, size));
         } catch (PageSizeException e) {
             return ApiResponse.errorResponse(e.getMessage());
         }
@@ -143,18 +141,16 @@ public class DebtServiceImpl implements DebtService {
         List<DebtGetDto> debtGetDtoList = new LinkedList<>();
 
         for (Debt debt : debtList) {
-            if (debt.getBorrower() == null) {
-                DebtGetDto debtGetDto = new DebtGetDto();
-                debtGetDto.setId(debt.getId());
-                debtGetDto.setBorrower(debt.getBorrower());
-                debtGetDto.setAmount(debt.getAmount());
-                debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
-                debtGetDto.setLenderId(debt.getLender().getId());
-                debtGetDto.setGivenTime(debt.getGivenTime());
-                debtGetDto.setReturnTime(debt.getReturnTime());
-                debtGetDto.setGiven(debt.isGiven());
-                debtGetDtoList.add(debtGetDto);
-            }
+            DebtGetDto debtGetDto = new DebtGetDto();
+            debtGetDto.setId(debt.getId());
+            debtGetDto.setBorrower(debt.getBorrower());
+            debtGetDto.setAmount(debt.getAmount());
+            debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
+            debtGetDto.setLenderId(debt.getLender().getId());
+            debtGetDto.setGivenTime(debt.getGivenTime());
+            debtGetDto.setReturnTime(debt.getReturnTime());
+            debtGetDto.setGiven(debt.isGiven());
+            debtGetDtoList.add(debtGetDto);
         }
         Map<String, Object> response = new HashMap<>();
         response.put("debt", debtGetDtoList);
