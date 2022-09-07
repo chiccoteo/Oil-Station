@@ -32,6 +32,8 @@ public interface IncomeFuelController {
     
      String PUT_INCOME_FUEL = "/{id}";
 
+
+
     @PostMapping
     HttpEntity<?> create(@RequestBody IncomeFuelPostDto incomeFuelDto);
 

@@ -29,7 +29,7 @@ public class BranchServiceImpl implements BranchService {
     @Override
     public ApiResponse<?> getAllPageable(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-        Page<Branch> all = repository.findAll(pageable);
+        Page<Branch> all = repository.findAllByDeleteIsFalse(pageable);
 
         List<BranchGetDTO> branchDTOList = mapper.toGetDTOList(all.toList());
 
@@ -44,7 +44,7 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public ApiResponse<?> getAll() {
-        return ApiResponse.successResponse("ALL_BRANCHES", mapper.toGetDTOList(repository.findAll(Sort.by("createdDate").descending())));
+        return ApiResponse.successResponse("ALL_BRANCHES", mapper.toGetDTOList(repository.findAllByDeleteIsFalse(Sort.by("createdDate").descending())));
     }
 
     @Override
@@ -80,18 +80,24 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public ApiResponse<?> edit(UUID id, BranchDTO branchDTO) {
-        if (id == null || branchDTO.getAddressId() == null)
+        if (id == null)
             return ApiResponse.errorResponse("ID_MUST_NOT_BE_NULL");
 
         Optional<Branch> optionalBranch = repository.findById(id);
-        Optional<Address> optionalAddress = addressRepository.findById(branchDTO.getAddressId());
 
-        if (optionalBranch.isEmpty() || optionalAddress.isEmpty()) {
+        if (optionalBranch.isEmpty()) {
             return ApiResponse.errorResponse("SUCH_A_BRANCH_OR_ADDRESS_DOES_NOT_EXIST");
         }
-
         Branch branch = optionalBranch.get();
-        branch.setAddress(optionalAddress.get());
+
+        if (branchDTO.getAddressId()!=null){
+            Optional<Address> optionalAddress = addressRepository.findById(branchDTO.getAddressId());
+            if (optionalAddress.isEmpty()) {
+                return ApiResponse.errorResponse("SUCH_A_BRANCH_OR_ADDRESS_DOES_NOT_EXIST");
+            }
+            branch.setAddress(optionalAddress.get());
+        }
+
         branch.setName(branchDTO.getName());
         repository.save(branch);
         return ApiResponse.successResponse("SUCCESSFULLY_UPDATE");
@@ -107,7 +113,8 @@ public class BranchServiceImpl implements BranchService {
         if (optionalBranch.isEmpty())
             return ApiResponse.errorResponse("SUCH_A_BRANCH_DOES_NOT_EXIST");
 
-        repository.delete(optionalBranch.get());
+        Branch branch = optionalBranch.get();
+        branch.setDelete(true);
 
         return ApiResponse.successResponse("SUCCESSFULLY_DELETED");
     }
