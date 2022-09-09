@@ -115,6 +115,7 @@ public class BranchServiceImpl implements BranchService {
 
         Branch branch = optionalBranch.get();
         branch.setDelete(true);
+        repository.save(branch);
 
         return ApiResponse.successResponse("SUCCESSFULLY_DELETED");
     }
