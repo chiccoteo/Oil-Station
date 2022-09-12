@@ -1,5 +1,6 @@
 package com.sigma.oilstation.serviceImpl;
 
+import com.sigma.oilstation.entity.Branch;
 import com.sigma.oilstation.entity.Debt;
 import com.sigma.oilstation.entity.Supplier;
 import com.sigma.oilstation.entity.User;
@@ -8,6 +9,7 @@ import com.sigma.oilstation.payload.ApiResponse;
 import com.sigma.oilstation.payload.DebtGetDto;
 import com.sigma.oilstation.payload.DebtPostDto;
 import com.sigma.oilstation.payload.DebtUpdateDto;
+import com.sigma.oilstation.repository.BranchRepository;
 import com.sigma.oilstation.repository.DebtRepository;
 import com.sigma.oilstation.repository.SupplierRepository;
 import com.sigma.oilstation.repository.UserRepository;
@@ -15,7 +17,6 @@ import com.sigma.oilstation.service.DebtService;
 import com.sigma.oilstation.utils.CommandUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -29,6 +30,8 @@ public class DebtServiceImpl implements DebtService {
     final private UserRepository userRepository;
 
     final private SupplierRepository supplierRepository;
+
+    final private BranchRepository branchRepository;
 
     @Override
     public ApiResponse<?> addDebt(DebtPostDto debtPostDto) {
@@ -163,9 +166,13 @@ public class DebtServiceImpl implements DebtService {
 
     @Override
     public ApiResponse<?> getAllDebtPageableWorkerByBranch(Integer page, Integer size, UUID branchId) {
+        Optional<Branch> optionalBranch = branchRepository.findById(branchId);
+        if (optionalBranch.isEmpty()){
+            return ApiResponse.errorResponse("Such a branch does not exist");
+        }
         Page<Debt> debtPage;
         try {
-            debtPage = debtRepository.findAllByBorrowerByBranch(CommandUtils.debtPageable(page, size),branchId);
+            debtPage = debtRepository.findAllByBorrowerByBranch(branchId, CommandUtils.debtByBranchPageable(page, size));
         } catch (PageSizeException e) {
             return ApiResponse.errorResponse(e.getMessage());
         }
@@ -194,9 +201,13 @@ public class DebtServiceImpl implements DebtService {
 
     @Override
     public ApiResponse<?> getAllDebtPageableSupplierByBranch(Integer page, Integer size, UUID branchId) {
+        Optional<Branch> optionalBranch = branchRepository.findById(branchId);
+        if (optionalBranch.isEmpty()){
+            return ApiResponse.errorResponse("Such a branch does not exist");
+        }
         Page<Debt> debtPage;
         try {
-            debtPage = debtRepository.findAllByLenderByBranch(CommandUtils.debtPageable(page, size), branchId);
+            debtPage = debtRepository.findAllByLenderByBranch(branchId, CommandUtils.debtByBranchPageable(page, size));
         } catch (PageSizeException e) {
             return ApiResponse.errorResponse(e.getMessage());
         }
