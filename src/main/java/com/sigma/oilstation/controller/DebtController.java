@@ -16,28 +16,28 @@ public interface DebtController {
     String DEBT_CONTROLLER = AppConstant.BASE_PATH + "/debt";
 
     @PostMapping(POST_PATH)
-    public HttpEntity<?> addDebt(@RequestBody DebtPostDto debtPostDto);
+    HttpEntity<?> addDebt(@RequestBody DebtPostDto debtPostDto);
 
     @GetMapping(GET_BY_ID_PATH)
-    public HttpEntity<?> getByIdDebt(@PathVariable UUID id);
+    HttpEntity<?> getByIdDebt(@PathVariable UUID id);
 
     @GetMapping(GET_ALL_PAGEABLE_PATH+"/worker")
-    public HttpEntity<?> getAllDebtPageableWorker(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
+    HttpEntity<?> getAllDebtPageableWorker(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
                                             @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
 
-    @GetMapping(GET_ALL_PAGEABLE_PATH+"supplier")
-    public HttpEntity<?> getAllDebtPageableSupplier(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
+    @GetMapping(GET_ALL_PAGEABLE_PATH+"/supplier")
+    HttpEntity<?> getAllDebtPageableSupplier(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
                                             @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
 
     @GetMapping(GET_ALL_PATH)
-    public HttpEntity<?> getAllDebt();
+    HttpEntity<?> getAllDebt();
 
 
     @PutMapping(PUT_PATH)
-    public HttpEntity<?> updateDebt(@PathVariable UUID id, @RequestBody DebtUpdateDto debtUpdateDto);
+    HttpEntity<?> updateDebt(@PathVariable UUID id, @RequestBody DebtUpdateDto debtUpdateDto);
 
 
     @DeleteMapping(DELETE_PATH)
-    public HttpEntity<?> deleteDebt(@PathVariable UUID id);
+    HttpEntity<?> deleteDebt(@PathVariable UUID id);
 
 }

@@ -12,5 +12,6 @@ import java.util.UUID;
 public class BranchGetDTO {
     private UUID id;
     private String name;
-    private AddressDTO addressDTO;
+    private AddressGetDTO addressGetDTO;
+    private boolean delete;
 }

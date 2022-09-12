@@ -110,36 +110,36 @@ public class UserServiceImpl implements UserService {
 
         User user = optionalUser.get();
 
-        Optional<Role> optionalRole = roleRepository.findById(userDTO.getRoleId());
-        Optional<Branch> optionalBranch = branchRepository.findById(userDTO.getBranchId());
-
-        Branch branch;
-        Role role;
-
-        if (optionalBranch.isPresent() && optionalRole.isPresent()) {
-            branch = optionalBranch.get();
-            role = optionalRole.get();
-        } else {
-            return ApiResponse.errorResponse("SUCH_A_ROLE_OR_BRANCH_DOES_NOT_EXIST");
-        }
-
-        if (repository.existsByUsername(userDTO.getUsername())) {
-            if (!user.getUsername().equals(userDTO.getUsername())) {
-                return ApiResponse.errorResponse("ERROR_USERNAME");
+        if (userDTO.getRoleId()!=null){
+            Optional<Role> optionalRole = roleRepository.findById(userDTO.getRoleId());
+            if (optionalRole.isEmpty()){
+                return ApiResponse.errorResponse("SUCH_A_ROLE_DOES_NOT_EXIST");
             }
+            Role role = optionalRole.get();
+            user.setRole(role);
         }
+
+        if (userDTO.getBranchId()!=null){
+            Optional<Branch> optionalBranch = branchRepository.findById(userDTO.getBranchId());
+            if (optionalBranch.isEmpty()){
+                return ApiResponse.errorResponse("SUCH_A_BRANCH_DOES_NOT_EXIST");
+            }
+            Branch branch = optionalBranch.get();
+            user.setBranch(branch);
+        }
+
+
         user.setUsername(userDTO.getUsername());
         user.setFio(userDTO.getFio());
         if (userDTO.getPassword() != null)
             user.setPassword(passwordEncoder.encode((userDTO.getPassword())));
         user.setPhoneNumber(userDTO.getPhoneNumber());
-        user.setBranch(branch);
-        user.setRole(role);
         user.setBlock(userDTO.isBlock());
-        user.setDeleted(userDTO.isDeleted());
+
         repository.save(user);
-        return ApiResponse.successResponse("SUCCESSFULLY_CREATE");
-    }
+
+        return ApiResponse.successResponse("SUCCESSFULLY_UPDATE");
+        }
 
     @Override
     public ApiResponse<?> deleteUser(UUID id) {
