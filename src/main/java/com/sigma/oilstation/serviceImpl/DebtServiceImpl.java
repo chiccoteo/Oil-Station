@@ -15,6 +15,7 @@ import com.sigma.oilstation.service.DebtService;
 import com.sigma.oilstation.utils.CommandUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -102,7 +103,7 @@ public class DebtServiceImpl implements DebtService {
     public ApiResponse<?> getAllDebtPageableWorker(Integer page, Integer size) {
         Page<Debt> debtPage;
         try {
-            debtPage = debtRepository.findAllByBorrowerNotNull(CommandUtils.simplePageable(page, size));
+            debtPage = debtRepository.findAllByBorrowerNotNullOrderByGivenAsc(CommandUtils.debtPageable(page, size));
         } catch (PageSizeException e) {
             return ApiResponse.errorResponse(e.getMessage());
         }
@@ -133,7 +134,69 @@ public class DebtServiceImpl implements DebtService {
     public ApiResponse<?> getAllDebtPageableSupplier(Integer page, Integer size) {
         Page<Debt> debtPage;
         try {
-            debtPage = debtRepository.findAllByLenderIsNotNull(CommandUtils.simplePageable(page, size));
+            debtPage = debtRepository.findAllByLenderIsNotNullOrderByGivenAsc(CommandUtils.debtPageable(page, size));
+        } catch (PageSizeException e) {
+            return ApiResponse.errorResponse(e.getMessage());
+        }
+        List<Debt> debtList = debtPage.getContent();
+        List<DebtGetDto> debtGetDtoList = new LinkedList<>();
+
+        for (Debt debt : debtList) {
+            DebtGetDto debtGetDto = new DebtGetDto();
+            debtGetDto.setId(debt.getId());
+            debtGetDto.setBorrower(debt.getBorrower());
+            debtGetDto.setAmount(debt.getAmount());
+            debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
+            debtGetDto.setLenderId(debt.getLender().getId());
+            debtGetDto.setGivenTime(debt.getGivenTime());
+            debtGetDto.setReturnTime(debt.getReturnTime());
+            debtGetDto.setGiven(debt.isGiven());
+            debtGetDtoList.add(debtGetDto);
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("debt", debtGetDtoList);
+        response.put("currentPage", debtPage.getNumber());
+        response.put("totalItems", debtPage.getTotalElements());
+        response.put("totalPages", debtPage.getTotalPages());
+        return ApiResponse.successResponse("All debt with page, supplier", response);
+    }
+
+    @Override
+    public ApiResponse<?> getAllDebtPageableWorkerByBranch(Integer page, Integer size, UUID branchId) {
+        Page<Debt> debtPage;
+        try {
+            debtPage = debtRepository.findAllByBorrowerByBranch(CommandUtils.debtPageable(page, size),branchId);
+        } catch (PageSizeException e) {
+            return ApiResponse.errorResponse(e.getMessage());
+        }
+        List<Debt> debtList = debtPage.getContent();
+        List<DebtGetDto> debtGetDtoList = new LinkedList<>();
+
+        for (Debt debt : debtList) {
+            DebtGetDto debtGetDto = new DebtGetDto();
+            debtGetDto.setId(debt.getId());
+            debtGetDto.setBorrower(debt.getBorrower());
+            debtGetDto.setAmount(debt.getAmount());
+            debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
+            debtGetDto.setLenderId(null);
+            debtGetDto.setGivenTime(debt.getGivenTime());
+            debtGetDto.setReturnTime(debt.getReturnTime());
+            debtGetDto.setGiven(debt.isGiven());
+            debtGetDtoList.add(debtGetDto);
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("debt", debtGetDtoList);
+        response.put("currentPage", debtPage.getNumber());
+        response.put("totalItems", debtPage.getTotalElements());
+        response.put("totalPages", debtPage.getTotalPages());
+        return ApiResponse.successResponse("All debt with page, worker", response);
+    }
+
+    @Override
+    public ApiResponse<?> getAllDebtPageableSupplierByBranch(Integer page, Integer size, UUID branchId) {
+        Page<Debt> debtPage;
+        try {
+            debtPage = debtRepository.findAllByLenderByBranch(CommandUtils.debtPageable(page, size), branchId);
         } catch (PageSizeException e) {
             return ApiResponse.errorResponse(e.getMessage());
         }

@@ -43,6 +43,18 @@ public class DebtControllerImpl implements DebtController {
     }
 
     @Override
+    public HttpEntity<?> getAllDebtPageableWorkerByBranch(UUID id, Integer page, Integer size) {
+        ApiResponse<?> apiResponse = debtService.getAllDebtPageableWorkerByBranch(page,size,id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 400).body(apiResponse);
+    }
+
+    @Override
+    public HttpEntity<?> getAllDebtPageableSupplierByBranch(UUID id, Integer page, Integer size) {
+        ApiResponse<?> apiResponse = debtService.getAllDebtPageableSupplierByBranch(page,size,id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 400).body(apiResponse);
+    }
+
+    @Override
     public HttpEntity<?> getAllDebt() {
         ApiResponse<?> apiResponse = debtService.getAllDebt();
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 400).body(apiResponse);
