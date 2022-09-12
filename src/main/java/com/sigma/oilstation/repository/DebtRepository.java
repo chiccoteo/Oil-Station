@@ -14,9 +14,9 @@ public interface DebtRepository extends JpaRepository<Debt, UUID> {
 
     @Query(value = "select * from debt d join users u on d.lender_or_borrower_id= u.id\n" +
             "join branch b on u.branch_id = b.id where b.id=:branchId and d.lender_id IS NOT NULL order by d.given , d.created_date desc", nativeQuery = true)
-    Page<Debt> findAllByLenderByBranch(Pageable pageable, UUID branchId);
+    Page<Debt> findAllByLenderByBranch(UUID branchId, Pageable pageable);
 
     @Query(value = "select * from debt d join users u on d.lender_or_borrower_id= u.id\n" +
             "join branch b on u.branch_id = b.id where b.id=:branchId and d.borrower IS NOT NULL order by d.given , d.created_date desc", nativeQuery = true)
-    Page<Debt> findAllByBorrowerByBranch(Pageable pageable, UUID branchId);
+    Page<Debt> findAllByBorrowerByBranch(UUID branchId, Pageable pageable);
 }
