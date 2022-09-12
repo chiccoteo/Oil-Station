@@ -38,6 +38,7 @@ public class RoleServiceImpl implements RoleService {
         return ApiResponse.successResponse("ALL_ROLES", mapper.toGetDTOList(repository.findAll(Sort.by("createdDate").descending())));
     }
 
+
     @Override
     public ApiResponse<?> getById(Long id) {
         if (id == null)
@@ -50,6 +51,7 @@ public class RoleServiceImpl implements RoleService {
 
         return ApiResponse.successResponse("SUCCESS", mapper.toGetDTO(optionalRole.get()));
     }
+
 
     @Override
     public ApiResponse<?> create(RoleDTO roleDTO) {
