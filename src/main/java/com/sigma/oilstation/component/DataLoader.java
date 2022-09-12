@@ -67,7 +67,7 @@ public class DataLoader implements CommandLineRunner {
             measurement1 = measurementRepository.save(measurement1);
             measurement2 = measurementRepository.save(measurement2);
             Fuel fuel = new Fuel("A-80",1400,measurement1,measurement2,false);
-            fuel =fuelRepository.save(fuel);
+            fuelRepository.save(fuel);
 
         }
     }
