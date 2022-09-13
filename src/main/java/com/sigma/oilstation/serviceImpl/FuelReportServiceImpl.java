@@ -313,7 +313,7 @@ public class FuelReportServiceImpl implements FuelReportService {
         for (FuelReportDto fuelReportDto : fuelReportDtoList) {
             double amount = fuelReportDto.getAmountAtStartOfShift() - fuelReportDto.getAmountAtEndOfShift();
             totalAmount += amount;
-            totalAmount += (amount * fuelReportDto.getSalePrice());
+            totalSum += (amount * fuelReportDto.getSalePrice());
         }
         return new FuelReportTotalDto(totalSum, totalAmount, fuelReportDtoList);
     }
@@ -325,7 +325,7 @@ public class FuelReportServiceImpl implements FuelReportService {
         for (FuelReportDto fuelReportDto : fuelReportDtoList) {
             double amount = fuelReportDto.getAmountAtStartOfShift() - fuelReportDto.getAmountAtEndOfShift();
             totalAmount += amount;
-            totalAmount += (amount * fuelReportDto.getSalePrice());
+            totalSum += (amount * fuelReportDto.getSalePrice());
         }
         return new FuelReportTotalDto(totalSum, totalAmount, fuelReportDtoList);
     }
