@@ -78,6 +78,7 @@ public class BranchServiceImpl implements BranchService {
         return ApiResponse.successResponse("SUCCESSFULLY_SAVED", mapper.toGetDTO(repository.save(branch)));
     }
 
+
     @Override
     public ApiResponse<?> edit(UUID id, BranchDTO branchDTO) {
         if (id == null)
@@ -90,18 +91,17 @@ public class BranchServiceImpl implements BranchService {
         }
         Branch branch = optionalBranch.get();
 
-        if (branchDTO.getAddressId()!=null){
-            Optional<Address> optionalAddress = addressRepository.findById(branchDTO.getAddressId());
-            if (optionalAddress.isEmpty()) {
-                return ApiResponse.errorResponse("SUCH_A_BRANCH_OR_ADDRESS_DOES_NOT_EXIST");
-            }
-            branch.setAddress(optionalAddress.get());
+        Optional<Address> optionalAddress = addressRepository.findById(branchDTO.getAddressId());
+        if (optionalAddress.isEmpty()) {
+            return ApiResponse.errorResponse("SUCH_A_BRANCH_OR_ADDRESS_DOES_NOT_EXIST");
         }
 
+        branch.setAddress(optionalAddress.get());
         branch.setName(branchDTO.getName());
         repository.save(branch);
         return ApiResponse.successResponse("SUCCESSFULLY_UPDATE");
     }
+
 
     @Override
     public ApiResponse<?> delete(UUID id) {
