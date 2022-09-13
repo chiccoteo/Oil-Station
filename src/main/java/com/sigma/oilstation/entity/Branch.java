@@ -17,7 +17,6 @@ import javax.persistence.OneToOne;
 @EqualsAndHashCode(callSuper = true)
 public class Branch extends AbsEntity {
 
-
     @OneToOne(fetch = FetchType.LAZY)
     private Address address;
 
