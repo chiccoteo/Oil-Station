@@ -49,4 +49,7 @@ public interface UserController {
     @GetMapping
     HttpEntity<?> getUser();
 
+    @GetMapping("/get/user/branch{id}")
+    HttpEntity<?> getUsersByBranchId(@PathVariable UUID id);
+
 }
