@@ -20,4 +20,6 @@ public interface UserService {
 
     ApiResponse<?> getUser();
 
+    ApiResponse<?> getUsersByBranchId(UUID id);
+
 }

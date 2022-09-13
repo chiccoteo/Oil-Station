@@ -58,4 +58,10 @@ public class UserControllerImpl implements UserController {
         ApiResponse<?> apiResponse = service.getUser();
         return ResponseEntity.ok(apiResponse);
     }
+
+    @Override
+    public HttpEntity<?> getUsersByBranchId(UUID id) {
+        ApiResponse<?> apiResponse = service.getUsersByBranchId(id);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 400).body(apiResponse);
+    }
 }
