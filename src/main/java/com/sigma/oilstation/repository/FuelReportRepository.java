@@ -12,6 +12,6 @@ import java.util.UUID;
 public interface FuelReportRepository extends JpaRepository<FuelReport, UUID> {
     FuelReport findByActiveShiftTrueAndEmployeeBranchId(UUID employee_branch_id);
     Page<FuelReport> findAllByReportTimeIsBetween(Timestamp startTime, Timestamp endTime, Pageable pageable);
-    List<FuelReport> findAllByEmployeeBranchId(UUID employee_branch_id);
+    List<FuelReport> findAllByEmployeeBranchId(Pageable pageable, UUID employee_branch_id);
     Page<FuelReport> findAllByEmployeeBranchIdAndReportTimeIsBetween(UUID employee_branch_id, Timestamp startTime, Timestamp endTime, Pageable pageable);
 }

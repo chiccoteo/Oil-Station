@@ -119,11 +119,10 @@ public class FuelReportServiceImpl implements FuelReportService {
     }
 
     @Override
-    public ApiResponse<?> getByBranchId(UUID branchId) {
+    public ApiResponse<?> getByBranchId(UUID branchId, int page, int size) throws PageSizeException {
         if (!branchRepository.existsById(branchId))
             return new ApiResponse<>(false, "Filial mavjud emas!");
-
-        List<FuelReport> fuelReportList = fuelReportRepository.findAllByEmployeeBranchId(branchId);
+        List<FuelReport> fuelReportList = fuelReportRepository.findAllByEmployeeBranchId(CommandUtils.simplePageable(page, size),branchId);
         return new ApiResponse<>(true, "Filial hisobotlari!", getTotalFuelReport(fuelReportList));
     }
 
