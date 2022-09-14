@@ -26,12 +26,11 @@ public interface IncomeFuelController {
 
     String GET_MONTHLY_INCOME_FUEL = "/monthly";
 
-    String GET_ANNUAL_INCOME_FUEL= "/annually";
+    String GET_ANNUAL_INCOME_FUEL = "/annually";
 
     String GET_BETWEEN_INCOME_FUEL = "/between";
-    
-     String PUT_INCOME_FUEL = "/{id}";
 
+    String PUT_INCOME_FUEL = "/{id}";
 
 
     @PostMapping
@@ -71,6 +70,42 @@ public interface IncomeFuelController {
 
     @GetMapping(GET_BETWEEN_INCOME_FUEL)
     HttpEntity<?> getInterimIncomeFuel(
+            @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
+            @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size,
+            @RequestParam(name = "startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @RequestParam(name = "endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate);
+
+
+    @GetMapping("/byBranch/{branchId}")
+    HttpEntity<?> getByBranchId(@PathVariable UUID branchId,
+                                @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
+                                @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size);
+
+
+    @GetMapping(GET_DAILY_INCOME_FUEL + "/{branchId}")
+    HttpEntity<?> getDailyBranchIncomeFuel(@PathVariable UUID branchId,
+                                           @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
+                                           @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size);
+
+    @GetMapping(GET_WEEKLY_INCOME_FUEL + "/{branchId}")
+    HttpEntity<?> getWeeklyBranchIncomeFuel(@PathVariable UUID branchId,
+                                            @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
+                                            @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size);
+
+    @GetMapping(GET_MONTHLY_INCOME_FUEL + "/{branchId}")
+    HttpEntity<?> getMonthlyBranchIncomeFuel(@PathVariable UUID branchId,
+                                             @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
+                                             @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size);
+
+
+    @GetMapping(GET_ANNUAL_INCOME_FUEL + "/{branchId}")
+    HttpEntity<?> getAnnualBranchIncomeFuel(@PathVariable UUID branchId,
+                                      @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
+                                      @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size);
+
+    @GetMapping(GET_BETWEEN_INCOME_FUEL + "/{branchId}")
+    HttpEntity<?> getInterimBranchIncomeFuel(
+            @PathVariable UUID branchId,
             @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
             @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size,
             @RequestParam(name = "startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,

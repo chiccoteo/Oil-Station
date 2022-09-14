@@ -1,9 +1,16 @@
 package com.sigma.oilstation.serviceImpl;
 
-import com.sigma.oilstation.entity.*;
+import com.sigma.oilstation.entity.Debt;
+import com.sigma.oilstation.entity.Fuel;
+import com.sigma.oilstation.entity.IncomeFuel;
+import com.sigma.oilstation.entity.User;
 import com.sigma.oilstation.exceptions.PageSizeException;
 import com.sigma.oilstation.mapper.IncomeFuelMapper;
-import com.sigma.oilstation.payload.*;
+import com.sigma.oilstation.payload.ApiResponse;
+import com.sigma.oilstation.payload.IncomeFuelDto;
+import com.sigma.oilstation.payload.IncomeFuelPostDto;
+import com.sigma.oilstation.payload.IncomeFuelTotalDto;
+import com.sigma.oilstation.repository.BranchRepository;
 import com.sigma.oilstation.repository.FuelRepository;
 import com.sigma.oilstation.repository.IncomeFuelRepository;
 import com.sigma.oilstation.repository.UserRepository;
@@ -26,6 +33,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
     private final UserRepository userRepository;
     private final IncomeFuelMapper incomeMapper;
     private final FuelRepository fuelRepository;
+    private final BranchRepository branchRepository;
 
 
     @Override
@@ -128,12 +136,12 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
         Timestamp today = Timestamp.valueOf(LocalDateTime.now());
         Timestamp yesterday = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
         try {
-            Page<IncomeFuel> fuelReportPage = incomeFuelRepository.findAllByIncomeTimeIsBetween(today, yesterday, CommandUtils.simplePageable(page, size));
+            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByIncomeTimeIsBetween(today, yesterday, CommandUtils.simplePageable(page, size));
             Map<String, Object> response = new HashMap<>();
-            response.put("fuelReports", getTotalIncomeFuel(fuelReportPage));
-            response.put("currentPage", fuelReportPage.getNumber());
-            response.put("totalItems", fuelReportPage.getTotalElements());
-            response.put("totalPages", fuelReportPage.getTotalPages());
+            response.put("fuelReports", getTotalIncomeFuel(incomeFuelPage));
+            response.put("currentPage", incomeFuelPage.getNumber());
+            response.put("totalItems", incomeFuelPage.getTotalElements());
+            response.put("totalPages", incomeFuelPage.getTotalPages());
             return new ApiResponse<>(true, "Kunlik kirimlar!", response);
         } catch (PageSizeException e) {
             return new ApiResponse<>(false, e.getMessage());
@@ -145,12 +153,12 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
         Timestamp today = Timestamp.valueOf(LocalDateTime.now());
         Timestamp aWeekAgo = Timestamp.valueOf(LocalDateTime.now().minusWeeks(1));
         try {
-            Page<IncomeFuel> fuelReportPage = incomeFuelRepository.findAllByIncomeTimeIsBetween(today, aWeekAgo, CommandUtils.simplePageable(page, size));
+            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByIncomeTimeIsBetween(today, aWeekAgo, CommandUtils.simplePageable(page, size));
             Map<String, Object> response = new HashMap<>();
-            response.put("fuelReports", getTotalIncomeFuel(fuelReportPage));
-            response.put("currentPage", fuelReportPage.getNumber());
-            response.put("totalItems", fuelReportPage.getTotalElements());
-            response.put("totalPages", fuelReportPage.getTotalPages());
+            response.put("fuelReports", getTotalIncomeFuel(incomeFuelPage));
+            response.put("currentPage", incomeFuelPage.getNumber());
+            response.put("totalItems", incomeFuelPage.getTotalElements());
+            response.put("totalPages", incomeFuelPage.getTotalPages());
             return new ApiResponse<>(true, "Haftalik kirimlar!", response);
         } catch (PageSizeException e) {
             return new ApiResponse<>(false, e.getMessage());
@@ -162,29 +170,30 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
         Timestamp today = Timestamp.valueOf(LocalDateTime.now());
         Timestamp aMonthAgo = Timestamp.valueOf(LocalDateTime.now().minusMonths(1));
         try {
-            Page<IncomeFuel> fuelReportPage = incomeFuelRepository.findAllByIncomeTimeIsBetween(today, aMonthAgo, CommandUtils.simplePageable(page, size));
+            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByIncomeTimeIsBetween(today, aMonthAgo, CommandUtils.simplePageable(page, size));
             Map<String, Object> response = new HashMap<>();
-            response.put("fuelReports", getTotalIncomeFuel(fuelReportPage));
-            response.put("currentPage", fuelReportPage.getNumber());
-            response.put("totalItems", fuelReportPage.getTotalElements());
-            response.put("totalPages", fuelReportPage.getTotalPages());
+            response.put("fuelReports", getTotalIncomeFuel(incomeFuelPage));
+            response.put("currentPage", incomeFuelPage.getNumber());
+            response.put("totalItems", incomeFuelPage.getTotalElements());
+            response.put("totalPages", incomeFuelPage.getTotalPages());
             return new ApiResponse<>(true, "Oylik kirimlar!", response);
         } catch (PageSizeException e) {
             return new ApiResponse<>(false, e.getMessage());
         }
     }
 
+
     @Override
     public ApiResponse<?> getAnnuallyIncomeFuel(int page, int size) {
         Timestamp today = Timestamp.valueOf(LocalDateTime.now());
         Timestamp aYearAgo = Timestamp.valueOf(LocalDateTime.now().minusYears(1));
         try {
-            Page<IncomeFuel> fuelReportPage = incomeFuelRepository.findAllByIncomeTimeIsBetween(today, aYearAgo, CommandUtils.simplePageable(page, size));
+            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByIncomeTimeIsBetween(today, aYearAgo, CommandUtils.simplePageable(page, size));
             Map<String, Object> response = new HashMap<>();
-            response.put("fuelReports", getTotalIncomeFuel(fuelReportPage));
-            response.put("currentPage", fuelReportPage.getNumber());
-            response.put("totalItems", fuelReportPage.getTotalElements());
-            response.put("totalPages", fuelReportPage.getTotalPages());
+            response.put("fuelReports", getTotalIncomeFuel(incomeFuelPage));
+            response.put("currentPage", incomeFuelPage.getNumber());
+            response.put("totalItems", incomeFuelPage.getTotalElements());
+            response.put("totalPages", incomeFuelPage.getTotalPages());
             return new ApiResponse<>(true, "Yillik kirimlar!", response);
         } catch (PageSizeException e) {
             return new ApiResponse<>(false, e.getMessage());
@@ -194,45 +203,161 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
 
     @Override
     public ApiResponse<?> getInterimIncomeFuel(int page, int size, Date startDate, Date endDate) {
+
         try {
-            Page<IncomeFuel> fuelReportPage = incomeFuelRepository.findAllByIncomeTimeIsBetween(new Timestamp(startDate.getTime()),new Timestamp(endDate.getTime()), CommandUtils.simplePageable(page, size));
+            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByIncomeTimeIsBetween(new Timestamp(startDate.getTime()), new Timestamp(endDate.getTime()), CommandUtils.simplePageable(page, size));
             Map<String, Object> response = new HashMap<>();
-            response.put("fuelReports", getTotalIncomeFuel(fuelReportPage));
-            response.put("currentPage", fuelReportPage.getNumber());
-            response.put("totalItems", fuelReportPage.getTotalElements());
-            response.put("totalPages", fuelReportPage.getTotalPages());
+            response.put("fuelReports", getTotalIncomeFuel(incomeFuelPage));
+            response.put("currentPage", incomeFuelPage.getNumber());
+            response.put("totalItems", incomeFuelPage.getTotalElements());
+            response.put("totalPages", incomeFuelPage.getTotalPages());
             return new ApiResponse<>(true, "Vaqt oraligidagi kirimlar!", response);
         } catch (PageSizeException e) {
             return new ApiResponse<>(false, e.getMessage());
         }
     }
 
+    @Override
+    public ApiResponse<?> getByBranchId(UUID branchId, int page, int size) {
+        if (!branchRepository.existsById(branchId))
+            return new ApiResponse<>(false, "Filial mavjud emas!");
 
+        try {
+            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByEmployeeBranchId(branchId, CommandUtils.simplePageable(page, size));
+            Map<String, Object> response = new HashMap<>();
+            response.put("fuelReports", getTotalIncomeFuel(incomeFuelPage));
+            response.put("currentPage", incomeFuelPage.getNumber());
+            response.put("totalItems", incomeFuelPage.getTotalElements());
+            response.put("totalPages", incomeFuelPage.getTotalPages());
+            return new ApiResponse<>(true, "Filial kirimlar!", response);
+        } catch (PageSizeException e) {
+            return new ApiResponse<>(false, e.getMessage());
+        }
+    }
 
+    @Override
+    public ApiResponse<?> getDailyBranchIncomeFuel(UUID branchId, int page, int size) {
+        if (!branchRepository.existsById(branchId))
+            return new ApiResponse<>(false, "Filial mavjud emas!");
 
+        Timestamp today = Timestamp.valueOf(LocalDateTime.now());
+        Timestamp yesterday = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
+        try {
+            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByEmployeeBranchIdAndIncomeTimeIsBetween(branchId, today, yesterday, CommandUtils.simplePageable(page, size));
+            Map<String, Object> response = new HashMap<>();
+            response.put("fuelReports", getTotalIncomeFuel(incomeFuelPage));
+            response.put("currentPage", incomeFuelPage.getNumber());
+            response.put("totalItems", incomeFuelPage.getTotalElements());
+            response.put("totalPages", incomeFuelPage.getTotalPages());
+            return new ApiResponse<>(true, "Kunlik filial kirimlar!", response);
+        } catch (PageSizeException e) {
+            return new ApiResponse<>(false, e.getMessage());
+        }
+    }
 
-    IncomeFuelTotalDto getTotalIncomeFuel(Page<IncomeFuel> fuelReportPage){
+    @Override
+    public ApiResponse<?> getWeeklyBranchIncomeFuel(UUID branchId, int page, int size) {
+        if (!branchRepository.existsById(branchId))
+            return new ApiResponse<>(false, "Filial mavjud emas!");
+
+        Timestamp today = Timestamp.valueOf(LocalDateTime.now());
+        Timestamp aWeekAgo = Timestamp.valueOf(LocalDateTime.now().minusWeeks(1));
+        try {
+            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByEmployeeBranchIdAndIncomeTimeIsBetween(branchId, today, aWeekAgo, CommandUtils.simplePageable(page, size));
+            Map<String, Object> response = new HashMap<>();
+            response.put("fuelReports", getTotalIncomeFuel(incomeFuelPage));
+            response.put("currentPage", incomeFuelPage.getNumber());
+            response.put("totalItems", incomeFuelPage.getTotalElements());
+            response.put("totalPages", incomeFuelPage.getTotalPages());
+            return new ApiResponse<>(true, "Haftalik filial kirimlar!", response);
+        } catch (PageSizeException e) {
+            return new ApiResponse<>(false, e.getMessage());
+        }
+    }
+
+    @Override
+    public ApiResponse<?> getMonthlyBranchIncomeFuel(UUID branchId, int page, int size) {
+        if (!branchRepository.existsById(branchId))
+            return new ApiResponse<>(false, "Filial mavjud emas!");
+
+        Timestamp today = Timestamp.valueOf(LocalDateTime.now());
+        Timestamp aMonthAgo = Timestamp.valueOf(LocalDateTime.now().minusMonths(1));
+        try {
+            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByEmployeeBranchIdAndIncomeTimeIsBetween(branchId, today, aMonthAgo, CommandUtils.simplePageable(page, size));
+            Map<String, Object> response = new HashMap<>();
+            response.put("fuelReports", getTotalIncomeFuel(incomeFuelPage));
+            response.put("currentPage", incomeFuelPage.getNumber());
+            response.put("totalItems", incomeFuelPage.getTotalElements());
+            response.put("totalPages", incomeFuelPage.getTotalPages());
+            return new ApiResponse<>(true, "Oylik filial kirimlar!", response);
+        } catch (PageSizeException e) {
+            return new ApiResponse<>(false, e.getMessage());
+        }
+    }
+
+    @Override
+    public ApiResponse<?> getAnnualBranchIncomeFuel(UUID branchId, int page, int size) {
+        if (!branchRepository.existsById(branchId))
+            return new ApiResponse<>(false, "Filial mavjud emas!");
+
+        Timestamp today = Timestamp.valueOf(LocalDateTime.now());
+        Timestamp aYearAgo = Timestamp.valueOf(LocalDateTime.now().minusYears(1));
+        try {
+            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByEmployeeBranchIdAndIncomeTimeIsBetween(branchId, today, aYearAgo, CommandUtils.simplePageable(page, size));
+            Map<String, Object> response = new HashMap<>();
+            response.put("fuelReports", getTotalIncomeFuel(incomeFuelPage));
+            response.put("currentPage", incomeFuelPage.getNumber());
+            response.put("totalItems", incomeFuelPage.getTotalElements());
+            response.put("totalPages", incomeFuelPage.getTotalPages());
+            return new ApiResponse<>(true, "Yillik filial kirimlar!", response);
+        } catch (PageSizeException e) {
+            return new ApiResponse<>(false, e.getMessage());
+        }
+    }
+
+    @Override
+    public ApiResponse<?> getInterimBranchIncomeFuel(UUID branchId, int page, int size, Date startDate, Date endDate) {
+        if (!branchRepository.existsById(branchId))
+            return new ApiResponse<>(false, "Filial mavjud emas!");
+
+        try {
+            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByEmployeeBranchIdAndIncomeTimeIsBetween(branchId, new Timestamp(startDate.getTime()), new Timestamp(endDate.getTime()), CommandUtils.simplePageable(page, size));
+            Map<String, Object> response = new HashMap<>();
+            response.put("fuelReports", getTotalIncomeFuel(incomeFuelPage));
+            response.put("currentPage", incomeFuelPage.getNumber());
+            response.put("totalItems", incomeFuelPage.getTotalElements());
+            response.put("totalPages", incomeFuelPage.getTotalPages());
+            return new ApiResponse<>(true, "Vaqt filial oraligidagi kirimlar!", response);
+        } catch (PageSizeException e) {
+            return new ApiResponse<>(false, e.getMessage());
+        }
+    }
+
+    IncomeFuelTotalDto getTotalIncomeFuel(Page<IncomeFuel> fuelReportPage) {
         List<IncomeFuelDto> incomeFuelDtoList = fuelReportPage.getContent().stream().map(incomeMapper::toDto).collect(Collectors.toList());
-        double totalSumSale=0;
-        double totalSumIncome=0;
-        double totalAmount=0;
+        double totalSumSale = 0;
+        double totalSumIncome = 0;
+        double totalAmount = 0;
         for (IncomeFuelDto incomeFuelDto : incomeFuelDtoList) {
-            totalSumSale+=(incomeFuelDto.getAmount()*incomeFuelDto.getSalePrice());
-            totalSumIncome+=(incomeFuelDto.getAmount()*incomeFuelDto.getIncomePrice());
-            totalAmount+=incomeFuelDto.getAmount();
+            totalSumSale += (incomeFuelDto.getAmount() * incomeFuelDto.getSalePrice());
+            totalSumIncome += (incomeFuelDto.getAmount() * incomeFuelDto.getIncomePrice());
+            totalAmount += incomeFuelDto.getAmount();
         }
-        return new IncomeFuelTotalDto(totalSumIncome,totalSumSale,totalAmount,incomeFuelDtoList);
+        return new IncomeFuelTotalDto(totalSumIncome, totalSumSale, totalAmount, incomeFuelDtoList);
     }
-    IncomeFuelTotalDto getTotalIncomeFuel(List<IncomeFuel> fuelReportList){
+
+    IncomeFuelTotalDto getTotalIncomeFuel(List<IncomeFuel> fuelReportList) {
         List<IncomeFuelDto> incomeFuelDtoList = fuelReportList.stream().map(incomeMapper::toDto).collect(Collectors.toList());
-        double totalSumIncome=0;
-        double totalSumSale=0;
-        double totalAmount=0;
+        double totalSumIncome = 0;
+        double totalSumSale = 0;
+        double totalAmount = 0;
         for (IncomeFuelDto incomeFuelDto : incomeFuelDtoList) {
-            totalSumSale+=(incomeFuelDto.getAmount()*incomeFuelDto.getSalePrice());
-            totalSumIncome+=(incomeFuelDto.getAmount()*incomeFuelDto.getIncomePrice());
-            totalAmount+=incomeFuelDto.getAmount();
+            totalSumSale += (incomeFuelDto.getAmount() * incomeFuelDto.getSalePrice());
+            totalSumIncome += (incomeFuelDto.getAmount() * incomeFuelDto.getIncomePrice());
+            totalAmount += incomeFuelDto.getAmount();
         }
-        return new IncomeFuelTotalDto(totalSumIncome,totalSumSale,totalAmount,incomeFuelDtoList);
+        return new IncomeFuelTotalDto(totalSumIncome, totalSumSale, totalAmount, incomeFuelDtoList);
     }
+
+
 }
