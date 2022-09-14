@@ -288,6 +288,7 @@ public class FuelReportServiceImpl implements FuelReportService {
         }
     }
 
+
     @Override
     public ApiResponse<?> getInterimBranchFuelReport(int page, int size, UUID branchId, Date startDate, Date endDate) {
         if (!branchRepository.existsById(branchId))

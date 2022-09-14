@@ -37,6 +37,18 @@ public interface OutgoingController {
 
     String GET_BETWEEN_OUTGOINGS = "/between";
 
+    String GET_BY_BRANCH = "/branchId";
+
+    String GET_DAILY_OUTGOINGS_BY_BRANCH = "/dailyByBranchId";
+
+    String GET_WEEKLY_OUTGOINGS_BY_BRANCH = "/weeklyByBranchId";
+
+    String GET_MONTHLY_OUTGOINGS_BY_BRANCH = "/monthlyByBranchId";
+
+    String GET_ANNUAL_OUTGOINGS_BY_BRANCH = "/annualByBranchId";
+
+    String GET_BETWEEN_OUTGOINGS_BY_BRANCH = "/betweenByBranchId";
+
 
     @PostMapping
     HttpEntity<?> createOutgoing(@RequestBody OutgoingPostDTO outgoingPostDTO);
@@ -50,6 +62,38 @@ public interface OutgoingController {
 
     @GetMapping(GET_OUTGOING_BY_ID)
     HttpEntity<?> getOutgoingById(@RequestParam(name = "outgoingId") UUID id);
+
+    @GetMapping(GET_BY_BRANCH)
+    HttpEntity<?> getOutgoingByBranchId(@RequestParam(name = "branchId") UUID id,
+                                        @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
+                                        @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
+
+    @GetMapping(GET_DAILY_OUTGOINGS_BY_BRANCH)
+    HttpEntity<?> getDailyOutgoingsByBranchId(@RequestParam(name = "branchId") UUID id,
+                                              @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
+                                              @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
+
+    @GetMapping(GET_WEEKLY_OUTGOINGS_BY_BRANCH)
+    HttpEntity<?> getWeeklyOutgoingsByBranchId(@RequestParam(name = "branchId") UUID id,
+                                               @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
+                                               @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
+
+    @GetMapping(GET_MONTHLY_OUTGOINGS_BY_BRANCH)
+    HttpEntity<?> getMonthlyOutgoingsByBranchId(@RequestParam(name = "branchId") UUID id,
+                                                @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
+                                                @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
+
+    @GetMapping(GET_ANNUAL_OUTGOINGS_BY_BRANCH)
+    HttpEntity<?> getAnnualOutgoingsByBranchId(@RequestParam(name = "branchId") UUID id,
+                                               @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
+                                               @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
+
+    @GetMapping(GET_BETWEEN_OUTGOINGS_BY_BRANCH)
+    HttpEntity<?> getInterimOutgoingsByBranchId(@RequestParam(name = "branchId") UUID id,
+                                                @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
+                                                @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size,
+                                                @RequestParam(name = "startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+                                                @RequestParam(name = "endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate);
 
     @PutMapping(UPDATE_OUTGOING_BY_ID)
     HttpEntity<?> updateOutgoingById(@RequestParam(name = "outgoingId") UUID id,
