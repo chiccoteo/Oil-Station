@@ -12,4 +12,7 @@ public interface IncomeFuelRepository extends JpaRepository<IncomeFuel, UUID> {
 
     Page<IncomeFuel> findAllByIncomeTimeIsBetween(Timestamp startTime, Timestamp endTime, Pageable pageable);
 
+    Page<IncomeFuel> findAllByEmployeeBranchId(UUID employee_branch_id, Pageable pageable);
+
+    Page<IncomeFuel> findAllByEmployeeBranchIdAndIncomeTimeIsBetween(UUID employee_branch_id, Timestamp startTime, Timestamp endTime, Pageable pageable);
 }
