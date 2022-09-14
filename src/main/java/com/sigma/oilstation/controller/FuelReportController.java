@@ -22,15 +22,17 @@ public interface FuelReportController {
 
     String GET_ALL_BY_PAGE = AppConstant.BASE_PATH + "/page";
 
-    String GET_DAILY_FUEL_REPORT= "/daily";
+    String GET_DAILY_FUEL_REPORT = "/daily";
 
-    String GET_WEEKLY_FUEL_REPORT= "/weekly";
+    String GET_WEEKLY_FUEL_REPORT = "/weekly";
 
-    String GET_MONTHLY_FUEL_REPORT= "/monthly";
+    String GET_MONTHLY_FUEL_REPORT = "/monthly";
 
-    String GET_ANNUAL_FUEL_REPORT= "/annually";
+    String GET_ANNUAL_FUEL_REPORT = "/annually";
 
-    String GET_BETWEEN_FUEL_REPORT= "/between";
+    String GET_BETWEEN_FUEL_REPORT = "/between";
+
+    String GET_FUEL_REPORT_CURRENT = "/current";
 
     @PostMapping
     HttpEntity<?> create(@RequestBody @Valid FuelReportPostDto fuelPostDto);
@@ -53,48 +55,48 @@ public interface FuelReportController {
                               @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
                               @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size) throws PageSizeException;
 
-    @GetMapping(GET_DAILY_FUEL_REPORT+"/{branchId}")
+    @GetMapping(GET_DAILY_FUEL_REPORT + "/{branchId}")
     HttpEntity<?> getDailyBranchFuelReport(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
-                                           @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size,@PathVariable UUID branchId);
+                                           @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size, @PathVariable UUID branchId);
 
 
-    @GetMapping(GET_WEEKLY_FUEL_REPORT+"/{branchId}")
+    @GetMapping(GET_WEEKLY_FUEL_REPORT + "/{branchId}")
     HttpEntity<?> getWeeklyBranchFuelReport(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
-                                      @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size,@PathVariable UUID branchId);
+                                            @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size, @PathVariable UUID branchId);
 
-    @GetMapping(GET_MONTHLY_FUEL_REPORT+"/{branchId}")
+    @GetMapping(GET_MONTHLY_FUEL_REPORT + "/{branchId}")
     HttpEntity<?> getMonthlyBranchFuelReport(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
-                                       @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size,@PathVariable UUID branchId);
+                                             @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size, @PathVariable UUID branchId);
 
 
-    @GetMapping(GET_ANNUAL_FUEL_REPORT+"/{branchId}")
+    @GetMapping(GET_ANNUAL_FUEL_REPORT + "/{branchId}")
     HttpEntity<?> getAnnualBranchFuelReport(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
-                                      @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size,@PathVariable UUID branchId);
+                                            @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size, @PathVariable UUID branchId);
 
-    @GetMapping(GET_BETWEEN_FUEL_REPORT+"/{branchId}")
+    @GetMapping(GET_BETWEEN_FUEL_REPORT + "/{branchId}")
     HttpEntity<?> getInterimBranchFuelReport(
             @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
             @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size,
             @RequestParam(name = "startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @RequestParam(name = "endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,@PathVariable UUID branchId);
+            @RequestParam(name = "endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate, @PathVariable UUID branchId);
 
 
     @GetMapping(GET_DAILY_FUEL_REPORT)
     HttpEntity<?> getDailyFuelReport(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
-                                    @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size);
+                                     @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size);
 
 
     @GetMapping(GET_WEEKLY_FUEL_REPORT)
     HttpEntity<?> getWeeklyFuelReport(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
-                                     @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size);
+                                      @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size);
 
     @GetMapping(GET_MONTHLY_FUEL_REPORT)
     HttpEntity<?> getMonthlyFuelReport(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
-                                      @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size);
+                                       @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size);
 
     @GetMapping(GET_ANNUAL_FUEL_REPORT)
     HttpEntity<?> getAnnualFuelReport(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
-                                     @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size);
+                                      @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size);
 
     @GetMapping(GET_BETWEEN_FUEL_REPORT)
     HttpEntity<?> getInterimFuelReport(
@@ -103,5 +105,7 @@ public interface FuelReportController {
             @RequestParam(name = "startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
             @RequestParam(name = "endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate);
 
+    @GetMapping(GET_FUEL_REPORT_CURRENT)
+    HttpEntity<?> getFuelReportCurrent();
 
 }
