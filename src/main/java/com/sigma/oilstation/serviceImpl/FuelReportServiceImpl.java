@@ -18,7 +18,6 @@ import com.sigma.oilstation.service.FuelReportService;
 import com.sigma.oilstation.utils.CommandUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -309,8 +308,7 @@ public class FuelReportServiceImpl implements FuelReportService {
     }
 
     @Override
-    public ApiResponse<?> getFuelReportCurrent() {
-        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication();
+    public ApiResponse<?> getFuelReportCurrent(User currentUser) {
         if (currentUser.getRole().getType().equals(RoleType.ROLE_ADMIN)) {
             List<FuelReport> fuelReports = fuelReportRepository.findAllByActiveShiftIsTrue();
             return ApiResponse.successResponse("Current fuel report", mapper.toCurrentFuelReportList(fuelReports));

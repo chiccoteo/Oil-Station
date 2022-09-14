@@ -1,5 +1,6 @@
 package com.sigma.oilstation.service;
 
+import com.sigma.oilstation.entity.User;
 import com.sigma.oilstation.exceptions.PageSizeException;
 import com.sigma.oilstation.payload.ApiResponse;
 import com.sigma.oilstation.payload.FuelReportDto;
@@ -41,6 +42,6 @@ public interface FuelReportService {
 
     ApiResponse<?> getInterimBranchFuelReport(int page, int size, UUID branchId, Date startDate, Date endDate);
 
-    ApiResponse<?> getFuelReportCurrent();
+    ApiResponse<?> getFuelReportCurrent(User user);
 
 }
