@@ -1,6 +1,5 @@
 package com.sigma.oilstation.serviceImpl;
 
-import com.sigma.oilstation.entity.Debt;
 import com.sigma.oilstation.entity.Fuel;
 import com.sigma.oilstation.entity.IncomeFuel;
 import com.sigma.oilstation.entity.User;
@@ -14,7 +13,6 @@ import com.sigma.oilstation.repository.BranchRepository;
 import com.sigma.oilstation.repository.FuelRepository;
 import com.sigma.oilstation.repository.IncomeFuelRepository;
 import com.sigma.oilstation.repository.UserRepository;
-import com.sigma.oilstation.service.DebtService;
 import com.sigma.oilstation.service.IncomeFuelService;
 import com.sigma.oilstation.utils.CommandUtils;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +33,6 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
     private final IncomeFuelMapper incomeMapper;
     private final FuelRepository fuelRepository;
     private final BranchRepository branchRepository;
-
 
 
     @Override
@@ -136,7 +133,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
         Timestamp today = Timestamp.valueOf(LocalDateTime.now());
         Timestamp yesterday = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
         try {
-            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByIncomeTimeIsBetween(today, yesterday, CommandUtils.simplePageable(page, size));
+            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByIncomeTimeIsBetween(yesterday, today, CommandUtils.simplePageable(page, size));
             Map<String, Object> response = new HashMap<>();
             response.put("fuelReports", getTotalIncomeFuel(incomeFuelPage));
             response.put("currentPage", incomeFuelPage.getNumber());
@@ -153,7 +150,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
         Timestamp today = Timestamp.valueOf(LocalDateTime.now());
         Timestamp aWeekAgo = Timestamp.valueOf(LocalDateTime.now().minusWeeks(1));
         try {
-            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByIncomeTimeIsBetween(today, aWeekAgo, CommandUtils.simplePageable(page, size));
+            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByIncomeTimeIsBetween(aWeekAgo, today, CommandUtils.simplePageable(page, size));
             Map<String, Object> response = new HashMap<>();
             response.put("fuelReports", getTotalIncomeFuel(incomeFuelPage));
             response.put("currentPage", incomeFuelPage.getNumber());
@@ -170,7 +167,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
         Timestamp today = Timestamp.valueOf(LocalDateTime.now());
         Timestamp aMonthAgo = Timestamp.valueOf(LocalDateTime.now().minusMonths(1));
         try {
-            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByIncomeTimeIsBetween(today, aMonthAgo, CommandUtils.simplePageable(page, size));
+            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByIncomeTimeIsBetween(aMonthAgo, today, CommandUtils.simplePageable(page, size));
             Map<String, Object> response = new HashMap<>();
             response.put("fuelReports", getTotalIncomeFuel(incomeFuelPage));
             response.put("currentPage", incomeFuelPage.getNumber());
@@ -188,7 +185,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
         Timestamp today = Timestamp.valueOf(LocalDateTime.now());
         Timestamp aYearAgo = Timestamp.valueOf(LocalDateTime.now().minusYears(1));
         try {
-            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByIncomeTimeIsBetween(today, aYearAgo, CommandUtils.simplePageable(page, size));
+            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByIncomeTimeIsBetween(aYearAgo, today, CommandUtils.simplePageable(page, size));
             Map<String, Object> response = new HashMap<>();
             response.put("fuelReports", getTotalIncomeFuel(incomeFuelPage));
             response.put("currentPage", incomeFuelPage.getNumber());
@@ -243,7 +240,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
         Timestamp today = Timestamp.valueOf(LocalDateTime.now());
         Timestamp yesterday = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
         try {
-            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByEmployeeBranchIdAndIncomeTimeIsBetween(branchId, today, yesterday, CommandUtils.simplePageable(page, size));
+            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByEmployeeBranchIdAndIncomeTimeIsBetween(branchId, yesterday, today, CommandUtils.simplePageable(page, size));
             Map<String, Object> response = new HashMap<>();
             response.put("fuelReports", getTotalIncomeFuel(incomeFuelPage));
             response.put("currentPage", incomeFuelPage.getNumber());
@@ -263,7 +260,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
         Timestamp today = Timestamp.valueOf(LocalDateTime.now());
         Timestamp aWeekAgo = Timestamp.valueOf(LocalDateTime.now().minusWeeks(1));
         try {
-            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByEmployeeBranchIdAndIncomeTimeIsBetween(branchId, today, aWeekAgo, CommandUtils.simplePageable(page, size));
+            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByEmployeeBranchIdAndIncomeTimeIsBetween(branchId, aWeekAgo, today, CommandUtils.simplePageable(page, size));
             Map<String, Object> response = new HashMap<>();
             response.put("fuelReports", getTotalIncomeFuel(incomeFuelPage));
             response.put("currentPage", incomeFuelPage.getNumber());
@@ -283,7 +280,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
         Timestamp today = Timestamp.valueOf(LocalDateTime.now());
         Timestamp aMonthAgo = Timestamp.valueOf(LocalDateTime.now().minusMonths(1));
         try {
-            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByEmployeeBranchIdAndIncomeTimeIsBetween(branchId, today, aMonthAgo, CommandUtils.simplePageable(page, size));
+            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByEmployeeBranchIdAndIncomeTimeIsBetween(branchId, aMonthAgo, today, CommandUtils.simplePageable(page, size));
             Map<String, Object> response = new HashMap<>();
             response.put("fuelReports", getTotalIncomeFuel(incomeFuelPage));
             response.put("currentPage", incomeFuelPage.getNumber());
@@ -303,7 +300,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
         Timestamp today = Timestamp.valueOf(LocalDateTime.now());
         Timestamp aYearAgo = Timestamp.valueOf(LocalDateTime.now().minusYears(1));
         try {
-            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByEmployeeBranchIdAndIncomeTimeIsBetween(branchId, today, aYearAgo, CommandUtils.simplePageable(page, size));
+            Page<IncomeFuel> incomeFuelPage = incomeFuelRepository.findAllByEmployeeBranchIdAndIncomeTimeIsBetween(branchId, aYearAgo, today, CommandUtils.simplePageable(page, size));
             Map<String, Object> response = new HashMap<>();
             response.put("fuelReports", getTotalIncomeFuel(incomeFuelPage));
             response.put("currentPage", incomeFuelPage.getNumber());
@@ -333,7 +330,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
         }
     }
 
-    IncomeFuelTotalDto getTotalIncomeFuel(Page<IncomeFuel> fuelReportPage) {
+    private IncomeFuelTotalDto getTotalIncomeFuel(Page<IncomeFuel> fuelReportPage) {
         List<IncomeFuelDto> incomeFuelDtoList = fuelReportPage.getContent().stream().map(incomeMapper::toDto).collect(Collectors.toList());
         double totalSumSale = 0;
         double totalSumIncome = 0;
@@ -346,7 +343,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
         return new IncomeFuelTotalDto(totalSumIncome, totalSumSale, totalAmount, incomeFuelDtoList);
     }
 
-    IncomeFuelTotalDto getTotalIncomeFuel(List<IncomeFuel> fuelReportList) {
+    private IncomeFuelTotalDto getTotalIncomeFuel(List<IncomeFuel> fuelReportList) {
         List<IncomeFuelDto> incomeFuelDtoList = fuelReportList.stream().map(incomeMapper::toDto).collect(Collectors.toList());
         double totalSumIncome = 0;
         double totalSumSale = 0;
