@@ -29,7 +29,7 @@ public interface FuelReportService {
 
     ApiResponse<?> getAnnuallyFuelReport(Integer page, Integer size);
 
-    ApiResponse<?> getInterimFuelReport(Integer page, Integer size, Date startDate,Date endDate);
+    ApiResponse<?> getInterimFuelReport(Integer page, Integer size, Date startDate, Date endDate);
 
     ApiResponse<?> getDailyBranchFuelReport(int page, int size, UUID branchId);
 
@@ -40,5 +40,7 @@ public interface FuelReportService {
     ApiResponse<?> getAnnuallyBranchFuelReport(int page, int size, UUID branchId);
 
     ApiResponse<?> getInterimBranchFuelReport(int page, int size, UUID branchId, Date startDate, Date endDate);
+
+    ApiResponse<?> getFuelReportCurrent();
 
 }

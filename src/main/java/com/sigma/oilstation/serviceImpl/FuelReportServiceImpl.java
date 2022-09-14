@@ -3,6 +3,7 @@ package com.sigma.oilstation.serviceImpl;
 import com.sigma.oilstation.entity.Fuel;
 import com.sigma.oilstation.entity.FuelReport;
 import com.sigma.oilstation.entity.User;
+import com.sigma.oilstation.enums.RoleType;
 import com.sigma.oilstation.exceptions.PageSizeException;
 import com.sigma.oilstation.mapper.FuelReportMapper;
 import com.sigma.oilstation.payload.ApiResponse;
@@ -17,6 +18,7 @@ import com.sigma.oilstation.service.FuelReportService;
 import com.sigma.oilstation.utils.CommandUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -49,7 +51,7 @@ public class FuelReportServiceImpl implements FuelReportService {
         FuelReport fuelReport = mapper.toEntity(fuelPostDto);
 
         FuelReport oldFuelReport = fuelReportRepository.findByActiveShiftTrueAndEmployeeBranchId(optionalUser.get().getBranch().getId());
-        if(oldFuelReport!=null){
+        if (oldFuelReport != null) {
             oldFuelReport.setActiveShift(false);
             oldFuelReport.setAmountAtEndOfShift(fuelReport.getAmountAtStartOfShift());
             fuelReportRepository.save(oldFuelReport);
@@ -76,8 +78,8 @@ public class FuelReportServiceImpl implements FuelReportService {
         if (optionalFuel.isEmpty())
             return new ApiResponse<>(false, "Yoqilg'i mavjud emas!");
         FuelReport activeFuelReport = fuelReportRepository.findByActiveShiftTrueAndEmployeeBranchId(optionalEmployee.get().getBranch().getId());
-        if(fuelReportDto.isActiveShift()&&!activeFuelReport.getId().equals(fuelReportDto.getId()))
-            return new ApiResponse<>(false,"Hozirda faol hisobot allaqachon mavjud!");
+        if (fuelReportDto.isActiveShift() && !activeFuelReport.getId().equals(fuelReportDto.getId()))
+            return new ApiResponse<>(false, "Hozirda faol hisobot allaqachon mavjud!");
 
         FuelReport fuelReport = mapper.toEntity(fuelReportDto);
         fuelReport.setFuel(optionalFuel.get());
@@ -122,7 +124,7 @@ public class FuelReportServiceImpl implements FuelReportService {
     public ApiResponse<?> getByBranchId(UUID branchId, int page, int size) throws PageSizeException {
         if (!branchRepository.existsById(branchId))
             return new ApiResponse<>(false, "Filial mavjud emas!");
-        List<FuelReport> fuelReportList = fuelReportRepository.findAllByEmployeeBranchId(CommandUtils.simplePageable(page, size),branchId);
+        List<FuelReport> fuelReportList = fuelReportRepository.findAllByEmployeeBranchId(CommandUtils.simplePageable(page, size), branchId);
         return new ApiResponse<>(true, "Filial hisobotlari!", getTotalFuelReport(fuelReportList));
     }
 
@@ -147,10 +149,10 @@ public class FuelReportServiceImpl implements FuelReportService {
     public ApiResponse<?> getWeeklyFuelReport(Integer page, Integer size) {
         Timestamp today = Timestamp.valueOf(LocalDateTime.now());
         Timestamp aWeekAgo = Timestamp.valueOf(LocalDateTime.now().minusWeeks(1));
-        System.out.println(today+":: "+aWeekAgo);
+        System.out.println(today + ":: " + aWeekAgo);
         try {
             Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByReportTimeIsBetween(aWeekAgo, today, CommandUtils.simplePageable(page, size));
-            System.out.println("Fuel report:: "+ fuelReportPage.getContent());
+            System.out.println("Fuel report:: " + fuelReportPage.getContent());
             Map<String, Object> response = new HashMap<>();
             response.put("fuelReports", getTotalFuelReport(fuelReportPage));
             response.put("currentPage", fuelReportPage.getNumber());
@@ -199,7 +201,7 @@ public class FuelReportServiceImpl implements FuelReportService {
     @Override
     public ApiResponse<?> getInterimFuelReport(Integer page, Integer size, Date startDate, Date endDate) {
         try {
-            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByReportTimeIsBetween(new Timestamp(startDate.getTime()),new Timestamp(endDate.getTime()),  CommandUtils.simplePageable(page, size));
+            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByReportTimeIsBetween(new Timestamp(startDate.getTime()), new Timestamp(endDate.getTime()), CommandUtils.simplePageable(page, size));
             Map<String, Object> response = new HashMap<>();
             response.put("fuelReports", getTotalFuelReport(fuelReportPage));
             response.put("currentPage", fuelReportPage.getNumber());
@@ -293,7 +295,7 @@ public class FuelReportServiceImpl implements FuelReportService {
         if (!branchRepository.existsById(branchId))
             return new ApiResponse<>(false, "Filial mavjud emas!");
         try {
-            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByEmployeeBranchIdAndReportTimeIsBetween(branchId, new Timestamp(startDate.getTime()),new Timestamp(endDate.getTime()),  CommandUtils.simplePageable(page, size));
+            Page<FuelReport> fuelReportPage = fuelReportRepository.findAllByEmployeeBranchIdAndReportTimeIsBetween(branchId, new Timestamp(startDate.getTime()), new Timestamp(endDate.getTime()), CommandUtils.simplePageable(page, size));
             Map<String, Object> response = new HashMap<>();
             response.put("fuelReports", getTotalFuelReport(fuelReportPage));
             response.put("currentPage", fuelReportPage.getNumber());
@@ -303,6 +305,17 @@ public class FuelReportServiceImpl implements FuelReportService {
         } catch (PageSizeException e) {
             return new ApiResponse<>(false, e.getMessage());
         }
+    }
+
+    @Override
+    public ApiResponse<?> getFuelReportCurrent() {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication();
+        if (currentUser.getRole().getType().equals(RoleType.ROLE_ADMIN)) {
+            List<FuelReport> fuelReports = fuelReportRepository.findAllByActiveShiftIsTrue();
+            return ApiResponse.successResponse("Current fuel report", mapper.toCurrentFuelReportList(fuelReports));
+        }
+        List<FuelReport> fuelReports = fuelReportRepository.findAllByActiveShiftIsTrueAndEmployee_Branch(currentUser.getBranch());
+        return ApiResponse.successResponse("Current fuel report", mapper.toCurrentFuelReportList(fuelReports));
     }
 
 
