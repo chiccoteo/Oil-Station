@@ -1,5 +1,6 @@
 package com.sigma.oilstation.serviceImpl;
 
+import com.sigma.oilstation.entity.Branch;
 import com.sigma.oilstation.entity.Outgoing;
 import com.sigma.oilstation.entity.OutgoingCategory;
 import com.sigma.oilstation.entity.User;
@@ -9,6 +10,7 @@ import com.sigma.oilstation.payload.ApiResponse;
 import com.sigma.oilstation.payload.OutgoingDTOForReportWithTotalSumma;
 import com.sigma.oilstation.payload.OutgoingGetDTOForReport;
 import com.sigma.oilstation.payload.OutgoingPostDTO;
+import com.sigma.oilstation.repository.BranchRepository;
 import com.sigma.oilstation.repository.OutgoingCategoryRepository;
 import com.sigma.oilstation.repository.OutgoingRepository;
 import com.sigma.oilstation.repository.UserRepository;
@@ -34,6 +36,8 @@ public class OutgoingServiceImpl implements OutgoingService {
     private final OutgoingMapper outgoingMapper;
 
     private final UserRepository userRepo;
+
+    private final BranchRepository branchRepository;
 
     @Override
     public ApiResponse<?> createOutgoing(OutgoingPostDTO outgoingPostDTO) {
@@ -198,6 +202,128 @@ public class OutgoingServiceImpl implements OutgoingService {
         response.put("totalItems", outgoingPage.getTotalElements());
         response.put("totalPages", outgoingPage.getTotalPages());
         return ApiResponse.successResponse("All monthly outgoings with page", response);
+    }
+
+    @Override
+    public ApiResponse<?> getOutgoingByBranchId(UUID id, Integer page, Integer size) {
+        Optional<Branch> optionalBranch = branchRepository.findById(id);
+        if (optionalBranch.isEmpty())
+            return ApiResponse.errorResponse("Such a branch does not exist");
+        Page<Outgoing> outgoingPage;
+        try {
+            outgoingPage = outgoingRepo.findAllBySpender_Branch(optionalBranch.get(), CommandUtils.simplePageable(page, size));
+        } catch (PageSizeException e) {
+            return ApiResponse.errorResponse(e.getMessage());
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("outgoings", getTotalSumma(outgoingPage));
+        response.put("currentPage", outgoingPage.getNumber());
+        response.put("totalItems", outgoingPage.getTotalElements());
+        response.put("totalPages", outgoingPage.getTotalPages());
+        return ApiResponse.successResponse("Get all outgoings by branch id with page", response);
+    }
+
+    @Override
+    public ApiResponse<?> getDailyOutgoingsByBranchId(UUID id, Integer page, Integer size) {
+        Optional<Branch> optionalBranch = branchRepository.findById(id);
+        if (optionalBranch.isEmpty())
+            return ApiResponse.errorResponse("Such a branch does not exist");
+        Page<Outgoing> outgoingPage;
+        Timestamp today = Timestamp.valueOf(LocalDateTime.now());
+        Timestamp yesterday = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
+        try {
+            outgoingPage = outgoingRepo.findAllByOutgoingTimeIsBetweenAndSpender_Branch(yesterday, today, optionalBranch.get(), CommandUtils.simplePageable(page, size));
+        } catch (PageSizeException e) {
+            return ApiResponse.errorResponse(e.getMessage());
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("outgoings", getTotalSumma(outgoingPage));
+        response.put("currentPage", outgoingPage.getNumber());
+        response.put("totalItems", outgoingPage.getTotalElements());
+        response.put("totalPages", outgoingPage.getTotalPages());
+        return ApiResponse.successResponse("All daily outgoings by branch with page", response);
+    }
+
+    @Override
+    public ApiResponse<?> getWeeklyOutgoingsByBranchId(UUID id, Integer page, Integer size) {
+        Optional<Branch> optionalBranch = branchRepository.findById(id);
+        if (optionalBranch.isEmpty())
+            return ApiResponse.errorResponse("Such a branch does not exist");
+        Page<Outgoing> outgoingPage;
+        Timestamp today = Timestamp.valueOf(LocalDateTime.now());
+        Timestamp aWeekAgo = Timestamp.valueOf(LocalDateTime.now().minusWeeks(1));
+        try {
+            outgoingPage = outgoingRepo.findAllByOutgoingTimeIsBetweenAndSpender_Branch(aWeekAgo, today, optionalBranch.get(), CommandUtils.simplePageable(page, size));
+        } catch (PageSizeException e) {
+            return ApiResponse.errorResponse(e.getMessage());
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("outgoings", getTotalSumma(outgoingPage));
+        response.put("currentPage", outgoingPage.getNumber());
+        response.put("totalItems", outgoingPage.getTotalElements());
+        response.put("totalPages", outgoingPage.getTotalPages());
+        return ApiResponse.successResponse("All weekly outgoings by branch with page", response);
+    }
+
+    @Override
+    public ApiResponse<?> getMonthlyOutgoingsByBranchId(UUID id, Integer page, Integer size) {
+        Optional<Branch> optionalBranch = branchRepository.findById(id);
+        if (optionalBranch.isEmpty())
+            return ApiResponse.errorResponse("Such a branch does not exist");
+        Page<Outgoing> outgoingPage;
+        Timestamp today = Timestamp.valueOf(LocalDateTime.now());
+        Timestamp aMonthAgo = Timestamp.valueOf(LocalDateTime.now().minusMonths(1));
+        try {
+            outgoingPage = outgoingRepo.findAllByOutgoingTimeIsBetweenAndSpender_Branch(aMonthAgo, today, optionalBranch.get(), CommandUtils.simplePageable(page, size));
+        } catch (PageSizeException e) {
+            return ApiResponse.errorResponse(e.getMessage());
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("outgoings", getTotalSumma(outgoingPage));
+        response.put("currentPage", outgoingPage.getNumber());
+        response.put("totalItems", outgoingPage.getTotalElements());
+        response.put("totalPages", outgoingPage.getTotalPages());
+        return ApiResponse.successResponse("All monthly outgoings by branch with page", response);
+    }
+
+    @Override
+    public ApiResponse<?> getAnnualOutgoingsByBranchId(UUID id, Integer page, Integer size) {
+        Optional<Branch> optionalBranch = branchRepository.findById(id);
+        if (optionalBranch.isEmpty())
+            return ApiResponse.errorResponse("Such a branch does not exist");
+        Page<Outgoing> outgoingPage;
+        Timestamp today = Timestamp.valueOf(LocalDateTime.now());
+        Timestamp aYearAgo = Timestamp.valueOf(LocalDateTime.now().minusYears(1));
+        try {
+            outgoingPage = outgoingRepo.findAllByOutgoingTimeIsBetweenAndSpender_Branch(aYearAgo, today, optionalBranch.get(), CommandUtils.simplePageable(page, size));
+        } catch (PageSizeException e) {
+            return ApiResponse.errorResponse(e.getMessage());
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("outgoings", getTotalSumma(outgoingPage));
+        response.put("currentPage", outgoingPage.getNumber());
+        response.put("totalItems", outgoingPage.getTotalElements());
+        response.put("totalPages", outgoingPage.getTotalPages());
+        return ApiResponse.successResponse("All annual outgoings by branch with page", response);
+    }
+
+    @Override
+    public ApiResponse<?> getInterimOutgoingsByBranchId(UUID id, Integer page, Integer size, Timestamp startTimestamp, Timestamp endTimestamp) {
+        Optional<Branch> optionalBranch = branchRepository.findById(id);
+        if (optionalBranch.isEmpty())
+            return ApiResponse.errorResponse("Such a branch does not exist");
+        Page<Outgoing> outgoingPage;
+        try {
+            outgoingPage = outgoingRepo.findAllByOutgoingTimeIsBetweenAndSpender_Branch(startTimestamp, endTimestamp, optionalBranch.get(), CommandUtils.simplePageable(page, size));
+        } catch (PageSizeException e) {
+            return ApiResponse.errorResponse(e.getMessage());
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("outgoings", getTotalSumma(outgoingPage));
+        response.put("currentPage", outgoingPage.getNumber());
+        response.put("totalItems", outgoingPage.getTotalElements());
+        response.put("totalPages", outgoingPage.getTotalPages());
+        return ApiResponse.successResponse("All InterimOutgoings by branch with page", response);
     }
 
     private OutgoingDTOForReportWithTotalSumma getTotalSumma(Page<Outgoing> outgoingPage) {
