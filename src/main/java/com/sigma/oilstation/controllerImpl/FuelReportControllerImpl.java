@@ -1,6 +1,7 @@
 package com.sigma.oilstation.controllerImpl;
 
 import com.sigma.oilstation.controller.FuelReportController;
+import com.sigma.oilstation.exceptions.PageSizeException;
 import com.sigma.oilstation.payload.ApiResponse;
 import com.sigma.oilstation.payload.FuelReportDto;
 import com.sigma.oilstation.payload.FuelReportPostDto;
@@ -49,8 +50,8 @@ public class FuelReportControllerImpl implements FuelReportController {
     }
 
     @Override
-    public HttpEntity<?> getByBranch(UUID branchId) {
-        ApiResponse<?> response = fuelReportService.getByBranchId(branchId);
+    public HttpEntity<?> getByBranch(UUID branchId,  int page, int size) throws PageSizeException {
+        ApiResponse<?> response = fuelReportService.getByBranchId(branchId, page, size);
         return ResponseEntity.status(response.isSuccess()?200:409).body(response);
     }
 

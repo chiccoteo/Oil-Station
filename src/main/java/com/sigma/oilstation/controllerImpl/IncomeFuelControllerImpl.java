@@ -2,6 +2,7 @@ package com.sigma.oilstation.controllerImpl;
 
 import com.sigma.oilstation.controller.IncomeFuelController;
 import com.sigma.oilstation.payload.ApiResponse;
+import com.sigma.oilstation.payload.DebtPostDto;
 import com.sigma.oilstation.payload.IncomeFuelPostDto;
 import com.sigma.oilstation.payload.IncomeFuelDto;
 import com.sigma.oilstation.service.IncomeFuelService;

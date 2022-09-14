@@ -1,6 +1,7 @@
 package com.sigma.oilstation.utils;
 
 import com.sigma.oilstation.exceptions.PageSizeException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -17,6 +18,16 @@ public class CommandUtils {
         } else if (size > MAX_PAGE_SIZE) {
             throw new PageSizeException("Invalid Page size. Page size must not be more than " + MAX_PAGE_SIZE + "!");
         }
+    }
+
+    public static Pageable debtPageable(int page, int size) throws PageSizeException {
+        validatePageAndSize(page, size);
+        return PageRequest.of(page, size, Sort.by(Sort.Order.desc("createdDate")));
+    }
+
+    public static Pageable debtByBranchPageable(int page, int size) throws PageSizeException {
+        validatePageAndSize(page, size);
+        return PageRequest.of(page, size);
     }
 
     public static Pageable simplePageable(int page, int size) throws PageSizeException {

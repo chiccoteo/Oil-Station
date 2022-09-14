@@ -1,5 +1,6 @@
 package com.sigma.oilstation.controller;
 
+import com.sigma.oilstation.exceptions.PageSizeException;
 import com.sigma.oilstation.payload.FuelReportDto;
 import com.sigma.oilstation.payload.FuelReportPostDto;
 import com.sigma.oilstation.utils.AppConstant;
@@ -48,7 +49,9 @@ public interface FuelReportController {
                           @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size);
 
     @GetMapping("/byBranch/{branchId}")
-    HttpEntity<?> getByBranch(@PathVariable UUID branchId);
+    HttpEntity<?> getByBranch(@PathVariable UUID branchId,
+                              @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,
+                              @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) int size) throws PageSizeException;
 
     @GetMapping(GET_DAILY_FUEL_REPORT+"/{branchId}")
     HttpEntity<?> getDailyBranchFuelReport(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) int page,

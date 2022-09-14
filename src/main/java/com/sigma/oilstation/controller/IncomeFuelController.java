@@ -1,5 +1,6 @@
 package com.sigma.oilstation.controller;
 
+import com.sigma.oilstation.payload.DebtPostDto;
 import com.sigma.oilstation.payload.IncomeFuelPostDto;
 import com.sigma.oilstation.payload.IncomeFuelDto;
 import com.sigma.oilstation.utils.AppConstant;

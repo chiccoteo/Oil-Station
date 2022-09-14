@@ -1,6 +1,7 @@
 package com.sigma.oilstation.service;
 
 import com.sigma.oilstation.payload.ApiResponse;
+import com.sigma.oilstation.payload.DebtPostDto;
 import com.sigma.oilstation.payload.IncomeFuelPostDto;
 import com.sigma.oilstation.payload.IncomeFuelDto;
 

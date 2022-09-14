@@ -44,6 +44,44 @@ public class OutgoingControllerImpl implements OutgoingController {
     }
 
     @Override
+    public HttpEntity<?> getOutgoingByBranchId(UUID id, Integer page, Integer size) {
+        ApiResponse<?> apiResponse = outgoingService.getOutgoingByBranchId(id, page, size);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 404).body(apiResponse);
+    }
+
+    @Override
+    public HttpEntity<?> getDailyOutgoingsByBranchId(UUID id, Integer page, Integer size) {
+        ApiResponse<?> apiResponse = outgoingService.getDailyOutgoingsByBranchId(id, page, size);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 404).body(apiResponse);
+    }
+
+    @Override
+    public HttpEntity<?> getWeeklyOutgoingsByBranchId(UUID id, Integer page, Integer size) {
+        ApiResponse<?> apiResponse = outgoingService.getWeeklyOutgoingsByBranchId(id, page, size);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 404).body(apiResponse);
+    }
+
+    @Override
+    public HttpEntity<?> getMonthlyOutgoingsByBranchId(UUID id, Integer page, Integer size) {
+        ApiResponse<?> apiResponse = outgoingService.getMonthlyOutgoingsByBranchId(id, page, size);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 404).body(apiResponse);
+    }
+
+    @Override
+    public HttpEntity<?> getAnnualOutgoingsByBranchId(UUID id, Integer page, Integer size) {
+        ApiResponse<?> apiResponse = outgoingService.getAnnualOutgoingsByBranchId(id, page, size);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 404).body(apiResponse);
+    }
+
+    @Override
+    public HttpEntity<?> getInterimOutgoingsByBranchId(UUID id, Integer page, Integer size, Date startDate, Date endDate) {
+        Timestamp startTimestamp = new Timestamp(startDate.getTime());
+        Timestamp endTimestamp = new Timestamp(endDate.getTime());
+        ApiResponse<?> apiResponse = outgoingService.getInterimOutgoingsByBranchId(id, page, size, startTimestamp, endTimestamp);
+        return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 404).body(apiResponse);
+    }
+
+    @Override
     public HttpEntity<?> updateOutgoingById(UUID id, OutgoingPostDTO outgoingPostDTO) {
         ApiResponse<?> apiResponse = outgoingService.updateOutgoingById(id, outgoingPostDTO);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 404).body(apiResponse);

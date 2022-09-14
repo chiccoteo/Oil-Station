@@ -1,5 +1,6 @@
 package com.sigma.oilstation.serviceImpl;
 
+import com.sigma.oilstation.entity.Branch;
 import com.sigma.oilstation.entity.Debt;
 import com.sigma.oilstation.entity.Supplier;
 import com.sigma.oilstation.entity.User;
@@ -8,6 +9,7 @@ import com.sigma.oilstation.payload.ApiResponse;
 import com.sigma.oilstation.payload.DebtGetDto;
 import com.sigma.oilstation.payload.DebtPostDto;
 import com.sigma.oilstation.payload.DebtUpdateDto;
+import com.sigma.oilstation.repository.BranchRepository;
 import com.sigma.oilstation.repository.DebtRepository;
 import com.sigma.oilstation.repository.SupplierRepository;
 import com.sigma.oilstation.repository.UserRepository;
@@ -28,6 +30,8 @@ public class DebtServiceImpl implements DebtService {
     final private UserRepository userRepository;
 
     final private SupplierRepository supplierRepository;
+
+    final private BranchRepository branchRepository;
 
     @Override
     public ApiResponse<?> addDebt(DebtPostDto debtPostDto) {
@@ -102,7 +106,7 @@ public class DebtServiceImpl implements DebtService {
     public ApiResponse<?> getAllDebtPageableWorker(Integer page, Integer size) {
         Page<Debt> debtPage;
         try {
-            debtPage = debtRepository.findAllByBorrowerNotNull(CommandUtils.simplePageable(page, size));
+            debtPage = debtRepository.findAllByBorrowerNotNullOrderByGivenAsc(CommandUtils.debtPageable(page, size));
         } catch (PageSizeException e) {
             return ApiResponse.errorResponse(e.getMessage());
         }
@@ -133,7 +137,77 @@ public class DebtServiceImpl implements DebtService {
     public ApiResponse<?> getAllDebtPageableSupplier(Integer page, Integer size) {
         Page<Debt> debtPage;
         try {
-            debtPage = debtRepository.findAllByLenderIsNotNull(CommandUtils.simplePageable(page, size));
+            debtPage = debtRepository.findAllByLenderIsNotNullOrderByGivenAsc(CommandUtils.debtPageable(page, size));
+        } catch (PageSizeException e) {
+            return ApiResponse.errorResponse(e.getMessage());
+        }
+        List<Debt> debtList = debtPage.getContent();
+        List<DebtGetDto> debtGetDtoList = new LinkedList<>();
+
+        for (Debt debt : debtList) {
+            DebtGetDto debtGetDto = new DebtGetDto();
+            debtGetDto.setId(debt.getId());
+            debtGetDto.setBorrower(debt.getBorrower());
+            debtGetDto.setAmount(debt.getAmount());
+            debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
+            debtGetDto.setLenderId(debt.getLender().getId());
+            debtGetDto.setGivenTime(debt.getGivenTime());
+            debtGetDto.setReturnTime(debt.getReturnTime());
+            debtGetDto.setGiven(debt.isGiven());
+            debtGetDtoList.add(debtGetDto);
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("debt", debtGetDtoList);
+        response.put("currentPage", debtPage.getNumber());
+        response.put("totalItems", debtPage.getTotalElements());
+        response.put("totalPages", debtPage.getTotalPages());
+        return ApiResponse.successResponse("All debt with page, supplier", response);
+    }
+
+    @Override
+    public ApiResponse<?> getAllDebtPageableWorkerByBranch(Integer page, Integer size, UUID branchId) {
+        Optional<Branch> optionalBranch = branchRepository.findById(branchId);
+        if (optionalBranch.isEmpty()){
+            return ApiResponse.errorResponse("Such a branch does not exist");
+        }
+        Page<Debt> debtPage;
+        try {
+            debtPage = debtRepository.findAllByBorrowerByBranch(branchId, CommandUtils.debtByBranchPageable(page, size));
+        } catch (PageSizeException e) {
+            return ApiResponse.errorResponse(e.getMessage());
+        }
+        List<Debt> debtList = debtPage.getContent();
+        List<DebtGetDto> debtGetDtoList = new LinkedList<>();
+
+        for (Debt debt : debtList) {
+            DebtGetDto debtGetDto = new DebtGetDto();
+            debtGetDto.setId(debt.getId());
+            debtGetDto.setBorrower(debt.getBorrower());
+            debtGetDto.setAmount(debt.getAmount());
+            debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
+            debtGetDto.setLenderId(null);
+            debtGetDto.setGivenTime(debt.getGivenTime());
+            debtGetDto.setReturnTime(debt.getReturnTime());
+            debtGetDto.setGiven(debt.isGiven());
+            debtGetDtoList.add(debtGetDto);
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("debt", debtGetDtoList);
+        response.put("currentPage", debtPage.getNumber());
+        response.put("totalItems", debtPage.getTotalElements());
+        response.put("totalPages", debtPage.getTotalPages());
+        return ApiResponse.successResponse("All debt with page, worker", response);
+    }
+
+    @Override
+    public ApiResponse<?> getAllDebtPageableSupplierByBranch(Integer page, Integer size, UUID branchId) {
+        Optional<Branch> optionalBranch = branchRepository.findById(branchId);
+        if (optionalBranch.isEmpty()){
+            return ApiResponse.errorResponse("Such a branch does not exist");
+        }
+        Page<Debt> debtPage;
+        try {
+            debtPage = debtRepository.findAllByLenderByBranch(branchId, CommandUtils.debtByBranchPageable(page, size));
         } catch (PageSizeException e) {
             return ApiResponse.errorResponse(e.getMessage());
         }

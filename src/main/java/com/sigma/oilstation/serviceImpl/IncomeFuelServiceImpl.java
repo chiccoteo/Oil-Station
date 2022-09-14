@@ -14,6 +14,7 @@ import com.sigma.oilstation.repository.BranchRepository;
 import com.sigma.oilstation.repository.FuelRepository;
 import com.sigma.oilstation.repository.IncomeFuelRepository;
 import com.sigma.oilstation.repository.UserRepository;
+import com.sigma.oilstation.service.DebtService;
 import com.sigma.oilstation.service.IncomeFuelService;
 import com.sigma.oilstation.utils.CommandUtils;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
     private final IncomeFuelMapper incomeMapper;
     private final FuelRepository fuelRepository;
     private final BranchRepository branchRepository;
+
 
 
     @Override
@@ -58,9 +60,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
         incomeFuelRepository.save(incomeFuel);
 
         if (incomeFuel.isDebt()) {
-            Debt debt = new Debt();
-            //TODO Umidjon shu yerga qarzni yozish kere
-            //TODO men qarzga uncha tushunmadim, help qivoring))
+
         }
         return new ApiResponse<>(true, "Kirim saqlandi");
     }
