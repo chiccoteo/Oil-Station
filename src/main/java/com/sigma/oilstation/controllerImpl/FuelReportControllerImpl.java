@@ -1,6 +1,7 @@
 package com.sigma.oilstation.controllerImpl;
 
 import com.sigma.oilstation.controller.FuelReportController;
+import com.sigma.oilstation.entity.User;
 import com.sigma.oilstation.exceptions.PageSizeException;
 import com.sigma.oilstation.payload.ApiResponse;
 import com.sigma.oilstation.payload.FuelReportDto;
@@ -9,6 +10,8 @@ import com.sigma.oilstation.service.FuelReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
@@ -87,7 +90,9 @@ public class FuelReportControllerImpl implements FuelReportController {
 
     @Override
     public HttpEntity<?> getFuelReportCurrent() {
-        ApiResponse<?> apiResponse = fuelReportService.getFuelReportCurrent();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        ApiResponse<?> apiResponse = fuelReportService.getFuelReportCurrent(currentUser);
         return ResponseEntity.ok(apiResponse);
     }
 
