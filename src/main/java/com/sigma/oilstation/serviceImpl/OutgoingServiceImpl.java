@@ -44,6 +44,8 @@ public class OutgoingServiceImpl implements OutgoingService {
         Optional<User> optionalUser = userRepo.findById(outgoingPostDTO.getSpenderId());
         if (optionalUser.isEmpty())
             return ApiResponse.errorResponse("Such a user does not exist");
+
+
         Outgoing outgoing = outgoingMapper.toEntity(outgoingPostDTO);
         outgoing.setSpender(optionalUser.get());
         Optional<OutgoingCategory> optionalOutgoingCategory = outgoingCategoryRepo.findByName(outgoing.getCategory().getName());

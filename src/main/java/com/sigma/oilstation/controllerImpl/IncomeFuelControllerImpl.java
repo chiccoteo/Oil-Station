@@ -85,4 +85,41 @@ public class IncomeFuelControllerImpl implements IncomeFuelController {
         ApiResponse<?> response = incomeFuelService.getInterimIncomeFuel(page, size,startDate,endDate);
         return ResponseEntity.status(response.isSuccess()?200:409).body(response);
     }
+
+    @Override
+    public HttpEntity<?> getByBranchId(UUID branchId, int page, int size) {
+        ApiResponse<?> response = incomeFuelService.getByBranchId(branchId,page,size);
+        return ResponseEntity.status(response.isSuccess()?200:409).body(response);
+    }
+
+    @Override
+    public HttpEntity<?> getDailyBranchIncomeFuel(UUID branchId, int page, int size) {
+        ApiResponse<?> response = incomeFuelService.getDailyBranchIncomeFuel(branchId,page, size);
+        return ResponseEntity.status(response.isSuccess()?200:409).body(response);
+    }
+
+    @Override
+    public HttpEntity<?> getWeeklyBranchIncomeFuel(UUID branchId, int page, int size) {
+        ApiResponse<?> response = incomeFuelService.getWeeklyBranchIncomeFuel(branchId,page, size);
+        return ResponseEntity.status(response.isSuccess()?200:409).body(response);
+    }
+
+    @Override
+    public HttpEntity<?> getMonthlyBranchIncomeFuel(UUID branchId, int page, int size) {
+        ApiResponse<?> response = incomeFuelService.getMonthlyBranchIncomeFuel(branchId,page, size);
+        return ResponseEntity.status(response.isSuccess()?200:409).body(response);
+    }
+
+    @Override
+    public HttpEntity<?> getAnnualBranchIncomeFuel(UUID branchId, int page, int size) {
+        ApiResponse<?> response = incomeFuelService.getAnnualBranchIncomeFuel(branchId,page, size);
+        return ResponseEntity.status(response.isSuccess()?200:409).body(response);
+    }
+
+    @Override
+    public HttpEntity<?> getInterimBranchIncomeFuel(UUID branchId, int page, int size, Date startDate, Date endDate) {
+        ApiResponse<?> response = incomeFuelService.getInterimBranchIncomeFuel(branchId,page, size,startDate,endDate);
+        return ResponseEntity.status(response.isSuccess()?200:409).body(response);
+    }
+
 }
