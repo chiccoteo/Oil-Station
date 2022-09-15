@@ -17,6 +17,8 @@ public interface NotificationController {
 
     String UPDATE_NOT = "/update";
 
+    String UPDATE_LIMIT = "/updateLimit";
+
     String GET = "/get";
 
     @PostMapping(CREATE_NOT)
@@ -27,5 +29,8 @@ public interface NotificationController {
 
     @PutMapping(UPDATE_NOT)
     HttpEntity<?> update(@RequestParam(name = "notificationId") UUID id);
+
+    @PutMapping(UPDATE_LIMIT)
+    HttpEntity<?> updateLimit(@RequestParam(name = "limit") Long oilLimit);
 
 }
