@@ -34,4 +34,11 @@ public class NotificationControllerImpl implements NotificationController {
         ApiResponse<?> apiResponse = notificationService.update(id);
         return ResponseEntity.status(apiResponse.isSuccess() ? 200 : 404).body(apiResponse);
     }
+
+    @Override
+    public HttpEntity<?> updateLimit(Long oilLimit) {
+        ApiResponse<?> apiResponse = notificationService.updateLimit(oilLimit);
+        return ResponseEntity.ok(apiResponse);
+    }
+
 }
