@@ -13,10 +13,10 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     Optional<User> findByUsername(String username);
 
-    Optional<User> findByUsernameAndPasswordAndDeletedIsFalse(String username, String password);
-
     boolean existsByUsername(String username);
+
     List<User> findUserByDeletedFalseOrderByCreatedDateDesc();
+
     Page<User> findUsersByDeletedFalse(Pageable pageable);
 
     List<User> findAllByBranchId(UUID id);
