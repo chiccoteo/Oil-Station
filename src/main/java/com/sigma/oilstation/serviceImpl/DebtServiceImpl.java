@@ -5,15 +5,13 @@ import com.sigma.oilstation.entity.Debt;
 import com.sigma.oilstation.entity.Supplier;
 import com.sigma.oilstation.entity.User;
 import com.sigma.oilstation.exceptions.PageSizeException;
-import com.sigma.oilstation.payload.ApiResponse;
-import com.sigma.oilstation.payload.DebtGetDto;
-import com.sigma.oilstation.payload.DebtPostDto;
-import com.sigma.oilstation.payload.DebtUpdateDto;
+import com.sigma.oilstation.payload.*;
 import com.sigma.oilstation.repository.BranchRepository;
 import com.sigma.oilstation.repository.DebtRepository;
 import com.sigma.oilstation.repository.SupplierRepository;
 import com.sigma.oilstation.repository.UserRepository;
 import com.sigma.oilstation.service.DebtService;
+import com.sigma.oilstation.service.NotificationService;
 import com.sigma.oilstation.utils.CommandUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,6 +31,8 @@ public class DebtServiceImpl implements DebtService {
 
     final private BranchRepository branchRepository;
 
+    private final NotificationService notificationService;
+
     @Override
     public ApiResponse<?> addDebt(DebtPostDto debtPostDto) {
         if (debtPostDto.getAmount() > 0) {
@@ -51,6 +51,12 @@ public class DebtServiceImpl implements DebtService {
                     debt.setReturnTime(debtPostDto.getReturnTime());
                     debt.setGiven(false);
                     debtRepository.save(debt);
+                    NotificationPostDTO build = NotificationPostDTO.
+                            builder().
+                            text(debt.getBorrower() + " " + debt.getAmount() +
+                                    " so'm qarz oldi " + debt.getLenderOrBorrower().getUsername() + " dan").
+                            build();
+                    notificationService.create(build);
                     return ApiResponse.successResponse("Successfully added");
                 }
             } else if (debtPostDto.getLenderOrBorrowerId() != null && debtPostDto.getLenderId() != null) {
@@ -86,7 +92,7 @@ public class DebtServiceImpl implements DebtService {
     @Override
     public ApiResponse<?> getByIdDebt(UUID id) {
         Optional<Debt> optionalDebt = debtRepository.findById(id);
-        if (optionalDebt.isEmpty()){
+        if (optionalDebt.isEmpty()) {
             return ApiResponse.errorResponse("Such a debt does not exist");
         }
         Debt debt = optionalDebt.get();
@@ -167,7 +173,7 @@ public class DebtServiceImpl implements DebtService {
     @Override
     public ApiResponse<?> getAllDebtPageableWorkerByBranch(Integer page, Integer size, UUID branchId) {
         Optional<Branch> optionalBranch = branchRepository.findById(branchId);
-        if (optionalBranch.isEmpty()){
+        if (optionalBranch.isEmpty()) {
             return ApiResponse.errorResponse("Such a branch does not exist");
         }
         Page<Debt> debtPage;
@@ -202,7 +208,7 @@ public class DebtServiceImpl implements DebtService {
     @Override
     public ApiResponse<?> getAllDebtPageableSupplierByBranch(Integer page, Integer size, UUID branchId) {
         Optional<Branch> optionalBranch = branchRepository.findById(branchId);
-        if (optionalBranch.isEmpty()){
+        if (optionalBranch.isEmpty()) {
             return ApiResponse.errorResponse("Such a branch does not exist");
         }
         Page<Debt> debtPage;
@@ -247,7 +253,7 @@ public class DebtServiceImpl implements DebtService {
             debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
             if (debt.getLender() != null) {
                 debtGetDto.setLenderId(debt.getLender().getId());
-            }else {
+            } else {
                 debtGetDto.setLenderId(null);
             }
             debtGetDto.setGivenTime(debt.getGivenTime());
@@ -263,7 +269,7 @@ public class DebtServiceImpl implements DebtService {
     @Override
     public ApiResponse<?> updateDebt(UUID id, DebtUpdateDto debtUpdateDto) {
         Optional<Debt> optionalDebt = debtRepository.findById(id);
-        if (optionalDebt.isEmpty()){
+        if (optionalDebt.isEmpty()) {
             return ApiResponse.errorResponse("Such a debt does not exist");
         }
         Debt debt = optionalDebt.get();
@@ -302,7 +308,7 @@ public class DebtServiceImpl implements DebtService {
                     debtRepository.save(debt);
                     return ApiResponse.successResponse("Successfully updated");
                 }
-            }  else {
+            } else {
                 return ApiResponse.errorResponse("Lender or Borrower not included");
             }
         }
@@ -312,7 +318,7 @@ public class DebtServiceImpl implements DebtService {
     @Override
     public ApiResponse<?> deleteDebt(UUID id) {
         Optional<Debt> optionalDebt = debtRepository.findById(id);
-        if (optionalDebt.isEmpty()){
+        if (optionalDebt.isEmpty()) {
             return ApiResponse.errorResponse("Such a debt does not exist");
         }
         Debt debt = optionalDebt.get();
