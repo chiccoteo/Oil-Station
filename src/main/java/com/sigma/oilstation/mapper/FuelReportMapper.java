@@ -29,6 +29,7 @@ public interface FuelReportMapper {
     FuelReportDto toDto(FuelReport fuelReport);
 
     @Mapping(target = "fuelId", source = "fuel.id")
+    @Mapping(target = "branchId", source = "employee.branch.id")
     @Mapping(target = "amount", source = "amountAtStartOfShift")
     @Mapping(target = "measurementId", source = "fuel.outcomeMeasurement.id")
     FuelReportCurrent toCurrentFuelReport(FuelReport fuelReport);

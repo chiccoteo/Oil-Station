@@ -111,7 +111,7 @@ public class FuelReportServiceImpl implements FuelReportService {
     @Override
     public ApiResponse<?> get(int page, int size) {
         try {
-            Page<FuelReport> fuelReportPage = fuelReportRepository.findAll(CommandUtils.simplePageable(page, size));
+            Page<FuelReport> fuelReportPage = fuelReportRepository.findAll(CommandUtils.debtPageable(page, size));
             HashMap<String, Object> response = new HashMap<>();
             response.put("fuelReports", getTotalFuelReport(fuelReportPage));
             response.put("currentPage", fuelReportPage.getNumber());
