@@ -1,6 +1,7 @@
 package com.sigma.oilstation.serviceImpl;
 
 import com.sigma.oilstation.entity.Fuel;
+import com.sigma.oilstation.entity.FuelReport;
 import com.sigma.oilstation.entity.IncomeFuel;
 import com.sigma.oilstation.entity.User;
 import com.sigma.oilstation.exceptions.PageSizeException;
@@ -9,10 +10,7 @@ import com.sigma.oilstation.payload.ApiResponse;
 import com.sigma.oilstation.payload.IncomeFuelDto;
 import com.sigma.oilstation.payload.IncomeFuelPostDto;
 import com.sigma.oilstation.payload.IncomeFuelTotalDto;
-import com.sigma.oilstation.repository.BranchRepository;
-import com.sigma.oilstation.repository.FuelRepository;
-import com.sigma.oilstation.repository.IncomeFuelRepository;
-import com.sigma.oilstation.repository.UserRepository;
+import com.sigma.oilstation.repository.*;
 import com.sigma.oilstation.service.IncomeFuelService;
 import com.sigma.oilstation.utils.CommandUtils;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +31,8 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
     private final IncomeFuelMapper incomeMapper;
     private final FuelRepository fuelRepository;
     private final BranchRepository branchRepository;
+    private final FuelReportRepository fuelReportRepository;
+
 
 
     @Override
@@ -48,6 +48,8 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
 
         IncomeFuel incomeFuel = incomeMapper.toEntity(incomeFuelDto);
 
+
+
         Fuel fuel = optionalFuel.get();
         fuel.setPrice(incomeFuel.getSalePrice());
         fuelRepository.saveAndFlush(fuel);
@@ -56,9 +58,12 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
         incomeFuel.setFuel(fuel);
         incomeFuelRepository.save(incomeFuel);
 
-        if (incomeFuel.isDebt()) {
+        FuelReport fuelReport = fuelReportRepository.findByActiveShiftTrueAndEmployeeBranchIdAndFuel_Id(incomeFuelDto.getEmployeeId(), incomeFuelDto.getFuelId());
 
-        }
+        fuelReport.setAmountAtStartOfShift(fuelReport.getAmountAtStartOfShift() + incomeFuelDto.getAmount());
+
+        fuelReportRepository.save(fuelReport);
+
         return new ApiResponse<>(true, "Kirim saqlandi");
     }
 
