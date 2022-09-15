@@ -14,15 +14,15 @@ import java.util.UUID;
 public class IncomeFuelDto {
     private UUID id;
     private UUID fuelId;
-    @Min(value = 0, message = "not negative")
+    @Min(value = 0,message = "not negative")
     private double amount;
-    @Min(value = 0, message = "not negative")
+    @Min(value = 0,message = "not negative")
     private double incomePrice;
-    @Min(value = 0, message = "not negative")
+    @Min(value = 0,message = "not negative")
     private double salePrice;
-    @Min(value = 0, message = "not negative")
+    @Min(value = 0,message = "not negative")
     private double counter;
     private Timestamp incomeTime;
     private UUID employeeId;
-    private boolean cash;
+    private boolean debt;
 }
