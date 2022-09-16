@@ -15,6 +15,8 @@ import javax.persistence.Entity;
 @Entity
 public class Notification extends AbsUUID {
 
+    private String title;
+
     private String text;
 
     private boolean seen;

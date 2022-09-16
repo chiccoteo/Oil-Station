@@ -9,6 +9,8 @@ public class NotificationGetDTO {
 
     private UUID id;
 
+    private String title;
+
     private String text;
 
 }

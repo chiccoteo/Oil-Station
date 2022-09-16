@@ -17,4 +17,6 @@ public interface NotificationService {
 
     ApiResponse<?> updateLimit(Long oilLimit);
 
+    ApiResponse<?> getAll(Integer page, Integer size);
+
 }
