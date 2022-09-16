@@ -34,4 +34,12 @@ public class FuelReport extends AbsUUID {
 
     private boolean activeShift;
 
+    public FuelReport(User employee, double amountAtStartOfShift, Fuel fuel, Double salePrice, Timestamp reportTime, boolean activeShift) {
+        this.employee = employee;
+        this.amountAtStartOfShift = amountAtStartOfShift;
+        this.fuel = fuel;
+        this.salePrice = salePrice;
+        this.reportTime = reportTime;
+        this.activeShift = activeShift;
+    }
 }
