@@ -49,7 +49,9 @@ public class FuelReportServiceImpl implements FuelReportService {
 
         FuelReport fuelReport = mapper.toEntity(fuelPostDto);
 
-        FuelReport oldFuelReport = fuelReportRepository.findByActiveShiftTrueAndEmployeeBranchId(optionalUser.get().getBranch().getId());
+        FuelReport oldFuelReport = fuelReportRepository.findByActiveShiftTrueAndEmployeeBranchIdAndFuel_Id(
+                optionalUser.get().getBranch().getId(),
+                fuelPostDto.getFuelId());
         if (oldFuelReport != null) {
             oldFuelReport.setActiveShift(false);
             oldFuelReport.setAmountAtEndOfShift(fuelReport.getAmountAtStartOfShift());
@@ -76,7 +78,9 @@ public class FuelReportServiceImpl implements FuelReportService {
             return new ApiResponse<>(false, "Ishchi mavjud emas!");
         if (optionalFuel.isEmpty())
             return new ApiResponse<>(false, "Yoqilg'i mavjud emas!");
-        FuelReport activeFuelReport = fuelReportRepository.findByActiveShiftTrueAndEmployeeBranchId(optionalEmployee.get().getBranch().getId());
+        FuelReport activeFuelReport = fuelReportRepository.findByActiveShiftTrueAndEmployeeBranchIdAndFuel_Id(
+                optionalEmployee.get().getBranch().getId(),
+                fuelReportDto.getFuelId());
         if (fuelReportDto.isActiveShift() && !activeFuelReport.getId().equals(fuelReportDto.getId()))
             return new ApiResponse<>(false, "Hozirda faol hisobot allaqachon mavjud!");
 
@@ -107,7 +111,7 @@ public class FuelReportServiceImpl implements FuelReportService {
     @Override
     public ApiResponse<?> get(int page, int size) {
         try {
-            Page<FuelReport> fuelReportPage = fuelReportRepository.findAll(CommandUtils.simplePageable(page, size));
+            Page<FuelReport> fuelReportPage = fuelReportRepository.findAll(CommandUtils.debtPageable(page, size));
             HashMap<String, Object> response = new HashMap<>();
             response.put("fuelReports", getTotalFuelReport(fuelReportPage));
             response.put("currentPage", fuelReportPage.getNumber());
