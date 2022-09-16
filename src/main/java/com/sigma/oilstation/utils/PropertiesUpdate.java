@@ -15,7 +15,7 @@ public class PropertiesUpdate {
         in.close();
 
         FileOutputStream out = new FileOutputStream("src/main/resources/application-prod.properties");
-        props.setProperty("oil.limit", String.valueOf(limit));
+        props.setProperty("oil.limit.prod", String.valueOf(limit));
         props.store(out, null);
         out.close();
     }
