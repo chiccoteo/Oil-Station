@@ -57,7 +57,6 @@ public class FuelReportServiceImpl implements FuelReportService {
             oldFuelReport.setAmountAtEndOfShift(fuelReport.getAmountAtStartOfShift());
             fuelReportRepository.save(oldFuelReport);
         }
-
         fuelReport.setFuel(optionalFuel.get());
         fuelReport.setEmployee(optionalUser.get());
         fuelReport.setActiveShift(true);
@@ -81,6 +80,7 @@ public class FuelReportServiceImpl implements FuelReportService {
         FuelReport activeFuelReport = fuelReportRepository.findByActiveShiftTrueAndEmployeeBranchIdAndFuel_Id(
                 optionalEmployee.get().getBranch().getId(),
                 fuelReportDto.getFuelId());
+
         if (fuelReportDto.isActiveShift() && !activeFuelReport.getId().equals(fuelReportDto.getId()))
             return new ApiResponse<>(false, "Hozirda faol hisobot allaqachon mavjud!");
 

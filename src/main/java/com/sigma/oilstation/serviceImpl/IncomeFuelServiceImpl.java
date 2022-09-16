@@ -46,23 +46,43 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
             return new ApiResponse<>(false, "Yoqilg'i mavjud emas!");
         }
 
+        User user = optionalUser.get();
+
         IncomeFuel incomeFuel = incomeMapper.toEntity(incomeFuelDto);
-
-
-
         Fuel fuel = optionalFuel.get();
-        fuel.setPrice(incomeFuel.getSalePrice());
-        fuelRepository.saveAndFlush(fuel);
+        if(incomeFuel.getSalePrice()==fuel.getPrice()){
+            FuelReport fuelReport = fuelReportRepository.findByActiveShiftTrueAndEmployeeBranchIdAndFuel_Id(user.getId(), fuel.getId());
+            fuelReport.setAmountAtEndOfShift(incomeFuel.getCounter());
+            fuelReport.setActiveShift(false);
+            fuelReportRepository.save(fuelReport);
+            FuelReport newFuelReport = new FuelReport(user,
+                    incomeFuel.getCounter()+incomeFuel.getAmount(),fuel,incomeFuel.getSalePrice(),
+                    incomeFuel.getIncomeTime(),
+                    true
+                    );
+            fuelReportRepository.save(newFuelReport);
+        }
+        else{
+            List<FuelReport> fuelReportList = fuelReportRepository.findAllByActiveShiftIsTrue();
+            for (FuelReport fuelReport : fuelReportList) {
+                fuelReport.setAmountAtEndOfShift(incomeFuel.getCounter());
+                fuelReport.setActiveShift(false);
+                fuelReportRepository.save(fuelReport);
+                FuelReport newFuelReport = new FuelReport(user,
+                        incomeFuel.getCounter()+incomeFuel.getAmount(),
+                        fuel, incomeFuel.getSalePrice(),
+                        incomeFuel.getIncomeTime(),
+                        true);
+                fuelReportRepository.save(newFuelReport);
+            }
+        }
 
-        incomeFuel.setEmployee(optionalUser.get());
+        fuel.setPrice(incomeFuel.getSalePrice());
+        fuelRepository.save(fuel);
+
+        incomeFuel.setEmployee(user);
         incomeFuel.setFuel(fuel);
         incomeFuelRepository.save(incomeFuel);
-
-        FuelReport fuelReport = fuelReportRepository.findByActiveShiftTrueAndEmployeeBranchIdAndFuel_Id(incomeFuelDto.getEmployeeId(), incomeFuelDto.getFuelId());
-
-        fuelReport.setAmountAtStartOfShift(fuelReport.getAmountAtStartOfShift() + incomeFuelDto.getAmount());
-
-        fuelReportRepository.save(fuelReport);
 
         return new ApiResponse<>(true, "Kirim saqlandi");
     }
@@ -82,13 +102,20 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
             return new ApiResponse<>(false, "Kirim mavjud emas!");
 
         IncomeFuel incomeFuel = optionalIncomeFuel.get();
-
+        User user = optionalUser.get();
         Fuel fuel = optionalFuel.get();
+
+        if(incomeFuel.getSalePrice()==fuel.getPrice()){
+            FuelReport fuelReport = fuelReportRepository.findByActiveShiftTrueAndEmployeeBranchIdAndFuel_Id(user.getId(), fuel.getId());
+            fuelReport.setAmountAtEndOfShift(incomeFuel.getCounter());
+            fuelReportRepository.save(fuelReport);
+        }
+
         fuel.setPrice(incomeFuel.getSalePrice());
         fuelRepository.save(fuel);
 
         incomeFuel.setFuel(optionalFuel.get());
-        incomeFuel.setEmployee(optionalUser.get());
+        incomeFuel.setEmployee(user);
         incomeFuelRepository.save(incomeFuel);
 
         return new ApiResponse<>(true, "Kirim tahrirlandi!");
