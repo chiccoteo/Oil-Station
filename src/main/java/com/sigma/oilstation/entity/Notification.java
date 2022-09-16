@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import java.util.UUID;
 
 @Data
 @EqualsAndHashCode
@@ -18,6 +19,8 @@ public class Notification extends AbsUUID {
     private String title;
 
     private String text;
+
+    private UUID fuelReportId;
 
     private boolean seen;
 
