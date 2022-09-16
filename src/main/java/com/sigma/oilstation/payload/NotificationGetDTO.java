@@ -14,6 +14,8 @@ public class NotificationGetDTO {
 
     private String text;
 
+    private boolean seen;
+
     private Date createdDate;
 
 }
