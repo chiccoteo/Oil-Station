@@ -7,6 +7,8 @@ import lombok.Data;
 @Builder
 public class NotificationPostDTO {
 
+    private String title;
+
     private String text;
 
 }

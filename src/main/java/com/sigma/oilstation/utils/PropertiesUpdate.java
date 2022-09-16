@@ -9,12 +9,12 @@ import java.util.Properties;
 public class PropertiesUpdate {
 
     public static void updateOilProperties(Long limit) throws IOException {
-        FileInputStream in = new FileInputStream("application-prod.properties");
+        FileInputStream in = new FileInputStream("src/main/resources/application-prod.properties");
         Properties props = new Properties();
         props.load(in);
         in.close();
 
-        FileOutputStream out = new FileOutputStream("application-prod.properties");
+        FileOutputStream out = new FileOutputStream("src/main/resources/application-prod.properties");
         props.setProperty("oil.limit", String.valueOf(limit));
         props.store(out, null);
         out.close();
