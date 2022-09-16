@@ -107,7 +107,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
 
         if(incomeFuel.getSalePrice()==fuel.getPrice()){
             FuelReport fuelReport = fuelReportRepository.findByActiveShiftTrueAndEmployeeBranchIdAndFuel_Id(user.getId(), fuel.getId());
-            fuelReport.setAmountAtEndOfShift(incomeFuel.getCounter());
+            fuelReport.setAmountAtStartOfShift(incomeFuel.getCounter()+incomeFuel.getAmount());
             fuelReportRepository.save(fuelReport);
         }
 
