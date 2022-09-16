@@ -35,7 +35,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final FuelReportRepository fuelReportRepository;
 
-    @Value("${oil.limit.prod}")
+    @Value("${oil.limit}")
     private long oilLimit;
 
     @Override
