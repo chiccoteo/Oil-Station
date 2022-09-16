@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import static com.sigma.oilstation.utils.AppConstant.BASE_PATH;
+import static com.sigma.oilstation.utils.AppConstant.*;
 
 @RequestMapping(BASE_PATH + NotificationController.NOTIFICATION_CONTROLLER)
 public interface NotificationController {
@@ -21,11 +21,20 @@ public interface NotificationController {
 
     String GET = "/get";
 
+    String GET_ALL = "/all";
+
     @PostMapping(CREATE_NOT)
     HttpEntity<?> create(@RequestBody NotificationPostDTO notificationPostDTO);
 
     @GetMapping(GET)
     HttpEntity<?> get();
+
+    @GetMapping(GET_ALL)
+    HttpEntity<?> getAll(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
+                         @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
+
+    @GetMapping(GET + "/oil/limit")
+    HttpEntity<?> getOilLimit();
 
     @PutMapping(UPDATE_NOT)
     HttpEntity<?> update(@RequestParam(name = "notificationId") UUID id);

@@ -53,6 +53,7 @@ public class DebtServiceImpl implements DebtService {
                     debtRepository.save(debt);
                     NotificationPostDTO build = NotificationPostDTO.
                             builder().
+                            title("Qarz uchun eslatma").
                             text(debt.getBorrower() + " " + debt.getAmount() +
                                     " so'm qarz oldi " + debt.getLenderOrBorrower().getUsername() + " dan").
                             build();

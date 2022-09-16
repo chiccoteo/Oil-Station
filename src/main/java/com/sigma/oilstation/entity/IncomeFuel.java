@@ -36,7 +36,6 @@ public class IncomeFuel extends AbsUUID {
     @ManyToOne(fetch = FetchType.LAZY)
     private User employee;
 
-    private  boolean cash;
 
     @Column(nullable = false)
     private boolean debt;
