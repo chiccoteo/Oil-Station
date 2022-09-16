@@ -4,6 +4,7 @@ import com.sigma.oilstation.payload.NotificationPostDTO;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.UUID;
 
 import static com.sigma.oilstation.utils.AppConstant.*;
@@ -15,7 +16,7 @@ public interface NotificationController {
 
     String CREATE_NOT = "/create";
 
-    String UPDATE_NOT = "/update";
+    String UPDATE = "/update";
 
     String UPDATE_LIMIT = "/updateLimit";
 
@@ -36,10 +37,10 @@ public interface NotificationController {
     @GetMapping(GET + "/oil/limit")
     HttpEntity<?> getOilLimit();
 
-    @PutMapping(UPDATE_NOT)
-    HttpEntity<?> update(@RequestParam(name = "notificationId") UUID id);
-
     @PutMapping(UPDATE_LIMIT)
     HttpEntity<?> updateLimit(@RequestParam(name = "limit") Long oilLimit);
+
+    @PutMapping(UPDATE)
+    HttpEntity<?> update(@RequestParam(name = "id") UUID id);
 
 }
