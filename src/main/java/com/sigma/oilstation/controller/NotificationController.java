@@ -27,6 +27,9 @@ public interface NotificationController {
     @GetMapping(GET)
     HttpEntity<?> get();
 
+    @GetMapping(GET + "/oil/limit")
+    HttpEntity<?> getOilLimit();
+
     @PutMapping(UPDATE_NOT)
     HttpEntity<?> update(@RequestParam(name = "notificationId") UUID id);
 

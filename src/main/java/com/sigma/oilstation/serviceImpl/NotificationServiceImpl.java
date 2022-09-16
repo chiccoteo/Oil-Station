@@ -6,6 +6,7 @@ import com.sigma.oilstation.entity.User;
 import com.sigma.oilstation.enums.RoleType;
 import com.sigma.oilstation.mapper.NotificationMapper;
 import com.sigma.oilstation.payload.ApiResponse;
+import com.sigma.oilstation.payload.LimitGetDto;
 import com.sigma.oilstation.payload.NotificationGetDTO;
 import com.sigma.oilstation.payload.NotificationPostDTO;
 import com.sigma.oilstation.repository.FuelReportRepository;
@@ -76,6 +77,16 @@ public class NotificationServiceImpl implements NotificationService {
             }
         }
         return ApiResponse.successResponse(notificationGetDTOS);
+    }
+
+    @Override
+    public ApiResponse<?> getOilLimit() {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        LimitGetDto limitGetDto = new LimitGetDto();
+        if (currentUser.getRole().getType().equals(RoleType.ROLE_ADMIN)) {
+            limitGetDto.setLimit(oilLimit);
+        }
+        return ApiResponse.successResponse(limitGetDto);
     }
 
     @SneakyThrows
