@@ -40,4 +40,6 @@ public class IncomeFuel extends AbsUUID {
     @Column(nullable = false)
     private boolean debt;
 
+    private boolean cash;
+
 }

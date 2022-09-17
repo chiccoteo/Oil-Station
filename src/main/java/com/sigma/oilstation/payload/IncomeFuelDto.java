@@ -25,4 +25,5 @@ public class IncomeFuelDto {
     private Timestamp incomeTime;
     private UUID employeeId;
     private boolean debt;
+    private boolean cash;
 }
