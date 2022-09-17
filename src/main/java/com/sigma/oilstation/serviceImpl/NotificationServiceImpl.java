@@ -96,7 +96,7 @@ public class NotificationServiceImpl implements NotificationService {
         if (currentUser.getRole().getType().equals(RoleType.ROLE_ADMIN)) {
             Page<Notification> notificationPage;
             try {
-                notificationPage = notificationRepository.findAll(CommandUtils.simplePageable(page, size));
+                notificationPage = notificationRepository.findAll(CommandUtils.debtPageable(page, size));
             } catch (PageSizeException e) {
                 return ApiResponse.errorResponse(e.getMessage());
             }
