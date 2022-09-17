@@ -47,23 +47,13 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public ApiResponse<?> update(UUID id) {
-        Optional<Notification> optionalNotification = notificationRepository.findById(id);
-        if (optionalNotification.isEmpty())
-            return ApiResponse.errorResponse("Such a notification does not exist");
-        Notification notification = optionalNotification.get();
-        notification.setSeen(true);
-        notificationRepository.save(notification);
-        return ApiResponse.successResponse("Updated");
-    }
-
-    @Override
     public ApiResponse<?> get() {
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<NotificationGetDTO> notificationGetDTOS = null;
+        List<Notification> notificationList = notificationRepository.findAllBySeenIsFalse();
+        List<NotificationGetDTO> notificationGetDTOS = new LinkedList<>();
+        notificationList.forEach(notification -> notificationGetDTOS.add(notificationMapper.toGetDTO(notification)));
         if (currentUser.getRole().getType().equals(RoleType.ROLE_ADMIN)) {
-            notificationGetDTOS = notificationRepository.findAllBySeenIsFalse().stream().map(notificationMapper::toGetDTO).collect(Collectors.toList());
-            List<FuelReport> fuelReports = fuelReportRepository.findAllByActiveShiftIsTrue();
+            List<FuelReport> fuelReports = fuelReportRepository.findAllByActiveShiftIsTrueAndIdNotInNotifications();
             for (FuelReport fuelReport : fuelReports) {
                 if (fuelReport.getAmountAtStartOfShift() <= oilLimit) {
                     Notification notification = new Notification(
@@ -72,7 +62,8 @@ public class NotificationServiceImpl implements NotificationService {
                                     + " filialda " +
                                     fuelReport.getAmountAtStartOfShift() + " " + fuelReport.getFuel().getOutcomeMeasurement().getName() +
                                     " " + fuelReport.getFuel().getType() + " " + fuelReport.getFuel().getName() + " qoldi",
-                            false
+                            fuelReport.getId(),
+                            true
                     );
                     NotificationGetDTO notificationGetDTO = notificationMapper.toGetDTO(notificationRepository.save(notification));
                     notificationGetDTOS.add(notificationGetDTO);
@@ -105,7 +96,7 @@ public class NotificationServiceImpl implements NotificationService {
         if (currentUser.getRole().getType().equals(RoleType.ROLE_ADMIN)) {
             Page<Notification> notificationPage;
             try {
-                notificationPage = notificationRepository.findAll(CommandUtils.simplePageable(page, size));
+                notificationPage = notificationRepository.findAll(CommandUtils.debtPageable(page, size));
             } catch (PageSizeException e) {
                 return ApiResponse.errorResponse(e.getMessage());
             }
@@ -117,6 +108,17 @@ public class NotificationServiceImpl implements NotificationService {
             return ApiResponse.successResponse("All notifications with page", response);
         }
         return ApiResponse.errorResponse("Forbidden");
+    }
+
+    @Override
+    public ApiResponse<?> update(UUID id) {
+        Optional<Notification> optionalNotification = notificationRepository.findById(id);
+        if (optionalNotification.isEmpty())
+            return ApiResponse.errorResponse("Such a notification does not exist");
+        Notification notification = optionalNotification.get();
+        notification.setSeen(true);
+        notificationRepository.save(notification);
+        return ApiResponse.successResponse("Successfully updated");
     }
 
 }

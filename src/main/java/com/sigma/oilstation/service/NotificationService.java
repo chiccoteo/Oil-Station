@@ -9,8 +9,6 @@ public interface NotificationService {
 
     ApiResponse<?> create(NotificationPostDTO notificationPostDTO);
 
-    ApiResponse<?> update(UUID id);
-
     ApiResponse<?> get();
 
     ApiResponse<?> getOilLimit();
@@ -18,5 +16,7 @@ public interface NotificationService {
     ApiResponse<?> updateLimit(Long oilLimit);
 
     ApiResponse<?> getAll(Integer page, Integer size);
+
+    ApiResponse<?> update(UUID id);
 
 }
