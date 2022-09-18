@@ -374,6 +374,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
             totalSumIncome += (incomeFuelDto.getAmount() * incomeFuelDto.getIncomePrice());
             totalAmount += incomeFuelDto.getAmount();
         }
+        incomeFuelDtoList.sort(Comparator.comparing(IncomeFuelDto::getIncomeTime).reversed());
         return new IncomeFuelTotalDto(totalSumIncome, totalSumSale, totalAmount, incomeFuelDtoList);
     }
 
@@ -387,6 +388,7 @@ public class IncomeFuelServiceImpl implements IncomeFuelService {
             totalSumIncome += (incomeFuelDto.getAmount() * incomeFuelDto.getIncomePrice());
             totalAmount += incomeFuelDto.getAmount();
         }
+        incomeFuelDtoList.sort(Comparator.comparing(IncomeFuelDto::getIncomeTime).reversed());
         return new IncomeFuelTotalDto(totalSumIncome, totalSumSale, totalAmount, incomeFuelDtoList);
     }
 
