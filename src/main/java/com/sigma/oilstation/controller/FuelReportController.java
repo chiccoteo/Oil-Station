@@ -108,4 +108,7 @@ public interface FuelReportController {
     @GetMapping(GET_FUEL_REPORT_CURRENT)
     HttpEntity<?> getFuelReportCurrent();
 
+    @DeleteMapping
+    HttpEntity<?> delete();
+
 }

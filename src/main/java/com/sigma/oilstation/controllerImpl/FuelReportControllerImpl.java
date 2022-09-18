@@ -97,6 +97,12 @@ public class FuelReportControllerImpl implements FuelReportController {
     }
 
     @Override
+    public HttpEntity<?> delete() {
+        ApiResponse<?> apiResponse = fuelReportService.delete();
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @Override
     public HttpEntity<?> getDailyBranchFuelReport(int page, int size, UUID branchId) {
         ApiResponse<?> response = fuelReportService.getDailyBranchFuelReport(page, size, branchId);
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
