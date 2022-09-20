@@ -11,10 +11,6 @@ public interface NotificationService {
 
     ApiResponse<?> get();
 
-    ApiResponse<?> getOilLimit();
-
-    ApiResponse<?> updateLimit(Long oilLimit);
-
     ApiResponse<?> getAll(Integer page, Integer size);
 
     ApiResponse<?> update(UUID id);
