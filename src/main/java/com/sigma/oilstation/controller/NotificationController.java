@@ -19,8 +19,6 @@ public interface NotificationController {
 
     String UPDATE = "/update";
 
-    String UPDATE_LIMIT = "/updateLimit";
-
     String GET = "/get";
 
     String GET_ALL = "/all";
@@ -37,14 +35,6 @@ public interface NotificationController {
     @GetMapping(GET_ALL)
     HttpEntity<?> getAll(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
                          @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
-
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping(GET + "/oil/limit")
-    HttpEntity<?> getOilLimit();
-
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping(UPDATE_LIMIT)
-    HttpEntity<?> updateLimit(@RequestParam(name = "limit") Long oilLimit);
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping(UPDATE)
