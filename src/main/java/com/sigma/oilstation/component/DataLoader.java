@@ -26,6 +26,8 @@ public class DataLoader implements CommandLineRunner {
     private final FuelRepository fuelRepository;
     private final MeasurementRepository measurementRepository;
 
+    private final LimitRepository limitRepository;
+
     @Value("${spring.sql.init.mode}")
     private String initialMode;
 
@@ -33,6 +35,8 @@ public class DataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) {
         if (initialMode.equals("always")) {
+            if (!limitRepository.existsByName("OilLimit"))
+                limitRepository.save(new Limit("OilLimit", 100000L));
             List<Role> roles = new LinkedList<>();
             Role admin = new Role(RoleType.ROLE_ADMIN.name(), RoleType.ROLE_ADMIN);
             Role manager = new Role(RoleType.ROLE_MANAGER.name(), RoleType.ROLE_MANAGER);
