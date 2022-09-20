@@ -15,10 +15,8 @@ public interface AuthController {
 
     String LOGIN = "/login";
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_EMPLOYEE')")
     @PostMapping(LOGIN)
     HttpEntity<?> login(@RequestBody LoginDTO loginDTO);
-
 
 
 }
