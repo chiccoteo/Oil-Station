@@ -73,10 +73,13 @@ public class FuelReportServiceImpl implements FuelReportService {
 
         if (optionalFuelReport.isEmpty())
             return new ApiResponse<>(false, "Hisobot mavjud emas!");
+
         if (optionalEmployee.isEmpty())
             return new ApiResponse<>(false, "Ishchi mavjud emas!");
+
         if (optionalFuel.isEmpty())
             return new ApiResponse<>(false, "Yoqilg'i mavjud emas!");
+
         FuelReport activeFuelReport = fuelReportRepository.findByActiveShiftTrueAndEmployeeBranchIdAndFuel_Id(
                 optionalEmployee.get().getBranch().getId(),
                 fuelReportDto.getFuelId());

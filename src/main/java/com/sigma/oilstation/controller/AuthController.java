@@ -3,6 +3,7 @@ package com.sigma.oilstation.controller;
 import com.sigma.oilstation.payload.LoginDTO;
 import com.sigma.oilstation.utils.AppConstant;
 import org.springframework.http.HttpEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ public interface AuthController {
 
     String LOGIN = "/login";
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_EMPLOYEE')")
     @PostMapping(LOGIN)
     HttpEntity<?> login(@RequestBody LoginDTO loginDTO);
 

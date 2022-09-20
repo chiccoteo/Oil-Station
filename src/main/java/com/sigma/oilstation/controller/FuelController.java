@@ -4,6 +4,7 @@ import com.sigma.oilstation.payload.FuelPostDto;
 import com.sigma.oilstation.payload.FuelUpdateDto;
 import com.sigma.oilstation.utils.AppConstant;
 import org.springframework.http.HttpEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -15,22 +16,28 @@ public interface FuelController {
 
     String FUEL_CONTROLLER = AppConstant.BASE_PATH + "/fuel";
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_EMPLOYEE')")
     @PostMapping(POST_PATH)
-    public HttpEntity<?> addFuel(@RequestBody FuelPostDto fuelPostDto);
+    HttpEntity<?> addFuel(@RequestBody FuelPostDto fuelPostDto);
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_EMPLOYEE')")
     @GetMapping(GET_BY_ID_PATH)
-    public HttpEntity<?> getByIdFuel(@PathVariable UUID id);
+    HttpEntity<?> getByIdFuel(@PathVariable UUID id);
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_EMPLOYEE')")
     @GetMapping(GET_ALL_PAGEABLE_PATH)
-    public HttpEntity<?> getAllFuelPageable(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
-                                       @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
+    HttpEntity<?> getAllFuelPageable(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
+                                     @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_EMPLOYEE')")
     @GetMapping(GET_ALL_PATH)
-    public HttpEntity<?> getAllFuel();
+    HttpEntity<?> getAllFuel();
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_EMPLOYEE')")
     @PutMapping(PUT_PATH)
-    public HttpEntity<?> updateFuel(@PathVariable UUID id, @RequestBody FuelUpdateDto fuelUpdateDto);
+    HttpEntity<?> updateFuel(@PathVariable UUID id, @RequestBody FuelUpdateDto fuelUpdateDto);
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_EMPLOYEE')")
     @DeleteMapping(DELETE_PATH)
-    public HttpEntity<?> deleteFuel(@PathVariable UUID id);
+    HttpEntity<?> deleteFuel(@PathVariable UUID id);
 }
