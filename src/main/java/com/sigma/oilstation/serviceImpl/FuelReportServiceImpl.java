@@ -324,6 +324,12 @@ public class FuelReportServiceImpl implements FuelReportService {
         return ApiResponse.successResponse("Current fuel report", mapper.toCurrentFuelReportList(fuelReports));
     }
 
+    @Override
+    public ApiResponse<?> delete() {
+        fuelReportRepository.deleteAll();
+        return ApiResponse.successResponse("Deleted");
+    }
+
 
     private FuelReportTotalDto getTotalFuelReport(Page<FuelReport> fuelReportPage) {
         List<FuelReportDto> fuelReportDtoList = fuelReportPage.getContent().stream().map(mapper::toDto).collect(Collectors.toList());

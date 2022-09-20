@@ -44,4 +44,6 @@ public interface FuelReportService {
 
     ApiResponse<?> getFuelReportCurrent(User user);
 
+    ApiResponse<?> delete();
+
 }
