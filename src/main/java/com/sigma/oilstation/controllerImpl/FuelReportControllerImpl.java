@@ -131,4 +131,5 @@ public class FuelReportControllerImpl implements FuelReportController {
         ApiResponse<?> response = fuelReportService.getInterimBranchFuelReport(page, size, branchId, startDate, endDate);
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
     }
+
 }
