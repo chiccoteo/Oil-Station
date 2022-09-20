@@ -1,23 +1,21 @@
 package com.sigma.oilstation.serviceImpl;
 
 import com.sigma.oilstation.entity.FuelReport;
+import com.sigma.oilstation.entity.Limit;
 import com.sigma.oilstation.entity.Notification;
 import com.sigma.oilstation.entity.User;
 import com.sigma.oilstation.enums.RoleType;
 import com.sigma.oilstation.exceptions.PageSizeException;
 import com.sigma.oilstation.mapper.NotificationMapper;
 import com.sigma.oilstation.payload.ApiResponse;
-import com.sigma.oilstation.payload.LimitGetDto;
 import com.sigma.oilstation.payload.NotificationGetDTO;
 import com.sigma.oilstation.payload.NotificationPostDTO;
 import com.sigma.oilstation.repository.FuelReportRepository;
+import com.sigma.oilstation.repository.LimitRepository;
 import com.sigma.oilstation.repository.NotificationRepository;
 import com.sigma.oilstation.service.NotificationService;
 import com.sigma.oilstation.utils.CommandUtils;
-import com.sigma.oilstation.utils.PropertiesUpdate;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -35,8 +33,8 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final FuelReportRepository fuelReportRepository;
 
-    @Value("${oil.limit.prod}")
-    private long oilLimit;
+    private final LimitRepository limitRepository;
+
 
     @Override
     public ApiResponse<?> create(NotificationPostDTO notificationPostDTO) {
@@ -55,7 +53,7 @@ public class NotificationServiceImpl implements NotificationService {
         if (currentUser.getRole().getType().equals(RoleType.ROLE_ADMIN)) {
             List<FuelReport> fuelReports = fuelReportRepository.findAllByActiveShiftIsTrueAndIdNotInNotifications();
             for (FuelReport fuelReport : fuelReports) {
-                if (fuelReport.getAmountAtStartOfShift() <= oilLimit) {
+                if (fuelReport.getAmountAtStartOfShift() <= getLimit()) {
                     Notification notification = new Notification(
                             "Yoqilg'i zaxirasi uchun eslatma",
                             fuelReport.getEmployee().getBranch().getName()
@@ -71,23 +69,6 @@ public class NotificationServiceImpl implements NotificationService {
             }
         }
         return ApiResponse.successResponse(notificationGetDTOS);
-    }
-
-    @Override
-    public ApiResponse<?> getOilLimit() {
-        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        LimitGetDto limitGetDto = new LimitGetDto();
-        if (currentUser.getRole().getType().equals(RoleType.ROLE_ADMIN)) {
-            limitGetDto.setLimit(oilLimit);
-        }
-        return ApiResponse.successResponse(limitGetDto);
-    }
-
-    @SneakyThrows
-    @Override
-    public ApiResponse<?> updateLimit(Long oilLimit) {
-        PropertiesUpdate.updateOilProperties(oilLimit);
-        return ApiResponse.successResponse("Successfully updated limit");
     }
 
     @Override
@@ -119,6 +100,14 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setSeen(true);
         notificationRepository.save(notification);
         return ApiResponse.successResponse("Successfully updated");
+    }
+
+    private Long getLimit() {
+        Optional<Limit> optionalLimit = limitRepository.findByName("OilLimit");
+        Limit limit = new Limit();
+        if (optionalLimit.isPresent())
+            limit = optionalLimit.get();
+        return limit.getOilLimit();
     }
 
 }

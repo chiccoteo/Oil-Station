@@ -18,8 +18,6 @@ public interface NotificationController {
 
     String UPDATE = "/update";
 
-    String UPDATE_LIMIT = "/updateLimit";
-
     String GET = "/get";
 
     String GET_ALL = "/all";
@@ -33,12 +31,6 @@ public interface NotificationController {
     @GetMapping(GET_ALL)
     HttpEntity<?> getAll(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
                          @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
-
-    @GetMapping(GET + "/oil/limit")
-    HttpEntity<?> getOilLimit();
-
-    @PutMapping(UPDATE_LIMIT)
-    HttpEntity<?> updateLimit(@RequestParam(name = "limit") Long oilLimit);
 
     @PutMapping(UPDATE)
     HttpEntity<?> update(@RequestParam(name = "id") UUID id);
