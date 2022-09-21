@@ -171,7 +171,9 @@ public class UserServiceImpl implements UserService {
     public ApiResponse<?> getByBranchId(UUID id) {
         List<User> byBranchId = repository.findByBranchId(id);
         return ApiResponse.successResponse("ALL_USERS_BY_BRANCH", mapper.toGetDTOList(byBranchId));
-
+    }
+    
+    
     public ApiResponse<?> getUsersByBranchId(UUID id) {
         Optional<Branch> optionalBranch = branchRepository.findById(id);
         if (optionalBranch.isEmpty()) {
