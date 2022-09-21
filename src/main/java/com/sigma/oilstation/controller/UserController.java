@@ -28,6 +28,10 @@ public interface UserController {
 
     String DELETE_USER_BY_ID = "/delete{id}";
 
+
+    String GET_BY_BRANCH_ID = ("/getByBranchId{id}");
+
+
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     @GetMapping(GET_ALL_USER_PAGEABLE)
     HttpEntity<?> getAllPageable(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
@@ -36,6 +40,11 @@ public interface UserController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     @GetMapping(GET_ALL_USER)
     HttpEntity<?> getAll();
+
+
+    @GetMapping(GET_BY_BRANCH_ID)
+    HttpEntity<?> getByBranchId(@PathVariable UUID id);
+
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     @GetMapping(GET_USER_BY_ID)

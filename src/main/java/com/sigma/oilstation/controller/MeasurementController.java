@@ -17,9 +17,16 @@ public interface MeasurementController {
 
     String GET_MEASUREMENT_BY_ID = "/get";
 
+    String GET_ALL_MEASUREMENT = "getAll";
+
     String UPDATE_MEASUREMENT_BY_ID = "/update";
 
     String DELETE_MEASUREMENT_BY_ID = "/delete";
+
+
+    @GetMapping(GET_ALL_MEASUREMENT)
+    HttpEntity<?> getAll();
+
 
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -29,7 +36,7 @@ public interface MeasurementController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_EMPLOYEE')")
     @GetMapping(GET_ALL_MEASUREMENTS)
     HttpEntity<?> getAllMeasurements(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
-                                  @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
+                                     @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_EMPLOYEE')")
     @GetMapping(GET_MEASUREMENT_BY_ID)
@@ -38,7 +45,7 @@ public interface MeasurementController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping(UPDATE_MEASUREMENT_BY_ID)
     HttpEntity<?> editMeasurementById(@RequestParam(name = "measurementId") Long id,
-                                   @RequestParam(name = "name") String name);
+                                      @RequestParam(name = "name") String name);
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(DELETE_MEASUREMENT_BY_ID)

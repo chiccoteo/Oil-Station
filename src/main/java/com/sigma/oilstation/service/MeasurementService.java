@@ -12,4 +12,7 @@ public interface MeasurementService {
     ApiResponse<?> editMeasurementById(Long id, String name);
 
     ApiResponse<?> deleteMeasurementById(Long id);
+
+    ApiResponse<?> getAll();
+
 }

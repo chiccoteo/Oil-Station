@@ -51,7 +51,9 @@ public class DataLoader implements CommandLineRunner {
             Address address = new Address("Andijon","Oltinko'l","Ustozlar","40");
             address = addressRepository.save(address);
 
+
             Branch branch = new Branch(address, false);
+
             branch =branchRepository.save(branch);
             User adminUser = new User(
                     "AdminUsername",

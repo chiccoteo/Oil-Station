@@ -167,6 +167,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+
+    public ApiResponse<?> getByBranchId(UUID id) {
+        List<User> byBranchId = repository.findByBranchId(id);
+        return ApiResponse.successResponse("ALL_USERS_BY_BRANCH", mapper.toGetDTOList(byBranchId));
+
     public ApiResponse<?> getUsersByBranchId(UUID id) {
         Optional<Branch> optionalBranch = branchRepository.findById(id);
         if (optionalBranch.isEmpty()) {
@@ -175,5 +180,6 @@ public class UserServiceImpl implements UserService {
         List<User> userList = repository.findAllByBranchId(id);
 
         return ApiResponse.successResponse(mapper.toGetDTOList(userList));
+
     }
 }

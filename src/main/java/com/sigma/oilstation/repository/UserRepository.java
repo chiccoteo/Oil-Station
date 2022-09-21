@@ -19,5 +19,9 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     Page<User> findUsersByDeletedFalse(Pageable pageable);
 
+
+    List<User> findByBranchId(UUID branch_id);
+
     List<User> findAllByBranchId(UUID id);
+
 }

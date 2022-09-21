@@ -98,4 +98,10 @@ public class MeasurementServiceImpl implements MeasurementService {
 
         return ApiResponse.successResponse("SUCCESSFULLY_DELETED");
     }
+
+    @Override
+    public ApiResponse<?> getAll() {
+        List<Measurement> all = measurementRepository.findAll();
+        return ApiResponse.successResponse("ALL_MEASUREMENT",measurementMapper.toDoList(all));
+    }
 }
