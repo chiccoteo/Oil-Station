@@ -30,4 +30,16 @@ public interface OutgoingService {
 
     ApiResponse<?> getMonthlyOutgoings(Integer page, Integer size);
 
+    ApiResponse<?> getOutgoingByBranchId(UUID id, Integer page, Integer size);
+
+    ApiResponse<?> getDailyOutgoingsByBranchId(UUID id, Integer page, Integer size);
+
+    ApiResponse<?> getWeeklyOutgoingsByBranchId(UUID id, Integer page, Integer size);
+
+    ApiResponse<?> getMonthlyOutgoingsByBranchId(UUID id, Integer page, Integer size);
+
+    ApiResponse<?> getAnnualOutgoingsByBranchId(UUID id, Integer page, Integer size);
+
+    ApiResponse<?> getInterimOutgoingsByBranchId(UUID id, Integer page, Integer size, Timestamp startTimestamp, Timestamp endTimestamp);
+
 }

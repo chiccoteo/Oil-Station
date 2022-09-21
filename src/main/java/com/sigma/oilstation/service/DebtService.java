@@ -15,6 +15,12 @@ public interface DebtService {
 
     ApiResponse<?> getAllDebtPageableSupplier(Integer page, Integer size);
 
+    ApiResponse<?> getAllDebtPageableWorkerByBranch(Integer page, Integer size, UUID branchId);
+
+    ApiResponse<?> getAllDebtPageableSupplierByBranch(Integer page, Integer size, UUID branchId);
+
+
+
     ApiResponse<?> getAllDebt();
 
     ApiResponse<?> updateDebt(UUID id, DebtUpdateDto debtUpdateDto);

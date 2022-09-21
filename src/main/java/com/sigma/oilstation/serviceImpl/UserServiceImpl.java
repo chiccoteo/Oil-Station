@@ -131,7 +131,8 @@ public class UserServiceImpl implements UserService {
 
         user.setUsername(userDTO.getUsername());
         user.setFio(userDTO.getFio());
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        if (userDTO.getPassword() != null)
+            user.setPassword(passwordEncoder.encode((userDTO.getPassword())));
         user.setPhoneNumber(userDTO.getPhoneNumber());
         user.setBlock(userDTO.isBlock());
 
@@ -166,8 +167,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+
     public ApiResponse<?> getByBranchId(UUID id) {
         List<User> byBranchId = repository.findByBranchId(id);
         return ApiResponse.successResponse("ALL_USERS_BY_BRANCH", mapper.toGetDTOList(byBranchId));
+
+    public ApiResponse<?> getUsersByBranchId(UUID id) {
+        Optional<Branch> optionalBranch = branchRepository.findById(id);
+        if (optionalBranch.isEmpty()) {
+            return ApiResponse.errorResponse("SUCH_A_BRANCH_DOES_NOT_EXIST");
+        }
+        List<User> userList = repository.findAllByBranchId(id);
+
+        return ApiResponse.successResponse(mapper.toGetDTOList(userList));
+
     }
 }

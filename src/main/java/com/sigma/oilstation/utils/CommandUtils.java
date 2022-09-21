@@ -19,6 +19,16 @@ public class CommandUtils {
         }
     }
 
+    public static Pageable debtPageable(int page, int size) throws PageSizeException {
+        validatePageAndSize(page, size);
+        return PageRequest.of(page, size, Sort.by(Sort.Order.desc("createdDate")));
+    }
+
+    public static Pageable debtByBranchPageable(int page, int size) throws PageSizeException {
+        validatePageAndSize(page, size);
+        return PageRequest.of(page, size);
+    }
+
     public static Pageable simplePageable(int page, int size) throws PageSizeException {
         validatePageAndSize(page, size);
         return PageRequest.of(page, size, Sort.by("createdDate"));

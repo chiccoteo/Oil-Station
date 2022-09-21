@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface BranchMapper {
 
-    @Mapping(target = "addressDTO", source = "address")
+    @Mapping(target = "addressGetDTO", source = "address")
     BranchGetDTO toGetDTO(Branch branch);
 
     List<BranchGetDTO> toGetDTOList(List<Branch> branchList);

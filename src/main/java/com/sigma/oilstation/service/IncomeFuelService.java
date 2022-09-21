@@ -1,6 +1,7 @@
 package com.sigma.oilstation.service;
 
 import com.sigma.oilstation.payload.ApiResponse;
+import com.sigma.oilstation.payload.DebtPostDto;
 import com.sigma.oilstation.payload.IncomeFuelPostDto;
 import com.sigma.oilstation.payload.IncomeFuelDto;
 
@@ -28,4 +29,16 @@ public interface IncomeFuelService {
     ApiResponse<?> getAnnuallyIncomeFuel(int page, int size);
 
     ApiResponse<?> getInterimIncomeFuel(int page, int size, Date startDate, Date endDate);
+
+    ApiResponse<?> getByBranchId(UUID branchId, int page, int size);
+
+    ApiResponse<?> getDailyBranchIncomeFuel(UUID branchId, int page, int size);
+
+    ApiResponse<?> getWeeklyBranchIncomeFuel(UUID branchId, int page, int size);
+
+    ApiResponse<?> getMonthlyBranchIncomeFuel(UUID branchId, int page, int size);
+
+    ApiResponse<?> getAnnualBranchIncomeFuel(UUID branchId, int page, int size);
+
+    ApiResponse<?> getInterimBranchIncomeFuel(UUID branchId,int page, int size, Date startDate, Date endDate);
 }

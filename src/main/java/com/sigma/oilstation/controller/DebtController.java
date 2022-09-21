@@ -4,6 +4,7 @@ import com.sigma.oilstation.payload.DebtPostDto;
 import com.sigma.oilstation.payload.DebtUpdateDto;
 import com.sigma.oilstation.utils.AppConstant;
 import org.springframework.http.HttpEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -15,29 +16,48 @@ public interface DebtController {
 
     String DEBT_CONTROLLER = AppConstant.BASE_PATH + "/debt";
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_EMPLOYEE')")
     @PostMapping(POST_PATH)
-    public HttpEntity<?> addDebt(@RequestBody DebtPostDto debtPostDto);
+    HttpEntity<?> addDebt(@RequestBody DebtPostDto debtPostDto);
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_EMPLOYEE')")
     @GetMapping(GET_BY_ID_PATH)
-    public HttpEntity<?> getByIdDebt(@PathVariable UUID id);
+    HttpEntity<?> getByIdDebt(@PathVariable UUID id);
 
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_EMPLOYEE')")
     @GetMapping(GET_ALL_PAGEABLE_PATH+"/worker")
-    public HttpEntity<?> getAllDebtPageableWorker(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
+    HttpEntity<?> getAllDebtPageableWorker(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
                                             @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
 
-    @GetMapping(GET_ALL_PAGEABLE_PATH+"supplier")
-    public HttpEntity<?> getAllDebtPageableSupplier(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_EMPLOYEE')")
+    @GetMapping(GET_ALL_PAGEABLE_PATH+"/supplier")
+    HttpEntity<?> getAllDebtPageableSupplier(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
                                             @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
 
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_EMPLOYEE')")
+    @GetMapping(GET_ALL_PAGEABLE_PATH+"/worker/{id}")
+    HttpEntity<?> getAllDebtPageableWorkerByBranch(@PathVariable UUID id,
+                                                   @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
+                                                   @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_EMPLOYEE')")
+    @GetMapping(GET_ALL_PAGEABLE_PATH+"/supplier/{id}")
+    HttpEntity<?> getAllDebtPageableSupplierByBranch(@PathVariable UUID id,
+                                                   @RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
+                                                   @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(GET_ALL_PATH)
-    public HttpEntity<?> getAllDebt();
+    HttpEntity<?> getAllDebt();
 
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_EMPLOYEE')")
     @PutMapping(PUT_PATH)
-    public HttpEntity<?> updateDebt(@PathVariable UUID id, @RequestBody DebtUpdateDto debtUpdateDto);
+    HttpEntity<?> updateDebt(@PathVariable UUID id, @RequestBody DebtUpdateDto debtUpdateDto);
 
-
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')")
     @DeleteMapping(DELETE_PATH)
-    public HttpEntity<?> deleteDebt(@PathVariable UUID id);
+    HttpEntity<?> deleteDebt(@PathVariable UUID id);
 
 }

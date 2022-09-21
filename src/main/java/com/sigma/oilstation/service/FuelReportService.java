@@ -1,5 +1,7 @@
 package com.sigma.oilstation.service;
 
+import com.sigma.oilstation.entity.User;
+import com.sigma.oilstation.exceptions.PageSizeException;
 import com.sigma.oilstation.payload.ApiResponse;
 import com.sigma.oilstation.payload.FuelReportDto;
 import com.sigma.oilstation.payload.FuelReportPostDto;
@@ -18,7 +20,7 @@ public interface FuelReportService {
 
     ApiResponse<?> get(int page, int size);
 
-    ApiResponse<?> getByBranchId(UUID branchId);
+    ApiResponse<?> getByBranchId(UUID branchId, int page, int size) throws PageSizeException;
 
     ApiResponse<?> getDailyFuelReport(Integer page, Integer size);
 
@@ -28,7 +30,7 @@ public interface FuelReportService {
 
     ApiResponse<?> getAnnuallyFuelReport(Integer page, Integer size);
 
-    ApiResponse<?> getInterimFuelReport(Integer page, Integer size, Date startDate,Date endDate);
+    ApiResponse<?> getInterimFuelReport(Integer page, Integer size, Date startDate, Date endDate);
 
     ApiResponse<?> getDailyBranchFuelReport(int page, int size, UUID branchId);
 
@@ -39,5 +41,9 @@ public interface FuelReportService {
     ApiResponse<?> getAnnuallyBranchFuelReport(int page, int size, UUID branchId);
 
     ApiResponse<?> getInterimBranchFuelReport(int page, int size, UUID branchId, Date startDate, Date endDate);
+
+    ApiResponse<?> getFuelReportCurrent(User user);
+
+    ApiResponse<?> delete();
 
 }

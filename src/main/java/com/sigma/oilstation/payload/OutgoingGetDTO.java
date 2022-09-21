@@ -9,6 +9,8 @@ import java.util.UUID;
 @Data
 public class OutgoingGetDTO {
 
+    private UUID id;
+
     private String name;
 
     private String description;

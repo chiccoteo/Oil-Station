@@ -1,17 +1,17 @@
 package com.sigma.oilstation.serviceImpl;
 
+import com.sigma.oilstation.entity.Branch;
 import com.sigma.oilstation.entity.Debt;
 import com.sigma.oilstation.entity.Supplier;
 import com.sigma.oilstation.entity.User;
 import com.sigma.oilstation.exceptions.PageSizeException;
-import com.sigma.oilstation.payload.ApiResponse;
-import com.sigma.oilstation.payload.DebtGetDto;
-import com.sigma.oilstation.payload.DebtPostDto;
-import com.sigma.oilstation.payload.DebtUpdateDto;
+import com.sigma.oilstation.payload.*;
+import com.sigma.oilstation.repository.BranchRepository;
 import com.sigma.oilstation.repository.DebtRepository;
 import com.sigma.oilstation.repository.SupplierRepository;
 import com.sigma.oilstation.repository.UserRepository;
 import com.sigma.oilstation.service.DebtService;
+import com.sigma.oilstation.service.NotificationService;
 import com.sigma.oilstation.utils.CommandUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,6 +28,10 @@ public class DebtServiceImpl implements DebtService {
     final private UserRepository userRepository;
 
     final private SupplierRepository supplierRepository;
+
+    final private BranchRepository branchRepository;
+
+    private final NotificationService notificationService;
 
     @Override
     public ApiResponse<?> addDebt(DebtPostDto debtPostDto) {
@@ -47,6 +51,13 @@ public class DebtServiceImpl implements DebtService {
                     debt.setReturnTime(debtPostDto.getReturnTime());
                     debt.setGiven(false);
                     debtRepository.save(debt);
+                    NotificationPostDTO build = NotificationPostDTO.
+                            builder().
+                            title("Qarz uchun eslatma").
+                            text(debt.getBorrower() + " " + debt.getAmount() +
+                                    " so'm qarz oldi " + debt.getLenderOrBorrower().getUsername() + " dan").
+                            build();
+                    notificationService.create(build);
                     return ApiResponse.successResponse("Successfully added");
                 }
             } else if (debtPostDto.getLenderOrBorrowerId() != null && debtPostDto.getLenderId() != null) {
@@ -82,7 +93,7 @@ public class DebtServiceImpl implements DebtService {
     @Override
     public ApiResponse<?> getByIdDebt(UUID id) {
         Optional<Debt> optionalDebt = debtRepository.findById(id);
-        if (optionalDebt.isEmpty()){
+        if (optionalDebt.isEmpty()) {
             return ApiResponse.errorResponse("Such a debt does not exist");
         }
         Debt debt = optionalDebt.get();
@@ -102,7 +113,7 @@ public class DebtServiceImpl implements DebtService {
     public ApiResponse<?> getAllDebtPageableWorker(Integer page, Integer size) {
         Page<Debt> debtPage;
         try {
-            debtPage = debtRepository.findAll(CommandUtils.simplePageable(page, size));
+            debtPage = debtRepository.findAllByBorrowerNotNullOrderByGivenAsc(CommandUtils.debtPageable(page, size));
         } catch (PageSizeException e) {
             return ApiResponse.errorResponse(e.getMessage());
         }
@@ -110,18 +121,16 @@ public class DebtServiceImpl implements DebtService {
         List<DebtGetDto> debtGetDtoList = new LinkedList<>();
 
         for (Debt debt : debtList) {
-            if (debt.getLender() == null) {
-                DebtGetDto debtGetDto = new DebtGetDto();
-                debtGetDto.setId(debt.getId());
-                debtGetDto.setBorrower(debt.getBorrower());
-                debtGetDto.setAmount(debt.getAmount());
-                debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
-                debtGetDto.setLenderId(null);
-                debtGetDto.setGivenTime(debt.getGivenTime());
-                debtGetDto.setReturnTime(debt.getReturnTime());
-                debtGetDto.setGiven(debt.isGiven());
-                debtGetDtoList.add(debtGetDto);
-            }
+            DebtGetDto debtGetDto = new DebtGetDto();
+            debtGetDto.setId(debt.getId());
+            debtGetDto.setBorrower(debt.getBorrower());
+            debtGetDto.setAmount(debt.getAmount());
+            debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
+            debtGetDto.setLenderId(null);
+            debtGetDto.setGivenTime(debt.getGivenTime());
+            debtGetDto.setReturnTime(debt.getReturnTime());
+            debtGetDto.setGiven(debt.isGiven());
+            debtGetDtoList.add(debtGetDto);
         }
         Map<String, Object> response = new HashMap<>();
         response.put("debt", debtGetDtoList);
@@ -135,7 +144,7 @@ public class DebtServiceImpl implements DebtService {
     public ApiResponse<?> getAllDebtPageableSupplier(Integer page, Integer size) {
         Page<Debt> debtPage;
         try {
-            debtPage = debtRepository.findAll(CommandUtils.simplePageable(page, size));
+            debtPage = debtRepository.findAllByLenderIsNotNullOrderByGivenAsc(CommandUtils.debtPageable(page, size));
         } catch (PageSizeException e) {
             return ApiResponse.errorResponse(e.getMessage());
         }
@@ -143,18 +152,86 @@ public class DebtServiceImpl implements DebtService {
         List<DebtGetDto> debtGetDtoList = new LinkedList<>();
 
         for (Debt debt : debtList) {
-            if (debt.getBorrower() == null) {
-                DebtGetDto debtGetDto = new DebtGetDto();
-                debtGetDto.setId(debt.getId());
-                debtGetDto.setBorrower(debt.getBorrower());
-                debtGetDto.setAmount(debt.getAmount());
-                debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
-                debtGetDto.setLenderId(debt.getLender().getId());
-                debtGetDto.setGivenTime(debt.getGivenTime());
-                debtGetDto.setReturnTime(debt.getReturnTime());
-                debtGetDto.setGiven(debt.isGiven());
-                debtGetDtoList.add(debtGetDto);
-            }
+            DebtGetDto debtGetDto = new DebtGetDto();
+            debtGetDto.setId(debt.getId());
+            debtGetDto.setBorrower(debt.getBorrower());
+            debtGetDto.setAmount(debt.getAmount());
+            debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
+            debtGetDto.setLenderId(debt.getLender().getId());
+            debtGetDto.setGivenTime(debt.getGivenTime());
+            debtGetDto.setReturnTime(debt.getReturnTime());
+            debtGetDto.setGiven(debt.isGiven());
+            debtGetDtoList.add(debtGetDto);
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("debt", debtGetDtoList);
+        response.put("currentPage", debtPage.getNumber());
+        response.put("totalItems", debtPage.getTotalElements());
+        response.put("totalPages", debtPage.getTotalPages());
+        return ApiResponse.successResponse("All debt with page, supplier", response);
+    }
+
+    @Override
+    public ApiResponse<?> getAllDebtPageableWorkerByBranch(Integer page, Integer size, UUID branchId) {
+        Optional<Branch> optionalBranch = branchRepository.findById(branchId);
+        if (optionalBranch.isEmpty()) {
+            return ApiResponse.errorResponse("Such a branch does not exist");
+        }
+        Page<Debt> debtPage;
+        try {
+            debtPage = debtRepository.findAllByBorrowerByBranch(branchId, CommandUtils.debtByBranchPageable(page, size));
+        } catch (PageSizeException e) {
+            return ApiResponse.errorResponse(e.getMessage());
+        }
+        List<Debt> debtList = debtPage.getContent();
+        List<DebtGetDto> debtGetDtoList = new LinkedList<>();
+
+        for (Debt debt : debtList) {
+            DebtGetDto debtGetDto = new DebtGetDto();
+            debtGetDto.setId(debt.getId());
+            debtGetDto.setBorrower(debt.getBorrower());
+            debtGetDto.setAmount(debt.getAmount());
+            debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
+            debtGetDto.setLenderId(null);
+            debtGetDto.setGivenTime(debt.getGivenTime());
+            debtGetDto.setReturnTime(debt.getReturnTime());
+            debtGetDto.setGiven(debt.isGiven());
+            debtGetDtoList.add(debtGetDto);
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("debt", debtGetDtoList);
+        response.put("currentPage", debtPage.getNumber());
+        response.put("totalItems", debtPage.getTotalElements());
+        response.put("totalPages", debtPage.getTotalPages());
+        return ApiResponse.successResponse("All debt with page, worker", response);
+    }
+
+    @Override
+    public ApiResponse<?> getAllDebtPageableSupplierByBranch(Integer page, Integer size, UUID branchId) {
+        Optional<Branch> optionalBranch = branchRepository.findById(branchId);
+        if (optionalBranch.isEmpty()) {
+            return ApiResponse.errorResponse("Such a branch does not exist");
+        }
+        Page<Debt> debtPage;
+        try {
+            debtPage = debtRepository.findAllByLenderByBranch(branchId, CommandUtils.debtByBranchPageable(page, size));
+        } catch (PageSizeException e) {
+            return ApiResponse.errorResponse(e.getMessage());
+        }
+        List<Debt> debtList = debtPage.getContent();
+        List<DebtGetDto> debtGetDtoList = new LinkedList<>();
+
+        for (Debt debt : debtList) {
+            DebtGetDto debtGetDto = new DebtGetDto();
+            debtGetDto.setId(debt.getId());
+            debtGetDto.setBorrower(debt.getBorrower());
+            debtGetDto.setAmount(debt.getAmount());
+            debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
+            debtGetDto.setLenderId(debt.getLender().getId());
+            debtGetDto.setGivenTime(debt.getGivenTime());
+            debtGetDto.setReturnTime(debt.getReturnTime());
+            debtGetDto.setGiven(debt.isGiven());
+            debtGetDtoList.add(debtGetDto);
         }
         Map<String, Object> response = new HashMap<>();
         response.put("debt", debtGetDtoList);
@@ -177,7 +254,7 @@ public class DebtServiceImpl implements DebtService {
             debtGetDto.setLenderOrBorrowerId(debt.getLenderOrBorrower().getId());
             if (debt.getLender() != null) {
                 debtGetDto.setLenderId(debt.getLender().getId());
-            }else {
+            } else {
                 debtGetDto.setLenderId(null);
             }
             debtGetDto.setGivenTime(debt.getGivenTime());
@@ -193,7 +270,7 @@ public class DebtServiceImpl implements DebtService {
     @Override
     public ApiResponse<?> updateDebt(UUID id, DebtUpdateDto debtUpdateDto) {
         Optional<Debt> optionalDebt = debtRepository.findById(id);
-        if (optionalDebt.isEmpty()){
+        if (optionalDebt.isEmpty()) {
             return ApiResponse.errorResponse("Such a debt does not exist");
         }
         Debt debt = optionalDebt.get();
@@ -214,7 +291,7 @@ public class DebtServiceImpl implements DebtService {
                     debtRepository.save(debt);
                     return ApiResponse.successResponse("Successfully updated");
                 }
-            } else if (debtUpdateDto.getBorrower() != null && debtUpdateDto.getLenderId() != null) {
+            } else if (debtUpdateDto.getLenderOrBorrowerId() != null && debtUpdateDto.getLenderId() != null) {
                 Optional<Supplier> optionalLender = supplierRepository.findById(debtUpdateDto.getLenderId());
                 Optional<User> optionalBorrower = userRepository.findById(debtUpdateDto.getLenderOrBorrowerId());
                 if (optionalBorrower.isEmpty()) {
@@ -232,7 +309,7 @@ public class DebtServiceImpl implements DebtService {
                     debtRepository.save(debt);
                     return ApiResponse.successResponse("Successfully updated");
                 }
-            }  else {
+            } else {
                 return ApiResponse.errorResponse("Lender or Borrower not included");
             }
         }
@@ -242,7 +319,7 @@ public class DebtServiceImpl implements DebtService {
     @Override
     public ApiResponse<?> deleteDebt(UUID id) {
         Optional<Debt> optionalDebt = debtRepository.findById(id);
-        if (optionalDebt.isEmpty()){
+        if (optionalDebt.isEmpty()) {
             return ApiResponse.errorResponse("Such a debt does not exist");
         }
         Debt debt = optionalDebt.get();
