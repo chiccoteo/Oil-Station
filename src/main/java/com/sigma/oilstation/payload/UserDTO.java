@@ -1,11 +1,13 @@
 package com.sigma.oilstation.payload;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.UUID;
 
 
 @Data
+@AllArgsConstructor
 public class UserDTO {
     private String username;
 
@@ -19,7 +21,7 @@ public class UserDTO {
 
     private Long roleId;
 
-    private boolean deleted;
-
     private boolean isBlock;
+
+
 }

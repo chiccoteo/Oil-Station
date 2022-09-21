@@ -15,6 +15,12 @@ public class MeasurementControllerImpl implements MeasurementController {
     private final MeasurementService measurementService;
 
     @Override
+    public HttpEntity<?> getAll() {
+        ApiResponse<?> apiResponse = measurementService.getAll();
+        return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 409).body(apiResponse);
+    }
+
+    @Override
     public HttpEntity<?> addMeasurement(String name) {
         ApiResponse<?> apiResponse = measurementService.addSupplier(name);
         return ResponseEntity.status(apiResponse.isSuccess() ? 201 : 409).body(apiResponse);

@@ -27,12 +27,17 @@ public interface UserController {
 
     String DELETE_USER_BY_ID = "/delete{id}";
 
+    String GET_BY_BRANCH_ID = ("/getByBranchId{id}");
+
     @GetMapping(GET_ALL_USER_PAGEABLE)
     HttpEntity<?> getAllPageable(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE) Integer page,
                                  @RequestParam(value = "size", defaultValue = DEFAULT_SIZE) Integer size);
 
     @GetMapping(GET_ALL_USER)
     HttpEntity<?> getAll();
+
+    @GetMapping(GET_BY_BRANCH_ID)
+    HttpEntity<?> getByBranchId(@PathVariable UUID id);
 
     @GetMapping(GET_USER_BY_ID)
     HttpEntity<?> getById(@PathVariable UUID id);

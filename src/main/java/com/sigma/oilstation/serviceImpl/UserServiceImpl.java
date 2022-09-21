@@ -164,4 +164,10 @@ public class UserServiceImpl implements UserService {
         User principal = (User) authentication.getPrincipal();
         return ApiResponse.successResponse(mapper.toGetDTOs(principal));
     }
+
+    @Override
+    public ApiResponse<?> getByBranchId(UUID id) {
+        List<User> byBranchId = repository.findByBranchId(id);
+        return ApiResponse.successResponse("ALL_USERS_BY_BRANCH", mapper.toGetDTOList(byBranchId));
+    }
 }

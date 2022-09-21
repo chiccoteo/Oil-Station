@@ -18,4 +18,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     boolean existsByUsername(String username);
     List<User> findUserByDeletedFalseOrderByCreatedDateDesc();
     Page<User> findUsersByDeletedFalse(Pageable pageable);
+
+    List<User> findByBranchId(UUID branch_id);
 }
