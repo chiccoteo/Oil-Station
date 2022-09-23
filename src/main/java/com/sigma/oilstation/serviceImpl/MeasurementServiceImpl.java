@@ -39,7 +39,7 @@ public class MeasurementServiceImpl implements MeasurementService {
     @Override
     public ApiResponse<?> getAllMeasurements(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-        Page<Measurement> all = measurementRepository.findAll(pageable);
+        Page<Measurement> all = measurementRepository.findAllByDeletedIsFalse(pageable);
 
         List<MeasurementGetDto> measurementDtos = measurementMapper.toDoList(all.toList());
 
@@ -101,7 +101,7 @@ public class MeasurementServiceImpl implements MeasurementService {
 
     @Override
     public ApiResponse<?> getAll() {
-        List<Measurement> all = measurementRepository.findAll();
+        List<Measurement> all = measurementRepository.findAllByDeletedIsFalse();
         return ApiResponse.successResponse("ALL_MEASUREMENT",measurementMapper.toDoList(all));
     }
 }
